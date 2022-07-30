@@ -11,6 +11,10 @@ body {
     display: flex;
     flex: 1 0 auto;
 }
+/* sample of how to style material-icons */
+/* .icon {
+    color: red;
+} */
 
 /* Sticky Footer and credit */
 .footer {
