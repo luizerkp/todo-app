@@ -4,7 +4,7 @@ import './css/normalize.css';
 import '../node_modules/material-icons/iconfont/round.css';
 import { footer } from './footerContent.js';
 import { loadPage } from './helper.js';
-
+import { modal } from './modals.js';
 
 var buildHeaderContent = (function () {
     const headerDiv = document.createElement('header');
@@ -34,4 +34,8 @@ var buildPageContent = (function (){
 
 var buildFooterContent = (function () {
     footer.buildFooter();
+})();
+
+var buildModal = (function () {
+    modal.buildModalContainer();
 })();

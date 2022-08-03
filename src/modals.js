@@ -10,7 +10,7 @@ function getFormattedDate(date) {
     if (month < 10) {
         month = '0' + month;
     }
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 var taskFormContainer = (function () {
@@ -116,22 +116,18 @@ var taskFormContainer = (function () {
     buildDueDateInput();
     buildFromPriorityField(priorityLevels);
 
-
     formContainer.appendChild(formHeader);
     formContainer.appendChild(form);
 
     return {
         getTaskFormContainer: () => formContainer,
     }
-
-
 })();
 
 // var listFormContainer = (function () {
 
 
 // })();
-
 
 var modal = (function () {
     const modal = document.createElement('div');
@@ -144,18 +140,28 @@ var modal = (function () {
     closeIcon.classList.add('material-icons-round', 'close-button');
     closeIcon.textContent = 'close';
 
+    const tempFormContainer = document.createElement('div');
+    tempFormContainer.classList.add('form-container');
+
     modalContent.appendChild(closeIcon);
+    modalContent.appendChild(tempFormContainer);
+    modal.appendChild(modalContent);
 
     const getTaskModal = () => {
+        const modalContentDiv = document.querySelector('.form-container');
         const taskForm = taskFormContainer.getTaskFormContainer();
-        modalContent.appendChild(taskForm);
-        modal.appendChild(modalContent);
+        modalContentDiv.replaceWith(taskForm);
+    }
+
+    const buildModalContainer = () => {
         document.body.appendChild(modal);
     }
 
     return {    
+        buildModalContainer: buildModalContainer,
         getTaskModal: getTaskModal,
     }
 })();
+
 
 export { modal };
