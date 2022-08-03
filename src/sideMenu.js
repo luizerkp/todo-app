@@ -1,5 +1,4 @@
 
-
 var tasksContent = (function () {
     const tasksDiv = document.createElement('div');
     tasksDiv.classList.add('tasks-div');
@@ -48,22 +47,8 @@ var listsContent = (function () {
     const listsHeader = document.createElement('h1');
     listsHeader.textContent = 'Lists';
     listsHeader.classList.add('title-text');
+    listsHeader.setAttribute('id', 'lists-header');
     listsDiv.appendChild(listsHeader);
-
-    const listsList = document.createElement('ul');
-    listsList.classList.add('lists-list');
-
-    const defaultLists = ['Groceries', 'Work', 'Personal'];
-
-    defaultLists.forEach(function (list) {
-        const listItem = document.createElement('li');
-        listItem.classList.add('list-item');
-        listItem.setAttribute('id', list.toLowerCase().replace(/\s/g, '-'));
-        listItem.textContent = list;
-        listsList.appendChild(listItem);
-    });
-
-    listsDiv.appendChild(listsList);
     
     const addListButton = document.createElement('button');
     addListButton.textContent = 'Add List';

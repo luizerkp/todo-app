@@ -25,12 +25,13 @@ var buildHeaderContent = (function () {
 var buildPageContent = (function (){
     const mainContainer = loadPage.getContentDiv();
     document.body.appendChild(mainContainer);
-    
-
-
+    loadPage.buildPage();
+    let createTask = document.querySelector('.create-task-button');
+    createTask.addEventListener('click', function () {
+        loadPage.createTask();
+    });
 })();
 
 var buildFooterContent = (function () {
     footer.buildFooter();
 })();
-
