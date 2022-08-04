@@ -16,10 +16,10 @@ function listFactory (title, tasks) {
     }
 }
 
-function tasksFactory (title, description, dueDate, priority, list) {
+function tasksFactory (title, notes = null, dueDate, priority, list) {
     return {
         title: title,
-        description: description,
+        notes: notes,
         dueDate: dueDate,
         priority: priority,
         list: list
@@ -90,16 +90,35 @@ var loadPage = (function() {
     const createTask = () => {
         modal.getTaskModal();
         const modalDiv = document.querySelector('.modal');
+        const modalContent = document.querySelector('.modal-content');
         modalDiv.classList.add('show-modal');
-        const closeButton = document.querySelector('.close-button');
+        modalContent.setAttribute('id', 'task-modal');
+        
+        const closeButton = document.querySelector('#close-button');
         closeButton.addEventListener('click', function () {
             modalDiv.classList.remove('show-modal');
+            modalContent.removeAttribute('id');
         }, false);
+        modal.buildHeader('Create Task');
     }
 
+    const createList = () => {
+        modal.getListModal();
+        const modalDiv = document.querySelector('.modal');
+        modalDiv.classList.add('show-modal');
+        const modalContent = document.querySelector('.modal-content');
+        modalContent.setAttribute('id', 'list-modal');
+        const closeButton = document.querySelector('#close-button');
+        closeButton.addEventListener('click', function () {
+            modalDiv.classList.remove('show-modal');
+            modalContent.removeAttribute('id');
+        }, false);
+        modal.buildHeader('Create List');
+    }
 
     return {
         createTask: createTask,
+        createList: createList,
         buildPage: buildPage,
         getContentDiv: () => contentDiv
     }
