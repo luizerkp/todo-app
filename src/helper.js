@@ -1,5 +1,6 @@
 import { sideMenuContent } from "./sideMenu.js";
 import { modal } from "./modals.js";
+import { events } from "./events.js";
 
 function listFactory (title, tasks) {
     return {
@@ -67,12 +68,19 @@ var initialLoad = (function () {
         }
     }
 
+
     return {
         getListsList: () => listsList,
-        buildDefaultLists: buildDefaultLists
+        buildDefaultLists: buildDefaultLists,
+        getLists: () => lists
     }
 
 })();
+
+// var createTask = (function () {
+//     let lists = initialLoad.getLists();
+
+// })();
 
 var loadPage = (function() {
     const contentDiv = document.createElement('div');
@@ -93,13 +101,8 @@ var loadPage = (function() {
         const modalContent = document.querySelector('.modal-content');
         modalDiv.classList.add('show-modal');
         modalContent.setAttribute('id', 'task-modal');
-        
-        const closeButton = document.querySelector('#close-button');
-        closeButton.addEventListener('click', function () {
-            modalDiv.classList.remove('show-modal');
-            modalContent.removeAttribute('id');
-        }, false);
         modal.buildHeader('Create Task');
+        events.addCancelEvents(modalDiv, modalContent);
     }
 
     const createList = () => {
@@ -108,12 +111,8 @@ var loadPage = (function() {
         modalDiv.classList.add('show-modal');
         const modalContent = document.querySelector('.modal-content');
         modalContent.setAttribute('id', 'list-modal');
-        const closeButton = document.querySelector('#close-button');
-        closeButton.addEventListener('click', function () {
-            modalDiv.classList.remove('show-modal');
-            modalContent.removeAttribute('id');
-        }, false);
         modal.buildHeader('Create List');
+        events.addCancelEvents(modalDiv, modalContent);
     }
 
     return {

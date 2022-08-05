@@ -5,6 +5,8 @@ import '../node_modules/material-icons/iconfont/round.css';
 import { footer } from './footerContent.js';
 import { loadPage } from './helper.js';
 import { modal } from './modals.js';
+import { events } from './events.js';
+
 
 var buildHeaderContent = (function () {
     const headerDiv = document.createElement('header');
@@ -26,17 +28,8 @@ var buildPageContent = (function (){
     const mainContainer = loadPage.getContentDiv();
     document.body.appendChild(mainContainer);
     loadPage.buildPage();
-
-    let createTask = document.querySelector('.create-task-button');
-    let addList = document.querySelector('.add-list-button');
-
-    createTask.addEventListener('click', function () {
-        loadPage.createTask();
-    });
-
-    addList.addEventListener('click', function () {
-        loadPage.createList();
-    });
+    events.addInitialEventListeners();
+    
 })();
 
 var buildFooterContent = (function () {

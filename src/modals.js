@@ -16,6 +16,21 @@ function getFormattedDate(date) {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
+function createButtons () {
+    const buttons = document.createElement('div');
+    buttons.classList.add('buttons');
+    const addButton = document.createElement('button');
+    addButton.classList.add('add-button');
+    addButton.textContent = 'Add';
+    const cancelButton = document.createElement('button');
+    cancelButton.classList.add('cancel-button', 'cancel');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.type = 'button';
+    buttons.appendChild(addButton);
+    buttons.appendChild(cancelButton);
+    return buttons;
+}
+
 var taskFormContainer = (function () {
     const form = document.createElement('form');
     form.classList.add('modal-form');
@@ -39,7 +54,7 @@ var taskFormContainer = (function () {
             input.setAttribute('autocorrect', 'off');
             
             if (property === 'Title') {
-                input.setAttribute('autofocus', 'autofocus');
+                // input.setAttribute('autofocus', 'autofocus');
                 input.setAttribute('required', 'required');
             }
 
@@ -64,7 +79,6 @@ var taskFormContainer = (function () {
         input.setAttribute('type', 'datetime-local');
         input.setAttribute('name', 'due-date-time');
         input.setAttribute('id', 'due-date');
-        input.setAttribute('placeholder', 'Enter a Due Date and Time');
         input.setAttribute('required', 'required');
         input.setAttribute('value', getFormattedDate(new Date()));
         input.classList.add('modal-input');
@@ -107,13 +121,15 @@ var taskFormContainer = (function () {
             priorityContentDiv.appendChild(priorityDiv);
         });
         
-        
         formGroup.appendChild(priorityContentDiv);
         form.appendChild(formGroup);
 
+        const buttons = createButtons();
+        form.appendChild(buttons);
+
     }
 
-    const taskTextInputProperties = ['Title', 'Description'];
+    const taskTextInputProperties = ['Title', 'Notes'];
     const priorityLevels = ['Low', 'Medium', 'High'];
     buildFormTextInputs(taskTextInputProperties);
     buildDueDateInput();
@@ -153,6 +169,9 @@ var listFormContainer = (function () {
 
     form.appendChild(formGroup);
 
+    const buttons = createButtons();
+    form.appendChild(buttons);
+
     return {
         getListForm: () => form,
     }
@@ -171,6 +190,7 @@ var modal = (function () {
     const closeIcon = document.createElement('i');
     closeIcon.classList.add('material-icons-round');
     closeIcon.setAttribute('id', 'close-button');
+    closeIcon.classList.add('cancel');
     closeIcon.textContent = 'close';
 
     modalContent.appendChild(closeIcon);
