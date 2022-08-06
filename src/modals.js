@@ -6,12 +6,12 @@ function getFormattedDate(date) {
     let hours = date.getHours();
     let minutes = date.getMinutes();
 
-    if (day < 10) {
-        day = '0' + day;
-    }
-    if (month < 10) {
-        month = '0' + month;
-    }
+    // format date and time for datetime-local input
+    day = day < 10 ? '0' + day : day;
+    month = month < 10 ? '0' + month : month;
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
@@ -145,7 +145,7 @@ var taskFormContainer = (function () {
 var listFormContainer = (function () {
     const form = document.createElement('form');
     form.classList.add('modal-form');
-    form.setAttribute('id', 'task-form');
+    form.setAttribute('id', 'list-form');
 
     const formGroup = document.createElement('div');
     formGroup.classList.add('form-group');

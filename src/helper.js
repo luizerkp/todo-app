@@ -2,13 +2,11 @@ import { sideMenuContent } from "./sideMenu.js";
 import { modal } from "./modals.js";
 import { events } from "./events.js";
 
-function listFactory (title, tasks) {
+var listFactory =  (title, tasks) => {
     return {
         title: title,
-        tasks: tasks.map(function (task) {
-            return task;
-        }, []),
-        addTask: function (task) {
+        tasks: tasks,
+        addTasks: function (task) {
             this.tasks.push(task);
         },
         removeTask: function (task) {
@@ -55,8 +53,10 @@ var initialLoad = (function () {
 
     if (chekStorage) {
         lists = JSON.parse(localStorage.getItem('lists'));
+        console.log(lists);
         if (lists) {
             lists.forEach(function (list) {
+                // console.log(Object.getPrototypeOf(list));
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-item');
                 listItem.setAttribute('id', list.title.toLowerCase().replace(/\s/g, '-'));
@@ -69,6 +69,7 @@ var initialLoad = (function () {
     }
 
     return {
+        // ul element listsList
         getListsList: () => listsList,
         buildDefaultLists: buildDefaultLists,
         getLists: () => lists
@@ -80,14 +81,32 @@ var createTask = (function () {
 
     const createTaskItem = ( title, notes, dueDate, priority, list) => {
         let task = tasksFactory(title, notes, dueDate, priority, list);
-        console.log(task);
-        // list.addTask(task);
-        // localStorage.setItem('lists', JSON.stringify(lists));
+
+        lists.forEach(function (list) {
+            if (list.title.toLowerCase() === task.list.toLowerCase()) {
+                list.addTasks(task);
+            } else {
+                console.log('List not found');
+            }
+        });
+        localStorage.setItem('lists', JSON.stringify(lists));
 
         console.log(JSON.parse(localStorage.getItem('lists')));
     }
     return {
         createTaskItem: createTaskItem
+    }
+})();
+
+var createList = (function () {
+    const createListItem = (listTitle) => {
+        let list = listFactory(listTitle, []);
+        initialLoad.getLists().push(list);
+        localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
+        console.log(JSON.parse(localStorage.getItem('lists')));
+    }
+    return {
+        createListItem: createListItem
     }
 })();
 
@@ -107,19 +126,26 @@ var loadPage = (function() {
     const createTask = () => {
         const createTaskModalHeader = "Create Task";
         const createTaskModalId = "task-modal";
+        // handle modal display
         modal.getTaskModal();
         modal.openModal(createTaskModalHeader, createTaskModalId);
-        events.addCancelEvents();
 
+        // handle events listeners
+        events.addCancelEvents();
         events.addTaskSubmitEvent();
     }
 
     const createList = () => {
         const createListModalHeader = 'Create List';
         const createListModalId = 'list-modal';
+
+        // handle modal display
         modal.getListModal();
         modal.openModal(createListModalHeader, createListModalId);
+
+        // handle events listeners
         events.addCancelEvents();
+        events.addListSubmitEvent();
     }
 
     return {
@@ -156,4 +182,4 @@ function storageAvailable(type) {
     }
 }
 
-export { loadPage, createTask };
+export { loadPage, createTask, createList };

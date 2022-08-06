@@ -1,4 +1,4 @@
-import { loadPage, createTask } from './helper.js';
+import { loadPage, createTask, createList } from './helper.js';
 import { modal } from './modals.js';
 
 
@@ -25,7 +25,7 @@ var modalEvents = (function () {
         });
     }
 
-    const addTaskSubmitEventListeners = () => {
+    const addTaskSubmitEventListener = () => {
         const taskForm = document.querySelector('#task-form');
         // console.log(taskForm);
         taskForm.addEventListener('submit', function (e) {
@@ -39,16 +39,26 @@ var modalEvents = (function () {
             createTask.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
             // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskList);
             modal.closeModal();
-
-
             
         }, false);
+    }
+
+    const addListFormSubmitEventListener = () => {
+            const listForm = document.querySelector('#list-form');
+            listForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const listFormInfo = listForm.elements;
+                const listName = listFormInfo['title'].value;
+                createList.createListItem(listName);
+                modal.closeModal();
+            }, false);
     }
 
     return {
         addInitialModalEvents: addInitialModalEvents,
         addCancelEventListeners: addCancelEventListeners,
-        addTaskSubmitEventListeners: addTaskSubmitEventListeners
+        addTaskSubmitEventListener: addTaskSubmitEventListener,
+        addListFormSubmitEventListener: addListFormSubmitEventListener
     }
 })();
 
@@ -62,13 +72,18 @@ var events = (function () {
     }
 
     const addTaskSubmitEvent = () => {
-        modalEvents.addTaskSubmitEventListeners();
+        modalEvents.addTaskSubmitEventListener();
+    }
+
+    const addListSubmitEvent = () => {
+        modalEvents.addListFormSubmitEventListener();
     }
 
     return {
         addInitialEventListeners: addInitialEventListeners,
         addCancelEvents: addCancelEvents,
-        addTaskSubmitEvent: addTaskSubmitEvent
+        addTaskSubmitEvent: addTaskSubmitEvent,
+        addListSubmitEvent: addListSubmitEvent
     }
 })();
 
