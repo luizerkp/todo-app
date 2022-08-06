@@ -1,8 +1,9 @@
-import { loadPage } from './helper.js';
+import { loadPage, createTask } from './helper.js';
 import { modal } from './modals.js';
 
+
 var modalEvents = (function () {
-    const addInitialModalEevents = () => {
+    const addInitialModalEvents = () => {
         let createTask = document.querySelector('.create-task-button');
         let addList = document.querySelector('.add-list-button');
 
@@ -19,32 +20,55 @@ var modalEvents = (function () {
         const cancelButtons = document.querySelectorAll('.cancel');
         cancelButtons.forEach(button  => {
             button.addEventListener('click', function () {
-            modalDiv.classList.remove('show-modal');
-            modalContent.removeAttribute('id');
+                modal.closeModal();
         }, false);
         });
     }
 
+    const addTaskSubmitEventListeners = () => {
+        const taskForm = document.querySelector('#task-form');
+        // console.log(taskForm);
+        taskForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const taskFormInfo = taskForm.elements;
+            const taskName = taskFormInfo['title'].value;
+            const taskNotes = taskFormInfo['notes'].value;
+            const taskDueDate = taskFormInfo['due-date-time'].value;
+            const taskPriority = taskFormInfo['priority'].value;
+            const taskList = taskFormInfo['list'].value;
+            createTask.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
+            // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskList);
+            modal.closeModal();
+
+
+            
+        }, false);
+    }
+
     return {
-        addInitialModalEevents: addInitialModalEevents,
-        addCancelEventListeners: addCancelEventListeners
+        addInitialModalEvents: addInitialModalEvents,
+        addCancelEventListeners: addCancelEventListeners,
+        addTaskSubmitEventListeners: addTaskSubmitEventListeners
     }
 })();
 
 var events = (function () {
     const addInitialEventListeners = () => {
-        modalEvents.addInitialModalEevents();
+        modalEvents.addInitialModalEvents();
     }
 
     const addCancelEvents = (modalDiv, modalContent) => {
         modalEvents.addCancelEventListeners(modalDiv, modalContent);
     }
 
-    
+    const addTaskSubmitEvent = () => {
+        modalEvents.addTaskSubmitEventListeners();
+    }
 
     return {
         addInitialEventListeners: addInitialEventListeners,
-        addCancelEvents: addCancelEvents
+        addCancelEvents: addCancelEvents,
+        addTaskSubmitEvent: addTaskSubmitEvent
     }
 })();
 

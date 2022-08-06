@@ -56,7 +56,7 @@ body {
     color: white;
     border: none;
     border-radius: 20px;
-    padding: 4px 18px;
+    padding: 6px 18px;
     font-weight: bold;
     cursor: pointer;
     margin-left: 20px;
@@ -92,14 +92,15 @@ body {
     display: none;
     transform: scale(1.1);
     transition: visibility 0s linear 0.07s, opacity 0.07s 0s, transform 0.07s;
+    overflow-y: auto;
 }
 
 .modal-header {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 #modal-header-text{
-    font-size: 32px;
+    font-size: 24px;
 }
 
 .modal-content {
@@ -134,8 +135,6 @@ body {
 }
 
 #close-button:hover {
-    opacity: 75%;
-    box-shadow: 0px 0px 20px rgb(66, 5, 66);
     cursor: pointer;
 }
 
@@ -162,7 +161,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 10px;
+    gap: 4px;
 }
 
 .form-group {
@@ -171,13 +170,14 @@ body {
 }
 
 .form-group>input {
-    padding: 10px 40px 10px 15px;
+    padding: 10px;
     margin: 8px 0;
     display: inline-block;
     border: 2px solid rgba(14, 13, 13, 0.3);
     border-radius: 8px;
     box-sizing: border-box;
-    width: 600px;
+    height: 100%;
+    width: 40vw;
 }
 
 .input-focus {
@@ -225,7 +225,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    padding: 20px;
+    padding: 10px;
     font-size: 18px;
 }
 
@@ -233,7 +233,7 @@ body {
     display: block;
     border: none;
     border-radius: 8px;
-    padding: 6px 24px;
+    padding: 12px 24px;
     font-weight: bold;
     cursor: pointer;
     margin-left: 20px;

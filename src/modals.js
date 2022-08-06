@@ -5,7 +5,6 @@ function getFormattedDate(date) {
     let year = date.getFullYear();
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
 
     if (day < 10) {
         day = '0' + day;
@@ -13,14 +12,15 @@ function getFormattedDate(date) {
     if (month < 10) {
         month = '0' + month;
     }
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-function createButtons () {
+function createButtons (addButtonId) {
     const buttons = document.createElement('div');
     buttons.classList.add('buttons');
     const addButton = document.createElement('button');
     addButton.classList.add('add-button');
+    addButton.setAttribute('id', addButtonId);
     addButton.textContent = 'Add';
     const cancelButton = document.createElement('button');
     cancelButton.classList.add('cancel-button', 'cancel');
@@ -42,18 +42,18 @@ var taskFormContainer = (function () {
             formGroup.classList.add('form-group');
 
             const label = document.createElement('label');
-            label.setAttribute('for', property);
+            label.setAttribute('for', property.toLowerCase());
             label.textContent = property;
 
             const input = document.createElement('input');
             input.setAttribute('type', 'text');
-            input.setAttribute('name', property);
-            input.setAttribute('id', property);
+            input.setAttribute('name', property.toLowerCase());
+            input.setAttribute('id', property.toLowerCase());
             input.setAttribute('placeholder', 'Enter a ' + property);
             input.setAttribute('autocomplete', 'off');
             input.setAttribute('autocorrect', 'off');
             
-            if (property === 'Title') {
+            if (property !== 'Notes') {
                 // input.setAttribute('autofocus', 'autofocus');
                 input.setAttribute('required', 'required');
             }
@@ -78,7 +78,7 @@ var taskFormContainer = (function () {
         const input = document.createElement('input');
         input.setAttribute('type', 'datetime-local');
         input.setAttribute('name', 'due-date-time');
-        input.setAttribute('id', 'due-date');
+        input.setAttribute('id', 'due-date-time');
         input.setAttribute('required', 'required');
         input.setAttribute('value', getFormattedDate(new Date()));
         input.classList.add('modal-input');
@@ -124,12 +124,13 @@ var taskFormContainer = (function () {
         formGroup.appendChild(priorityContentDiv);
         form.appendChild(formGroup);
 
-        const buttons = createButtons();
+        const addTaskButtonId = 'add-Task';
+        const buttons = createButtons(addTaskButtonId);
         form.appendChild(buttons);
 
     }
 
-    const taskTextInputProperties = ['Title', 'Notes'];
+    const taskTextInputProperties = ['Title', 'List', 'Notes'];
     const priorityLevels = ['Low', 'Medium', 'High'];
     buildFormTextInputs(taskTextInputProperties);
     buildDueDateInput();
@@ -169,7 +170,8 @@ var listFormContainer = (function () {
 
     form.appendChild(formGroup);
 
-    const buttons = createButtons();
+    const addListButtonId = 'add-List';
+    const buttons = createButtons(addListButtonId);
     form.appendChild(buttons);
 
     return {
@@ -233,20 +235,51 @@ var modal = (function () {
         currentForm.replaceWith(listForm);
     }
 
-    var buildHeader = (text) => {
+    var buildHeader = (header) => {
         const modalHeaderText = document.querySelector('#modal-header-text');
-        modalHeaderText.textContent = text;
+        modalHeaderText.textContent = header;
     }
 
     const buildModalContainer = () => {
         document.body.appendChild(modal);
     }
 
+    const getModalElements = () => {
+        let modalElements = {
+            modal: document.querySelector('.modal'),
+            modalContent: document.querySelector('.modal-content'),
+        }
+        return modalElements;
+    }
+
+    const openModal = (modalName, id) => {
+        const modalElements = getModalElements();
+        modalElements.modal.classList.add('show-modal');
+        modalElements.modalContent.setAttribute('id', id);
+        buildHeader(modalName);
+
+        // Disable background scroll while modal is open
+        document.body.style.overflow = "hidden";
+    }
+
+    const closeModal = () => {
+        const form = document.querySelector('.modal-form');
+        form.reset();
+        const modalElements = getModalElements();
+        modalElements.modal.classList.remove('show-modal');
+        modalElements.modalContent.removeAttribute('id');
+
+        // Enable normal scroll when modal is closed
+        document.body.style.overflow = "auto"
+
+    }
+
     return {    
         buildModalContainer: buildModalContainer,
         getTaskModal: getTaskModal,
         getListModal: getListModal,
-        buildHeader: buildHeader,
+        openModal: openModal,
+        closeModal: closeModal
     }
 })();
 

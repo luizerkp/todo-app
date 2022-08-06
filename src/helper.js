@@ -34,7 +34,7 @@ var initialLoad = (function () {
     let lists = [];
 
     const buildDefaultLists = () => {
-        let defaultListsTitles = ['Groceries', 'Work', 'Personal'];
+        let defaultListsTitles = ['Personal', 'Work', 'Groceries'];
         let defaultLists = [];
         defaultListsTitles.forEach(function (listTitle) {
             let list = listFactory(listTitle, []);
@@ -68,19 +68,28 @@ var initialLoad = (function () {
         }
     }
 
-
     return {
         getListsList: () => listsList,
         buildDefaultLists: buildDefaultLists,
         getLists: () => lists
     }
-
 })();
 
-// var createTask = (function () {
-//     let lists = initialLoad.getLists();
+var createTask = (function () {
+    let lists = initialLoad.getLists();
 
-// })();
+    const createTaskItem = ( title, notes, dueDate, priority, list) => {
+        let task = tasksFactory(title, notes, dueDate, priority, list);
+        console.log(task);
+        // list.addTask(task);
+        // localStorage.setItem('lists', JSON.stringify(lists));
+
+        console.log(JSON.parse(localStorage.getItem('lists')));
+    }
+    return {
+        createTaskItem: createTaskItem
+    }
+})();
 
 var loadPage = (function() {
     const contentDiv = document.createElement('div');
@@ -96,23 +105,21 @@ var loadPage = (function() {
     };
 
     const createTask = () => {
+        const createTaskModalHeader = "Create Task";
+        const createTaskModalId = "task-modal";
         modal.getTaskModal();
-        const modalDiv = document.querySelector('.modal');
-        const modalContent = document.querySelector('.modal-content');
-        modalDiv.classList.add('show-modal');
-        modalContent.setAttribute('id', 'task-modal');
-        modal.buildHeader('Create Task');
-        events.addCancelEvents(modalDiv, modalContent);
+        modal.openModal(createTaskModalHeader, createTaskModalId);
+        events.addCancelEvents();
+
+        events.addTaskSubmitEvent();
     }
 
     const createList = () => {
+        const createListModalHeader = 'Create List';
+        const createListModalId = 'list-modal';
         modal.getListModal();
-        const modalDiv = document.querySelector('.modal');
-        modalDiv.classList.add('show-modal');
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.setAttribute('id', 'list-modal');
-        modal.buildHeader('Create List');
-        events.addCancelEvents(modalDiv, modalContent);
+        modal.openModal(createListModalHeader, createListModalId);
+        events.addCancelEvents();
     }
 
     return {
@@ -149,4 +156,4 @@ function storageAvailable(type) {
     }
 }
 
-export { loadPage };
+export { loadPage, createTask };
