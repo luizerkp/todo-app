@@ -160,6 +160,11 @@ var listModule = (function () {
     }
 
     const editListTitle= (oldTitle, newTitle) => {
+        
+        if (alreadyExists(newTitle)) {
+            return alert('List already exists');
+        }
+
         if (oldTitle.toLowerCase() === newTitle.toLowerCase()) {
             return;
         } else {
