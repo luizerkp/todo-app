@@ -25,137 +25,6 @@ function tasksFactory (title, notes = null, dueDate, priority, list) {
     }
 }
 
-var initialLoad = (function () {
-    const chekStorage = storageAvailable('localStorage');
-    const listsList = document.createElement('ul');
-    listsList.classList.add('lists-list');
-    let lists = [];
-
-    const buildDefaultLists = () => {
-        let defaultListsTitles = ['Personal', 'Work', 'Groceries'];
-        let defaultLists = [];
-        defaultListsTitles.forEach(function (listTitle) {
-            let list = listFactory(listTitle, []);
-            defaultLists.push(list);
-        });
-
-        defaultLists.forEach(function (list) {
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-item');
-            listItem.setAttribute('id', list.title.toLowerCase().replace(/\s/g, '-'));
-            listItem.innerText = list.title;
-            listsList.appendChild(listItem);
-        });
-
-        lists = defaultLists;
-        localStorage.setItem('lists', JSON.stringify(lists));
-    }
-
-    if (chekStorage) {
-        lists = JSON.parse(localStorage.getItem('lists'));
-        console.log(lists);
-        if (lists) {
-            lists.forEach(function (list) {
-                // console.log(Object.getPrototypeOf(list));
-                const listItem = document.createElement('li');
-                listItem.classList.add('list-item');
-                listItem.setAttribute('id', list.title.toLowerCase().replace(/\s/g, '-'));
-                listItem.textContent = list.title;
-                listsList.appendChild(listItem);
-            });
-        } else {
-            buildDefaultLists();
-        }
-    }
-
-    return {
-        // ul element listsList
-        getListsList: () => listsList,
-        buildDefaultLists: buildDefaultLists,
-        getLists: () => lists
-    }
-})();
-
-var createTask = (function () {
-    let lists = initialLoad.getLists();
-
-    const createTaskItem = ( title, notes, dueDate, priority, list) => {
-        let task = tasksFactory(title, notes, dueDate, priority, list);
-
-        lists.forEach(function (list) {
-            if (list.title.toLowerCase() === task.list.toLowerCase()) {
-                list.addTasks(task);
-            } else {
-                console.log('List not found');
-            }
-        });
-        localStorage.setItem('lists', JSON.stringify(lists));
-
-        console.log(JSON.parse(localStorage.getItem('lists')));
-    }
-    return {
-        createTaskItem: createTaskItem
-    }
-})();
-
-var createList = (function () {
-    const createListItem = (listTitle) => {
-        let list = listFactory(listTitle, []);
-        initialLoad.getLists().push(list);
-        localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
-        console.log(JSON.parse(localStorage.getItem('lists')));
-    }
-    return {
-        createListItem: createListItem
-    }
-})();
-
-var loadPage = (function() {
-    const contentDiv = document.createElement('div');
-    contentDiv.classList.add('container');
-
-    const sideMenuDiv = sideMenuContent.getSideMenuDiv();
-    contentDiv.appendChild(sideMenuDiv);
-
-    const buildPage = () => {
-        const header =  document.querySelector('#lists-header');
-        const listsList= initialLoad.getListsList();
-        header.insertAdjacentElement('afterend', listsList);
-    };
-
-    const createTask = () => {
-        const createTaskModalHeader = "Create Task";
-        const createTaskModalId = "task-modal";
-        // handle modal display
-        modal.getTaskModal();
-        modal.openModal(createTaskModalHeader, createTaskModalId);
-
-        // handle events listeners
-        events.addCancelEvents();
-        events.addTaskSubmitEvent();
-    }
-
-    const createList = () => {
-        const createListModalHeader = 'Create List';
-        const createListModalId = 'list-modal';
-
-        // handle modal display
-        modal.getListModal();
-        modal.openModal(createListModalHeader, createListModalId);
-
-        // handle events listeners
-        events.addCancelEvents();
-        events.addListSubmitEvent();
-    }
-
-    return {
-        createTask: createTask,
-        createList: createList,
-        buildPage: buildPage,
-        getContentDiv: () => contentDiv
-    }
-})();
-
 // source https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 function storageAvailable(type) {
     let storage;
@@ -182,4 +51,209 @@ function storageAvailable(type) {
     }
 }
 
-export { loadPage, createTask, createList };
+var initialLoad = (function () {
+    const chekStorage = storageAvailable('localStorage');
+    const listsList = document.createElement('ul');
+    listsList.classList.add('lists-list');
+    let lists = [];
+
+    const buildListItem = (item) => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('list-item');
+        listItem.setAttribute('id', item.title.toLowerCase().replace(/\s/g, '-'));
+
+        const editIcon = document.createElement('i');
+        editIcon.classList.add('material-icons-round', 'edit-list-icon');
+        editIcon.textContent = 'edit';
+        editIcon.setAttribute('data-title', item.title);
+
+        listItem.innerText = item.title;
+        listItem.appendChild(editIcon);
+
+        return listItem;
+
+    }
+
+    const buildDefaultLists = () => {
+        let defaultListsTitles = ['Personal', 'Work', 'Groceries'];
+        let defaultLists = [];
+        defaultListsTitles.forEach(function (listTitle) {
+            let list = listFactory(listTitle, []);
+            defaultLists.push(list);
+        });
+
+        defaultLists.forEach(function (list) {
+            let listItem = buildListItem(list);
+            listsList.appendChild(listItem);
+        });
+
+        lists = defaultLists;
+        localStorage.setItem('lists', JSON.stringify(lists));
+    }
+
+    if (chekStorage) {
+        lists = JSON.parse(localStorage.getItem('lists'));
+        console.log(lists);
+        if (lists) {
+            lists.forEach(function (list) {
+                let listItem = buildListItem(list);
+                listsList.appendChild(listItem);
+            });
+        } else {
+            buildDefaultLists();
+        }
+    }
+
+    return {
+        // ul element listsList
+        getListsList: () => listsList,
+        buildDefaultLists: buildDefaultLists,
+        getLists: () => lists
+    }
+})();
+
+var taskModule = (function () {
+    let lists = initialLoad.getLists();
+
+    const createTaskItem = ( title, notes, dueDate, priority, list) => {
+        let task = tasksFactory(title, notes, dueDate, priority, list);
+
+        lists.forEach(function (list) {
+            if (list.title.toLowerCase() === task.list.toLowerCase()) {
+                list.addTasks(task);
+            } else {
+                console.log('List not found');
+            }
+        });
+        localStorage.setItem('lists', JSON.stringify(lists));
+
+        console.log(JSON.parse(localStorage.getItem('lists')));
+    }
+    return {
+        createTaskItem: createTaskItem
+    }
+})();
+
+var listModule = (function () {
+    let lists = initialLoad.getLists();
+
+    const alreadyExists = (title) => {
+        let exists = false;
+        lists.some(function (list) {
+            if (list.title.toLowerCase() === title.toLowerCase()) {
+                exists = true;
+            }
+        });
+        return exists;
+    }
+
+    const createListItem = (listTitle) => {
+        let list = listFactory(listTitle, []);
+        if (!alreadyExists(listTitle)) {
+            initialLoad.getLists().push(list);
+            localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
+            console.log(JSON.parse(localStorage.getItem('lists')));
+            window.location.reload();
+        } else {
+            alert('List already exists');
+        }
+    }
+
+    const editListTitle= (oldTitle, newTitle) => {
+        if (oldTitle.toLowerCase() === newTitle.toLowerCase()) {
+            return;
+        } else {
+            lists.some(function (list) {
+                if (list.title.toLowerCase() === oldTitle.toLowerCase()) {
+                    list.title = newTitle;
+                }
+            });
+            localStorage.setItem('lists', JSON.stringify(lists));
+            window.location.reload();
+        }
+    }
+
+    const removeList = (listTitle) => {
+        if (!alreadyExists(listTitle)) {
+            alert('List not found');
+        } else {
+            lists.some(function (list, index) {
+                if (list.title.toLowerCase() === listTitle.toLowerCase()) {
+                    lists.splice(index, 1);
+                }
+            });
+        }
+        
+        localStorage.setItem('lists', JSON.stringify(lists));
+        window.location.reload();
+    }
+
+    return {
+        createListItem: createListItem,
+        editListTitle: editListTitle,
+        removeList: removeList
+    }
+})();
+
+var loadPage = (function() {
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('container');
+
+    const sideMenuDiv = sideMenuContent.getSideMenuDiv();
+    contentDiv.appendChild(sideMenuDiv);
+
+    const buildPage = () => {
+        const header =  document.querySelector('#lists-header');
+        const listsList= initialLoad.getListsList();
+        header.insertAdjacentElement('afterend', listsList);
+    };
+
+    const createTaskModal= () => {
+        const createTaskModalHeader = "Create Task";
+        const createTaskModalId = "task-modal";
+
+        // handle modal display
+        modal.getTaskModal();
+        modal.openModal(createTaskModalHeader, createTaskModalId);
+
+        // handle events listeners
+        events.addCancelEvents();
+        events.addTaskSubmitEvent();
+    }
+
+    const createListModal = () => {
+        const createListModalHeader = 'Create List';
+        const createListModalId = 'list-modal';
+
+        // handle modal display
+        modal.getListModal();
+        modal.openModal(createListModalHeader, createListModalId);
+
+        // handle events listeners
+        events.addCancelEvents();
+        events.addListSubmitEvent();
+    }
+
+    const createEditListModal = (listTitle) => {
+        const createEditListModalHeader = 'Edit List';
+        const createEditListModalId = 'edit-list-modal';
+        console.log(listTitle);
+        modal.getListEditModal(listTitle);
+        modal.openModal(createEditListModalHeader, createEditListModalId);
+
+        events.addCancelEvents();
+        events.addEditListEvent(listTitle);
+    }
+
+    return {
+        createTaskModal: createTaskModal,
+        createListModal: createListModal,
+        createEditListModal: createEditListModal,
+        buildPage: buildPage,
+        getContentDiv: () => contentDiv
+    }
+})();
+
+
+
+export { loadPage, taskModule, listModule };

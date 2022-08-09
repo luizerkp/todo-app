@@ -78,6 +78,27 @@ body {
 .task-item, .list-item {
     margin: 3px 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#lists-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit-list-icon {
+    font-size: 20px !important;
+    display: none;
+    cursor: pointer;
+    margin-left: 3px;
+    color: rgb(97, 93, 93);
+}
+
+#hiden {
+    display: none;
 }
 
 /* Styles the modal popup box and its content */

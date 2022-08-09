@@ -1,22 +1,31 @@
-import { loadPage, createTask, createList } from './helper.js';
+import { loadPage, taskModule, listModule } from './helper.js';
 import { modal } from './modals.js';
-
 
 var modalEvents = (function () {
     const addInitialModalEvents = () => {
-        let createTask = document.querySelector('.create-task-button');
-        let addList = document.querySelector('.add-list-button');
+        let createTaskEvent = document.querySelector('.create-task-button');
+        let addListEvent = document.querySelector('.add-list-button');
+        let editListEvents = document.querySelectorAll('.edit-list-icon');
 
-        createTask.addEventListener('click', function () {
-            loadPage.createTask();
+        createTaskEvent.addEventListener('click', function () {
+            loadPage.createTaskModal();
         });
 
-        addList.addEventListener('click', function () {
-            loadPage.createList();
+        addListEvent.addEventListener('click', function () {
+            loadPage.createListModal();
         });
+
+        editListEvents.forEach(function (editListEvent) {
+            editListEvent.addEventListener('click', function (e) {
+                let dataTitle = e.target.getAttribute('data-title');
+                loadPage.createEditListModal(dataTitle);
+            }
+            );
+        });
+
     }
     
-    const addCancelEventListeners = (modalDiv, modalContent) => {
+    const addCancelEventListeners = () => {
         const cancelButtons = document.querySelectorAll('.cancel');
         cancelButtons.forEach(button  => {
             button.addEventListener('click', function () {
@@ -36,10 +45,9 @@ var modalEvents = (function () {
             const taskDueDate = taskFormInfo['due-date-time'].value;
             const taskPriority = taskFormInfo['priority'].value;
             const taskList = taskFormInfo['list'].value;
-            createTask.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
+            taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
             // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskList);
             modal.closeModal();
-            
         }, false);
     }
 
@@ -49,16 +57,40 @@ var modalEvents = (function () {
                 e.preventDefault();
                 const listFormInfo = listForm.elements;
                 const listName = listFormInfo['title'].value;
-                createList.createListItem(listName);
+                listModule.createListItem(listName);
                 modal.closeModal();
             }, false);
+    }
+
+    const addEditListFormSubmitEventListener = (currentTitle) => {
+        const editListForm = document.querySelector('#list-edit-form');
+        editListForm.addEventListener('click', function (e) {
+            e.preventDefault();
+            const editListFormInfo = editListForm.elements;
+            const newListTitle = editListFormInfo['title'].value;
+            if (!e.target.classList.contains('edit-buttons')) {
+                return;
+            }
+
+            if (e.target.id === 'save-list-title') {
+                console.log(currentTitle, newListTitle);
+                listModule.editListTitle(currentTitle, newListTitle);
+            } 
+            
+            if (e.target.id === 'delete-list-title') {
+                listModule.removeList(currentTitle);
+            } 
+
+            modal.closeModal();
+        }, false);
     }
 
     return {
         addInitialModalEvents: addInitialModalEvents,
         addCancelEventListeners: addCancelEventListeners,
         addTaskSubmitEventListener: addTaskSubmitEventListener,
-        addListFormSubmitEventListener: addListFormSubmitEventListener
+        addListFormSubmitEventListener: addListFormSubmitEventListener,
+        addEditListFormSubmitEventListener: addEditListFormSubmitEventListener
     }
 })();
 
@@ -67,8 +99,8 @@ var events = (function () {
         modalEvents.addInitialModalEvents();
     }
 
-    const addCancelEvents = (modalDiv, modalContent) => {
-        modalEvents.addCancelEventListeners(modalDiv, modalContent);
+    const addCancelEvents = () => {
+        modalEvents.addCancelEventListeners();
     }
 
     const addTaskSubmitEvent = () => {
@@ -79,11 +111,16 @@ var events = (function () {
         modalEvents.addListFormSubmitEventListener();
     }
 
+    const addEditListEvent = (title) => {
+        modalEvents.addEditListFormSubmitEventListener(title);
+    }
+
     return {
         addInitialEventListeners: addInitialEventListeners,
         addCancelEvents: addCancelEvents,
         addTaskSubmitEvent: addTaskSubmitEvent,
-        addListSubmitEvent: addListSubmitEvent
+        addListSubmitEvent: addListSubmitEvent,
+        addEditListEvent: addEditListEvent
     }
 })();
 

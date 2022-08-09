@@ -1,6 +1,5 @@
 import githubLogo from './imgs/GitHubMarkSmallLight.png';
 
-
 // adds footer content to the page
 var footer = (function() {
     const footerDiv = document.createElement('div');

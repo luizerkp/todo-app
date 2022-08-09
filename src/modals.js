@@ -169,13 +169,52 @@ var listFormContainer = (function () {
     formGroup.appendChild(input);
 
     form.appendChild(formGroup);
+    
+ 
 
     const addListButtonId = 'add-List';
     const buttons = createButtons(addListButtonId);
-    form.appendChild(buttons);
+    form.appendChild(buttons);   
+    
+    const getListEditForm = (title) => {
+        // clone exiting form to build edit form and change id atribute to list-edit-form
+        const editForm = form.cloneNode(true);
+        editForm.id = 'list-edit-form';
+
+        // change title label text to 'New Title'
+        editForm.childNodes[0].childNodes[0].textContent = 'New Title';
+
+        // change title input value to title, remove placeholder attribute and add autofocus attribute
+        editForm.childNodes[0].childNodes[1].removeAttribute('placeholder');
+        editForm.childNodes[0].childNodes[1].setAttribute('value', title);
+        editForm.childNodes[0].childNodes[1].setAttribute('autofocus', 'autofocus');
+
+        // change add-List button to edit-List button 
+        editForm.childNodes[1].childNodes[0].textContent = 'Save';
+        editForm.childNodes[1].childNodes[0].id = 'save-list-title';
+        editForm.childNodes[1].childNodes[0].classList.remove('add-button');
+        editForm.childNodes[1].childNodes[0].classList.add('edit-buttons');
+        // editForm.childNodes[1].childNodes[0].setAttribute('type', 'button');
+
+
+        // chnage cancel button to delete button 
+        editForm.childNodes[1].childNodes[1].textContent = 'Delete';
+        editForm.childNodes[1].childNodes[1].id = 'delete-list-title';
+        editForm.childNodes[1].childNodes[1].removeAttribute('type');
+        editForm.childNodes[1].childNodes[1].classList.remove('cancel-button');
+        editForm.childNodes[1].childNodes[1].classList.remove('cancel');
+        editForm.childNodes[1].childNodes[1].classList.add('edit-buttons');
+
+        return editForm;
+    };
+    
+
+
+
 
     return {
         getListForm: () => form,
+        getListEditForm: getListEditForm,
     }
 })();
 
@@ -235,6 +274,12 @@ var modal = (function () {
         currentForm.replaceWith(listForm);
     }
 
+    const getListEditModal = (title) => {
+        const currentForm = document.querySelector('.modal-form');
+        const listEditForm = listFormContainer.getListEditForm(title);
+        currentForm.replaceWith(listEditForm);
+    }
+
     var buildHeader = (header) => {
         const modalHeaderText = document.querySelector('#modal-header-text');
         modalHeaderText.textContent = header;
@@ -278,6 +323,7 @@ var modal = (function () {
         buildModalContainer: buildModalContainer,
         getTaskModal: getTaskModal,
         getListModal: getListModal,
+        getListEditModal: getListEditModal,
         openModal: openModal,
         closeModal: closeModal
     }

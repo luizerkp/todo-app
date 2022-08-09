@@ -48,6 +48,7 @@ var listsContent = (function () {
     listsHeader.textContent = 'Lists';
     listsHeader.classList.add('title-text');
     listsHeader.setAttribute('id', 'lists-header');
+    
     listsDiv.appendChild(listsHeader);
     
     const addListButton = document.createElement('button');
