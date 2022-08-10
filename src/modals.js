@@ -31,6 +31,11 @@ function createButtons (addButtonId) {
     return buttons;
 }
 
+// provides pattern format for atrribute for no leading whitespace regex: /^(?:[^\s].*)$/
+// doubles as check for empty string 
+const noLeadingWhitespcePattern = '[^\\s].*'
+const inputPatternTitle = 'No leading whitespace or empty field';
+
 var taskFormContainer = (function () {
     const form = document.createElement('form');
     form.classList.add('modal-form');
@@ -56,6 +61,8 @@ var taskFormContainer = (function () {
             if (property !== 'Notes') {
                 // input.setAttribute('autofocus', 'autofocus');
                 input.setAttribute('required', 'required');
+                input.setAttribute('pattern', noLeadingWhitespcePattern);
+                input.setAttribute('title', inputPatternTitle);
             }
 
             input.classList.add('modal-input');
@@ -153,6 +160,7 @@ var listFormContainer = (function () {
     const label = document.createElement('label');
     label.setAttribute('for', 'title');
     label.textContent = 'Title';
+   
 
     const input = document.createElement('input');
     input.setAttribute('type', 'text');
@@ -162,6 +170,8 @@ var listFormContainer = (function () {
     input.setAttribute('required', 'required');
     input.setAttribute('autocomplete', 'off');
     input.setAttribute('autocorrect', 'off');
+    input.setAttribute('pattern', noLeadingWhitespcePattern);
+    input.setAttribute('title', inputPatternTitle);
 
     input.classList.add('modal-input');
 
@@ -174,7 +184,11 @@ var listFormContainer = (function () {
 
     const addListButtonId = 'add-List';
     const buttons = createButtons(addListButtonId);
-    form.appendChild(buttons);   
+    form.appendChild(buttons);
+    
+    const errorParagraph = document.createElement('p');
+    errorParagraph.setAttribute('id', 'error-paragraph');
+    form.appendChild(errorParagraph);
     
     const getListEditForm = (title) => {
         // clone exiting form to build edit form and change id atribute to list-edit-form
@@ -182,10 +196,11 @@ var listFormContainer = (function () {
         editForm.id = 'list-edit-form';
 
         // change title label text to 'New Title'
-        editForm.childNodes[0].childNodes[0].textContent = 'New Title';
+        editForm.childNodes[0].childNodes[0].textContent = '';
 
         // change title input value to title, remove placeholder attribute and add autofocus attribute
         editForm.childNodes[0].childNodes[1].removeAttribute('placeholder');
+        // editForm.childNodes[0].childNodes[1].removeAttribute('required');
         editForm.childNodes[0].childNodes[1].setAttribute('value', title);
         editForm.childNodes[0].childNodes[1].setAttribute('autofocus', 'autofocus');
 

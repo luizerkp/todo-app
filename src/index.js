@@ -28,7 +28,6 @@ var buildPageContent = (function (){
     document.body.appendChild(mainContainer);
     loadPage.buildPage();
     events.addInitialEventListeners();
-    
 })();
 
 var buildFooterContent = (function () {

@@ -8,29 +8,29 @@ var modalEvents = (function () {
         let editListEvents = document.querySelectorAll('.edit-list-icon');
 
         createTaskEvent.addEventListener('click', function () {
-            loadPage.createTaskModal();
+            return loadPage.createTaskModal();
         });
 
         addListEvent.addEventListener('click', function () {
-            loadPage.createListModal();
+            return loadPage.createListModal();
         });
 
         editListEvents.forEach(function (editListEvent) {
             editListEvent.addEventListener('click', function (e) {
                 let dataTitle = e.target.getAttribute('data-title');
-                loadPage.createEditListModal(dataTitle);
+                return loadPage.createEditListModal(dataTitle);
             }
             );
         });
 
     }
-    
+
     const addCancelEventListeners = () => {
         const cancelButtons = document.querySelectorAll('.cancel');
-        cancelButtons.forEach(button  => {
+        cancelButtons.forEach(button => {
             button.addEventListener('click', function () {
-                modal.closeModal();
-        }, false);
+                return modal.closeModal();
+            }, false);
         });
     }
 
@@ -38,50 +38,49 @@ var modalEvents = (function () {
         const taskForm = document.querySelector('#task-form');
         // console.log(taskForm);
         taskForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+            // e.preventDefault();
             const taskFormInfo = taskForm.elements;
             const taskName = taskFormInfo['title'].value;
             const taskNotes = taskFormInfo['notes'].value;
             const taskDueDate = taskFormInfo['due-date-time'].value;
             const taskPriority = taskFormInfo['priority'].value;
             const taskList = taskFormInfo['list'].value;
-            taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
+            
+            return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
             // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskList);
-            modal.closeModal();
+            // modal.closeModal();
         }, false);
     }
 
     const addListFormSubmitEventListener = () => {
-            const listForm = document.querySelector('#list-form');
-            listForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const listFormInfo = listForm.elements;
-                const listName = listFormInfo['title'].value;
-                listModule.createListItem(listName);
-                modal.closeModal();
-            }, false);
+        const listForm = document.querySelector('#list-form');
+        listForm.addEventListener('submit', function () {
+            // e.preventDefault();
+            // console.log('list form submit');
+            const listFormInfo = listForm.elements;
+            const listName = listFormInfo['title'].value;
+            return listModule.createListItem(listName);
+        }, false);
     }
 
     const addEditListFormSubmitEventListener = (currentTitle) => {
         const editListForm = document.querySelector('#list-edit-form');
+        const listActions = {
+            'save-list-title': listModule.editListTitle,
+            'delete-list-title': listModule.removeList
+        }
+
         editListForm.addEventListener('click', function (e) {
-            e.preventDefault();
             const editListFormInfo = editListForm.elements;
-            const newListTitle = editListFormInfo['title'].value;
-            if (!e.target.classList.contains('edit-buttons')) {
-                return;
+            const newListTitle = editListFormInfo['title'].value.trim();
+
+            if (!e.target.matches('button') || newListTitle.length === 0) {
+                return false;
+
+            } else {
+                // if id is save-list-title, editListTitle is called with newListTitle and currentTitle else deleteList is called with currentTitle
+                return listActions[e.target.id](currentTitle, newListTitle); 
             }
-
-            if (e.target.id === 'save-list-title') {
-                console.log(currentTitle, newListTitle);
-                listModule.editListTitle(currentTitle, newListTitle);
-            } 
-            
-            if (e.target.id === 'delete-list-title') {
-                listModule.removeList(currentTitle);
-            } 
-
-            modal.closeModal();
         }, false);
     }
 

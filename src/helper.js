@@ -3,17 +3,16 @@ import { modal } from "./modals.js";
 import { events } from "./events.js";
 
 var listFactory =  (title, tasks) => {
+    
     return {
         title: title,
         tasks: tasks,
-        addTasks: function (task) {
-            this.tasks.push(task);
-        },
-        removeTask: function (task) {
-            this.tasks.splice(this.tasks.indexOf(task), 1);
-        }
+        // removeTask (task) {
+        //     this.tasks.splice(this.tasks.indexOf(task), 1);
+        // }
     }
 }
+
 
 function tasksFactory (title, notes = null, dueDate, priority, list) {
     return {
@@ -118,11 +117,10 @@ var taskModule = (function () {
     const createTaskItem = ( title, notes, dueDate, priority, list) => {
         let task = tasksFactory(title, notes, dueDate, priority, list);
 
-        lists.forEach(function (list) {
+        lists.some(function (list) {
             if (list.title.toLowerCase() === task.list.toLowerCase()) {
-                list.addTasks(task);
-            } else {
-                console.log('List not found');
+                list.tasks.push(task);
+                return true;
             }
         });
         localStorage.setItem('lists', JSON.stringify(lists));
@@ -136,6 +134,9 @@ var taskModule = (function () {
 
 var listModule = (function () {
     let lists = initialLoad.getLists();
+    const listExistsMessage = 'List with this title already exists';   
+    const listNotFoundMessage = 'List not found';
+    const titleHasChangedMessage = 'List Title has changed';
 
     const alreadyExists = (title) => {
         let exists = false;
@@ -147,26 +148,71 @@ var listModule = (function () {
         return exists;
     }
 
+    const checkListTitles = (oldValue, newValue) => {
+        let listTitleStatus = {
+            newTitleExists: false,
+            oldAndNewTitleAreSame: false,
+        }
+
+        if (oldValue !== null && (newValue.toLowerCase() === oldValue.toLowerCase())) {
+            listTitleStatus.oldAndNewTitleAreSame = true;
+        }
+
+        if (alreadyExists(newValue)) {
+            listTitleStatus.newTitleExists = true;
+        }
+        
+        return listTitleStatus;
+    }
+
+    const alertUser = (listTitleStatus, action) => {
+        const errorType = {
+            'create': function () {
+                // if list title already exists - show error message
+                if (listTitleStatus.newTitleExists) {
+                    alert(listExistsMessage);
+                    return false;
+                }
+            },
+            'edit': function () {
+                // if title exists and is not the same as the old one - show error message
+                if (listTitleStatus.newTitleExists && !listTitleStatus.oldAndNewTitleAreSame) {
+                    alert(listExistsMessage);
+                } 
+            },
+            'delete': function () {
+                // if title does not exists - show error message
+                if (!listTitleStatus.newTitleExists) {
+                   alert(listNotFoundMessage);
+                } else if (!listTitleStatus.oldAndNewTitleAreSame) {
+                    alert(titleHasChangedMessage);
+                }
+            }
+        }
+        errorType[action]();
+    }
+
     const createListItem = (listTitle) => {
         let list = listFactory(listTitle, []);
-        if (!alreadyExists(listTitle)) {
-            initialLoad.getLists().push(list);
+        let listTitleStatus = checkListTitles(null, listTitle);
+        const actionType = 'create';
+
+        if (Object.values(listTitleStatus).includes(true)) {
+            return alertUser(listTitleStatus, actionType);
+        } else {
+            lists.push(list);
             localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
             console.log(JSON.parse(localStorage.getItem('lists')));
-            window.location.reload();
-        } else {
-            alert('List already exists');
         }
     }
 
     const editListTitle= (oldTitle, newTitle) => {
-        
-        if (alreadyExists(newTitle)) {
-            return alert('List already exists');
-        }
+        let listTitleStatus = checkListTitles(oldTitle, newTitle);
+        const actionType = 'edit';
 
-        if (oldTitle.toLowerCase() === newTitle.toLowerCase()) {
-            return;
+        // if new title exists and/or is the same as the old one call alertUser function else edit list title
+        if (Object.values(listTitleStatus).includes(true)) {
+            return alertUser(listTitleStatus, actionType);
         } else {
             lists.some(function (list) {
                 if (list.title.toLowerCase() === oldTitle.toLowerCase()) {
@@ -174,29 +220,32 @@ var listModule = (function () {
                 }
             });
             localStorage.setItem('lists', JSON.stringify(lists));
-            window.location.reload();
         }
     }
 
-    const removeList = (listTitle) => {
-        if (!alreadyExists(listTitle)) {
-            alert('List not found');
+    const removeList = (oldTitle, newTitle) => {
+        let listTitleStatus = checkListTitles(oldTitle, newTitle);
+        const actionType = 'delete';
+
+        // if new title exists and is not the same as the old one call alertUser function else remove list from lists array
+        if (Object.values(listTitleStatus).includes(false)) {
+            return alertUser(listTitleStatus, actionType);
         } else {
             lists.some(function (list, index) {
-                if (list.title.toLowerCase() === listTitle.toLowerCase()) {
+                if (list.title.toLowerCase() === newTitle.toLowerCase()) {
                     lists.splice(index, 1);
                 }
             });
         }
         
         localStorage.setItem('lists', JSON.stringify(lists));
-        window.location.reload();
     }
 
     return {
         createListItem: createListItem,
         editListTitle: editListTitle,
-        removeList: removeList
+        removeList: removeList,
+        alreadyExists: alreadyExists
     }
 })();
 
@@ -242,7 +291,7 @@ var loadPage = (function() {
     const createEditListModal = (listTitle) => {
         const createEditListModalHeader = 'Edit List';
         const createEditListModalId = 'edit-list-modal';
-        console.log(listTitle);
+
         modal.getListEditModal(listTitle);
         modal.openModal(createEditListModalHeader, createEditListModalId);
 
