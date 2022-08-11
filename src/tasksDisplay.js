@@ -2,8 +2,6 @@
 // import { modal } from './modals.js';
 // import { events } from './events.js';
 
-
-
 var formattedTasks = (function (){
     //  compare priority for task during the same day
     const comparePriorityAndTime = function (a, b) {
@@ -12,18 +10,19 @@ var formattedTasks = (function (){
             'Medium': 2,
             'Low': 3
         };
+
         // if dates are the same, sort by priority descending from high to low
         if (a.dueDate === b.dueDate) {
             if (priorityLevel[a.priority] > priorityLevel[b.priority]) {
                 return 1;
-            }
-            if (priorityLevel[a.priority] < priorityLevel[b.priority]) {
+            } else if (priorityLevel[a.priority] < priorityLevel[b.priority]) {
                 return -1;
+            } else {
+                return 0;
             }
-            return 0;
-        } else {
-            return 0;
-        }
+        } 
+        
+        return 0;
     }
     
     // returns an array of dates of length formatted as dateStrings
@@ -133,9 +132,10 @@ var formattedTasks = (function (){
     // let tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
 // })();
 
-// var sevenDaysTasks = (function () {
-//     let sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
-// })();
+var sevenDaysTasks = (function () {
+    let sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
+    console.log(sevenDaysTasksList);
+})();
 
 var allTasks = (function () {
     const list = document.createElement('ul');
