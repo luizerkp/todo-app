@@ -13,10 +13,12 @@ body {
     gap: 20px;
     padding: 0.5rem 3rem;
     height: 7rem;
-    background-color: #0c4a6e;;
+    background-color: #0c4a6e;
+    ;
     border-bottom: 3px solid #070707;
 }
-#header-content > h1 {
+
+#header-content>h1 {
     font-size: 44px;
     letter-spacing: 2px;
     text-shadow: 2px 0;
@@ -32,11 +34,11 @@ body {
 #header-icon {
     font-size: 64px;
     color: #292525;
-    
+
 }
 
 .side-menu {
-    background-color: rgb(223, 231, 231);    
+    background-color: rgb(230, 231, 238);
 }
 
 .title-text {
@@ -46,7 +48,8 @@ body {
     margin: 10px 30px 0px;
 }
 
-.create-task-button, .add-list-button {
+.create-task-button,
+.add-list-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,7 +66,8 @@ body {
     margin-top: 10px;
 }
 
-.tasks-list, .lists-list {
+.tasks-list,
+.lists-list {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -75,7 +79,8 @@ body {
     padding: 10px;
 }
 
-.task-item, .list-item {
+.task-item,
+.list-item {
     margin: 3px 0;
     cursor: pointer;
     display: flex;
@@ -120,7 +125,7 @@ body {
     margin-top: 10px;
 }
 
-#modal-header-text{
+#modal-header-text {
     font-size: 24px;
 }
 
@@ -250,7 +255,8 @@ body {
     font-size: 18px;
 }
 
-.add-button, .cancel-button {
+.add-button,
+.cancel-button {
     display: block;
     border: none;
     border-radius: 8px;
@@ -268,6 +274,52 @@ body {
 
 .cancel-button {
     background-color: lightpink;
+}
+
+#main-task-container {
+    background-image: url('../imgs/staryNightSky.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#tasks-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    flex: 1 1 auto;
+    gap: 10px;
+    margin-left: 75px;
+    height: 100%;
+}
+
+#tasks-list-container {
+    max-width: 450px;
+    height: 87%;
+    background-color: #f1eeee;
+    border-radius: 30px;
+}
+
+/* box shadow properties from uiverse.io by @adamgiebl  */
+#tasks-header-content {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 5px;
+    padding-left: 30px;
+    margin-left: 20px;
+    height: 40px;
+    max-width: 300px;
+    background: rgb(255, 255, 255);
+    border-radius: 50px;
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+        rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+        rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
+        rgba(0, 0, 0, 0.06) 0px 2px 1px,
+        rgba(0, 0, 0, 0.09) 0px 4px 2px,
+        rgba(0, 0, 0, 0.09) 0px 8px 4px,
+        rgba(0, 0, 0, 0.09) 0px 16px 8px,
+        rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
 
 /* Sticky Footer and credit */

@@ -1,6 +1,8 @@
 import { sideMenuContent } from "./sideMenu.js";
 import { modal } from "./modals.js";
 import { events } from "./events.js";
+import { taskDisplayController } from "./tasksDisplay.js";
+// import StaryNightSky from './imgs/staryNightSky.jpg';
 
 var listFactory =  (title, tasks) => {
     
@@ -103,11 +105,10 @@ var initialLoad = (function () {
         }
     }
 
+
     return {
-        // ul element listsList
         getListsList: () => listsList,
-        buildDefaultLists: buildDefaultLists,
-        getLists: () => lists
+        getLists: () => lists,
     }
 })();
 
@@ -127,8 +128,59 @@ var taskModule = (function () {
 
         console.log(JSON.parse(localStorage.getItem('lists')));
     }
+
+    // const removeTask = (task) => {
+    //     lists.some(function (list) {
+    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
+    //             list.tasks.splice(list.tasks.indexOf(task), 1);
+    //             return true;
+    //         }
+    //     });
+    //     localStorage.setItem('lists', JSON.stringify(lists));
+
+    //     console.log('New List: ', JSON.parse(localStorage.getItem('lists')));
+    // }
+
+    // const editTask = (task, newTitle, newNotes, newDueDate, newPriority, newList) => {
+    //     lists.some(function (list) {
+    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
+    //             list.tasks.splice(list.tasks.indexOf(task), 1);
+    //             return true;
+    //         }
+    //     });
+    //     task.title = newTitle;
+    //     task.notes = newNotes;
+    //     task.dueDate = newDueDate;
+    //     task.priority = newPriority;
+    //     task.list = newList;
+    //     lists.some(function (list) {
+    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
+    //             list.tasks.push(task);
+    //             return true;
+    //         }
+    //     });
+    //     localStorage.setItem('lists', JSON.stringify(lists));
+
+    //     console.log('New List: ', JSON.parse(localStorage.getItem('lists')));
+    // }
+
+    const getTasks = () => {
+        let tasks = [];
+        lists.forEach(function (list) {
+            list.tasks.forEach(function (task) {
+                tasks.push(task);
+            });
+        });
+
+        return tasks;
+    }
+
+
     return {
-        createTaskItem: createTaskItem
+        createTaskItem: createTaskItem,
+        // removeTask: removeTask,
+        // editTask: editTask,
+        getTasks: getTasks
     }
 })();
 
@@ -254,7 +306,12 @@ var loadPage = (function() {
     contentDiv.classList.add('container');
 
     const sideMenuDiv = sideMenuContent.getSideMenuDiv();
+    const tasksDisplayDiv = taskDisplayController.getMainTaskContainer();
+
     contentDiv.appendChild(sideMenuDiv);
+    contentDiv.appendChild(tasksDisplayDiv);
+
+  
 
     const buildPage = () => {
         const header =  document.querySelector('#lists-header');

@@ -6,13 +6,11 @@ function getFormattedDate(date) {
     let hours = date.getHours();
     let minutes = date.getMinutes();
 
-    // format date and time for datetime-local input
+    // format date and time for datet input
     day = day < 10 ? '0' + day : day;
     month = month < 10 ? '0' + month : month;
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
 
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    return `${year}-${month}-${day}`;
 }
 
 function createButtons (addButtonId) {
@@ -80,12 +78,12 @@ var taskFormContainer = (function () {
 
         const label = document.createElement('label');
         label.setAttribute('for', 'due-date');
-        label.textContent = 'Due Date and Time';
+        label.textContent = 'Due Date';
 
         const input = document.createElement('input');
-        input.setAttribute('type', 'datetime-local');
-        input.setAttribute('name', 'due-date-time');
-        input.setAttribute('id', 'due-date-time');
+        input.setAttribute('type', 'date');
+        input.setAttribute('name', 'due-date');
+        input.setAttribute('id', 'due-date');
         input.setAttribute('required', 'required');
         input.setAttribute('value', getFormattedDate(new Date()));
         input.classList.add('modal-input');
@@ -143,7 +141,6 @@ var taskFormContainer = (function () {
     buildDueDateInput();
     buildFromPriorityField(priorityLevels);
 
-
     return {
         getTaskForm: () => form,
     }
@@ -161,7 +158,6 @@ var listFormContainer = (function () {
     label.setAttribute('for', 'title');
     label.textContent = 'Title';
    
-
     const input = document.createElement('input');
     input.setAttribute('type', 'text');
     input.setAttribute('name', 'title');
@@ -180,8 +176,6 @@ var listFormContainer = (function () {
 
     form.appendChild(formGroup);
     
- 
-
     const addListButtonId = 'add-List';
     const buttons = createButtons(addListButtonId);
     form.appendChild(buttons);
@@ -223,10 +217,6 @@ var listFormContainer = (function () {
         return editForm;
     };
     
-
-
-
-
     return {
         getListForm: () => form,
         getListEditForm: getListEditForm,

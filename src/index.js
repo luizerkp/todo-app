@@ -2,10 +2,12 @@ import './css/style.css';
 import './css/normalize.css';
 // ****remember to import the css file or files that include what you want to use in your project to reduce build size****
 import '../node_modules/material-icons/iconfont/round.css';
+import './imgs/staryNightSky.jpg';
 import { footer } from './footerContent.js';
-import { loadPage } from './helper.js';
+import { loadPage } from './controller.js';
 import { modal } from './modals.js';
 import { events } from './events.js';
+
 
 var buildHeaderContent = (function () {
     const headerDiv = document.createElement('header');

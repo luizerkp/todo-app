@@ -1,4 +1,4 @@
-import { loadPage, taskModule, listModule } from './helper.js';
+import { loadPage, taskModule, listModule } from './controller.js';
 import { modal } from './modals.js';
 
 var modalEvents = (function () {
@@ -42,7 +42,7 @@ var modalEvents = (function () {
             const taskFormInfo = taskForm.elements;
             const taskName = taskFormInfo['title'].value;
             const taskNotes = taskFormInfo['notes'].value;
-            const taskDueDate = taskFormInfo['due-date-time'].value;
+            const taskDueDate = taskFormInfo['due-date'].value;
             const taskPriority = taskFormInfo['priority'].value;
             const taskList = taskFormInfo['list'].value;
             
