@@ -1,5 +1,6 @@
 import { loadPage, taskModule, listModule } from './controller.js';
 import { modal } from './modals.js';
+import { taskDisplayController } from './tasksDisplay.js';
 
 var modalEvents = (function () {
     const addInitialModalEvents = () => {
@@ -93,9 +94,52 @@ var modalEvents = (function () {
     }
 })();
 
+var taskDisplayEvents = (function () {
+    const addInitialTaskDisplayEvents = () => {
+        const taskShortcuts = document.querySelectorAll('.task-shortcut');
+        const taskShortcutsEvents = {
+            'today': taskDisplayController.getTodayList,
+            'tomorrow': taskDisplayController.getTomorrowList,
+            'next-7-days': taskDisplayController.getSevenDayList,
+            'all-tasks': taskDisplayController.getAllTasksList
+        }
+
+        taskShortcuts.forEach(shortcut => {
+            shortcut.addEventListener('click', function (e) {
+                const taskId = e.target.getAttribute('id');
+                const tasksContentDiv = document.querySelector('.tasks-content');
+                tasksContentDiv.removeAttribute('id');
+                return taskShortcutsEvents[taskId]();
+            });
+        });
+    }
+    return {
+        addInitialTaskDisplayEvents: addInitialTaskDisplayEvents
+    }
+})();
+
+var listDisplayEvents = (function () {
+    const addInitialListDisplayEvents = () => {
+        const listShortcuts = document.querySelectorAll('.list-shortcut');
+        listShortcuts.forEach(shortcut => {
+            shortcut.addEventListener('click', function (e) {
+                const listTitle = e.target.getAttribute('data-title');
+                const tasksContentDiv = document.querySelector('.tasks-content');
+                tasksContentDiv.removeAttribute('id');
+                return taskDisplayController.getListTasksList(listTitle);
+            });
+        });
+    }
+    return {
+        addInitialListDisplayEvents: addInitialListDisplayEvents
+    }
+})();
+
 var events = (function () {
     const addInitialEventListeners = () => {
         modalEvents.addInitialModalEvents();
+        taskDisplayEvents.addInitialTaskDisplayEvents();
+        listDisplayEvents.addInitialListDisplayEvents();
     }
 
     const addCancelEvents = () => {

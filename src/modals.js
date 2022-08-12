@@ -3,8 +3,6 @@ function getFormattedDate(date) {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
 
     // format date and time for datet input
     day = day < 10 ? '0' + day : day;

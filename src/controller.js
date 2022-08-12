@@ -9,12 +9,8 @@ var listFactory =  (title, tasks) => {
     return {
         title: title,
         tasks: tasks,
-        // removeTask (task) {
-        //     this.tasks.splice(this.tasks.indexOf(task), 1);
-        // }
     }
 }
-
 
 function tasksFactory (title, notes = null, dueDate, priority, list) {
     return {
@@ -60,15 +56,16 @@ var initialLoad = (function () {
 
     const buildListItem = (item) => {
         const listItem = document.createElement('li');
-        listItem.classList.add('list-item');
-        listItem.setAttribute('id', item.title.toLowerCase().replace(/\s/g, '-'));
+        listItem.classList.add('list-shortcut');
+        listItem.dataset.title = item.title;
 
         const editIcon = document.createElement('i');
         editIcon.classList.add('material-icons-round', 'edit-list-icon');
         editIcon.textContent = 'edit';
-        editIcon.setAttribute('data-title', item.title);
 
-        listItem.innerText = item.title;
+        editIcon.dataset.title = item.title;
+        
+        listItem.innerText = item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title;
         listItem.appendChild(editIcon);
 
         return listItem;
@@ -314,9 +311,9 @@ var loadPage = (function() {
   
 
     const buildPage = () => {
-        const header =  document.querySelector('#lists-header');
+        const addListButton =  document.querySelector('.add-list-button');
         const listsList= initialLoad.getListsList();
-        header.insertAdjacentElement('afterend', listsList);
+        addListButton.insertAdjacentElement('afterend', listsList);
     };
 
     const createTaskModal= () => {

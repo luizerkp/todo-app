@@ -24,11 +24,11 @@ var tasksContent = (function () {
 
     const tasksShortcuts = ['Today', 'Tomorrow', 'Next 7 days', 'All Tasks'];
 
-    tasksShortcuts.forEach(function (task) {
+    tasksShortcuts.forEach(function (shortcut) {
         const taskItem = document.createElement('li');
-        taskItem.classList.add('task-item');
-        taskItem.setAttribute('id', task.toLowerCase().replace(/\s/g, '-'));
-        taskItem.textContent = task;
+        taskItem.classList.add('task-shortcut');
+        taskItem.setAttribute('id', shortcut.toLowerCase().replace(/\s/g, '-'));
+        taskItem.textContent = shortcut;
         tasksList.appendChild(taskItem);
     });
 
