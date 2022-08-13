@@ -201,7 +201,7 @@ var listFormContainer = (function () {
         editForm.childNodes[1].childNodes[0].id = 'save-list-title';
         editForm.childNodes[1].childNodes[0].classList.remove('add-button');
         editForm.childNodes[1].childNodes[0].classList.add('edit-buttons');
-        // editForm.childNodes[1].childNodes[0].setAttribute('type', 'button');
+        // editForm.childNodes[1].childNodes[0].setAttribute('name', 'edit-list-title');
 
 
         // chnage cancel button to delete button 
@@ -211,6 +211,7 @@ var listFormContainer = (function () {
         editForm.childNodes[1].childNodes[1].classList.remove('cancel-button');
         editForm.childNodes[1].childNodes[1].classList.remove('cancel');
         editForm.childNodes[1].childNodes[1].classList.add('edit-buttons');
+        // editForm.childNodes[1].childNodes[1].setAttribute('name', 'delete-list-title');
 
         return editForm;
     };

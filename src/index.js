@@ -8,7 +8,6 @@ import { loadPage } from './controller.js';
 import { modal } from './modals.js';
 import { events } from './events.js';
 
-
 var buildHeaderContent = (function () {
     const headerDiv = document.createElement('header');
     headerDiv.setAttribute('id', 'header-content');

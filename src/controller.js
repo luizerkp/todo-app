@@ -2,13 +2,17 @@ import { sideMenuContent } from "./sideMenu.js";
 import { modal } from "./modals.js";
 import { events } from "./events.js";
 import { taskDisplayController } from "./tasksDisplay.js";
-// import StaryNightSky from './imgs/staryNightSky.jpg';
+import { v4 as uuidv4 } from '../node_modules/uuid'
+
+
+// console.log(uuidv4())
+
 
 var listFactory =  (title, tasks) => {
-    
     return {
         title: title,
         tasks: tasks,
+        id: uuidv4()
     }
 }
 
@@ -18,7 +22,8 @@ function tasksFactory (title, notes = null, dueDate, priority, list) {
         notes: notes,
         dueDate: dueDate,
         priority: priority,
-        list: list
+        list: list,
+        id: uuidv4()
     }
 }
 
@@ -57,12 +62,14 @@ var initialLoad = (function () {
     const buildListItem = (item) => {
         const listItem = document.createElement('li');
         listItem.classList.add('list-shortcut');
+        listItem.dataset.id = item.id;
         listItem.dataset.title = item.title;
 
         const editIcon = document.createElement('i');
         editIcon.classList.add('material-icons-round', 'edit-list-icon');
         editIcon.textContent = 'edit';
 
+        editIcon.dataset.id = item.id;
         editIcon.dataset.title = item.title;
         
         listItem.innerText = item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title;
@@ -118,11 +125,10 @@ var taskModule = (function () {
         lists.some(function (list) {
             if (list.title.toLowerCase() === task.list.toLowerCase()) {
                 list.tasks.push(task);
+                localStorage.setItem('lists', JSON.stringify(lists));
                 return true;
             }
         });
-        localStorage.setItem('lists', JSON.stringify(lists));
-
         console.log(JSON.parse(localStorage.getItem('lists')));
     }
 
@@ -161,140 +167,51 @@ var taskModule = (function () {
     //     console.log('New List: ', JSON.parse(localStorage.getItem('lists')));
     // }
 
-    const getTasks = () => {
-        let tasks = [];
-        lists.forEach(function (list) {
-            list.tasks.forEach(function (task) {
-                tasks.push(task);
-            });
-        });
-
-        return tasks;
-    }
-
 
     return {
         createTaskItem: createTaskItem,
         // removeTask: removeTask,
         // editTask: editTask,
-        getTasks: getTasks
     }
 })();
 
 var listModule = (function () {
     let lists = initialLoad.getLists();
-    const listExistsMessage = 'List with this title already exists';   
-    const listNotFoundMessage = 'List not found';
-    const titleHasChangedMessage = 'List Title has changed';
-
-    const alreadyExists = (title) => {
-        let exists = false;
-        lists.some(function (list) {
-            if (list.title.toLowerCase() === title.toLowerCase()) {
-                exists = true;
-            }
-        });
-        return exists;
-    }
-
-    const checkListTitles = (oldValue, newValue) => {
-        let listTitleStatus = {
-            newTitleExists: false,
-            oldAndNewTitleAreSame: false,
-        }
-
-        if (oldValue !== null && (newValue.toLowerCase() === oldValue.toLowerCase())) {
-            listTitleStatus.oldAndNewTitleAreSame = true;
-        }
-
-        if (alreadyExists(newValue)) {
-            listTitleStatus.newTitleExists = true;
-        }
-        
-        return listTitleStatus;
-    }
-
-    const alertUser = (listTitleStatus, action) => {
-        const errorType = {
-            'create': function () {
-                // if list title already exists - show error message
-                if (listTitleStatus.newTitleExists) {
-                    alert(listExistsMessage);
-                    return false;
-                }
-            },
-            'edit': function () {
-                // if title exists and is not the same as the old one - show error message
-                if (listTitleStatus.newTitleExists && !listTitleStatus.oldAndNewTitleAreSame) {
-                    alert(listExistsMessage);
-                } 
-            },
-            'delete': function () {
-                // if title does not exists - show error message
-                if (!listTitleStatus.newTitleExists) {
-                   alert(listNotFoundMessage);
-                } else if (!listTitleStatus.oldAndNewTitleAreSame) {
-                    alert(titleHasChangedMessage);
-                }
-            }
-        }
-        errorType[action]();
-    }
 
     const createListItem = (listTitle) => {
         let list = listFactory(listTitle, []);
-        let listTitleStatus = checkListTitles(null, listTitle);
-        const actionType = 'create';
-
-        if (Object.values(listTitleStatus).includes(true)) {
-            return alertUser(listTitleStatus, actionType);
-        } else {
             lists.push(list);
             localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
             console.log(JSON.parse(localStorage.getItem('lists')));
-        }
     }
 
-    const editListTitle= (oldTitle, newTitle) => {
-        let listTitleStatus = checkListTitles(oldTitle, newTitle);
-        const actionType = 'edit';
-
-        // if new title exists and/or is the same as the old one call alertUser function else edit list title
-        if (Object.values(listTitleStatus).includes(true)) {
-            return alertUser(listTitleStatus, actionType);
+    const editListTitle= (currentListTitle, listId, newListTitle) => {
+        // if title has changed, update list title in localStorage
+        if (currentListTitle === newListTitle) {
+            return false;
         } else {
             lists.some(function (list) {
-                if (list.title.toLowerCase() === oldTitle.toLowerCase()) {
-                    list.title = newTitle;
+                if (list.id === listId) {
+                    list.title = newListTitle;
+                    localStorage.setItem('lists', JSON.stringify(lists));
                 }
             });
-            localStorage.setItem('lists', JSON.stringify(lists));
-        }
+        }    
     }
 
-    const removeList = (oldTitle, newTitle) => {
-        let listTitleStatus = checkListTitles(oldTitle, newTitle);
-        const actionType = 'delete';
-
-        // if new title exists and is not the same as the old one call alertUser function else remove list from lists array
-        if (Object.values(listTitleStatus).includes(false)) {
-            return alertUser(listTitleStatus, actionType);
-        } else {
-            lists.some(function (list, index) {
-                if (list.title.toLowerCase() === newTitle.toLowerCase()) {
-                    lists.splice(index, 1);
-                }
-            });
-        }
-        
-        localStorage.setItem('lists', JSON.stringify(lists));
+    const removeList = (listId) => {
+        lists.some(function (list, index) {
+            if (list.id === listId) {
+                lists.splice(index, 1);
+                localStorage.setItem('lists', JSON.stringify(lists));
+            }
+        });
     }
 
     return {
         createListItem: createListItem,
         editListTitle: editListTitle,
-        removeList: removeList,
-        alreadyExists: alreadyExists
+        removeList: removeList
     }
 })();
 
@@ -307,8 +224,6 @@ var loadPage = (function() {
 
     contentDiv.appendChild(sideMenuDiv);
     contentDiv.appendChild(tasksDisplayDiv);
-
-  
 
     const buildPage = () => {
         const addListButton =  document.querySelector('.add-list-button');
@@ -342,15 +257,15 @@ var loadPage = (function() {
         events.addListSubmitEvent();
     }
 
-    const createEditListModal = (listTitle) => {
+    const createEditListModal = (listTitle, listId) => {
         const createEditListModalHeader = 'Edit List';
         const createEditListModalId = 'edit-list-modal';
-
+        console.log(listTitle, listId);
         modal.getListEditModal(listTitle);
         modal.openModal(createEditListModalHeader, createEditListModalId);
 
         events.addCancelEvents();
-        events.addEditListEvent(listTitle);
+        events.addEditListEvent(listTitle, listId);
     }
 
     return {
@@ -361,7 +276,5 @@ var loadPage = (function() {
         getContentDiv: () => contentDiv
     }
 })();
-
-
 
 export { loadPage, taskModule, listModule };

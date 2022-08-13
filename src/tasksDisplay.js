@@ -15,11 +15,7 @@ function buildTasksUl(tasks) {
 
         const taskTitleItemDiv = document.createElement('div');
         taskTitleItemDiv.classList.add('task-item-title-text');
-        taskTitleItemDiv.dataset.title = task.title;
-        taskTitleItemDiv.dataset.notes = task.notes;
-        taskTitleItemDiv.dataset.dueDate = task.dueDate;
-        taskTitleItemDiv.dataset.priority = task.priority;
-        taskTitleItemDiv.dataset.list = task.list;
+        taskTitleItemDiv.dataset.id = task.id
 
         const taskTitleItemText = document.createElement('p');
         taskTitleItemText.textContent = task.title.length > 25 ? task.title.substring(0, 25) + '...' : task.title;
@@ -113,11 +109,13 @@ var formattedTasks = (function (){
     
     // extracts tasks from current lists
     let tasks = [];
-    currentLists.forEach(list => {
-        list.tasks.forEach(task => {
-            tasks.push(task);
+    if (currentLists) {
+        currentLists.forEach(list => {
+            list.tasks.forEach(task => {
+                tasks.push(task);
+            });
         });
-    });
+    }
 
     // sort all current tasks by due date
     let allTasksSortedByDate = sortArrayByDuedate(tasks);

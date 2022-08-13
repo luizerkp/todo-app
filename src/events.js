@@ -19,7 +19,8 @@ var modalEvents = (function () {
         editListEvents.forEach(function (editListEvent) {
             editListEvent.addEventListener('click', function (e) {
                 let dataTitle = e.target.getAttribute('data-title');
-                return loadPage.createEditListModal(dataTitle);
+                let dataId = e.target.getAttribute('data-id');
+                return loadPage.createEditListModal(dataTitle, dataId);
             }
             );
         });
@@ -37,51 +38,46 @@ var modalEvents = (function () {
 
     const addTaskSubmitEventListener = () => {
         const taskForm = document.querySelector('#task-form');
-        // console.log(taskForm);
-        taskForm.addEventListener('submit', function (e) {
-            // e.preventDefault();
+        taskForm.addEventListener('submit', function () {
             const taskFormInfo = taskForm.elements;
-            const taskName = taskFormInfo['title'].value;
-            const taskNotes = taskFormInfo['notes'].value;
-            const taskDueDate = taskFormInfo['due-date'].value;
-            const taskPriority = taskFormInfo['priority'].value;
-            const taskList = taskFormInfo['list'].value;
-            
+            const taskName = taskFormInfo['title'].value.trim();
+            const taskNotes = taskFormInfo['notes'].value.trim();
+            const taskDueDate = taskFormInfo['due-date'].value.trim();
+            const taskPriority = taskFormInfo['priority'].value.trim();
+            const taskList = taskFormInfo['list'].value.trim();           
             return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
-            // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskList);
-            // modal.closeModal();
         }, false);
     }
 
     const addListFormSubmitEventListener = () => {
         const listForm = document.querySelector('#list-form');
         listForm.addEventListener('submit', function () {
-            // e.preventDefault();
-            // console.log('list form submit');
             const listFormInfo = listForm.elements;
-            const listName = listFormInfo['title'].value;
-            return listModule.createListItem(listName);
+            const listName = listFormInfo['title'].value.trim();
+
+            if (listName.length === 0) {
+                return false;
+            } else {
+                return listModule.createListItem(listName);
+            }
         }, false);
     }
 
-    const addEditListFormSubmitEventListener = (currentTitle) => {
+    const addEditListFormSubmitEventListener = (currentListTitle, currentListId) => {
         const editListForm = document.querySelector('#list-edit-form');
-        const listActions = {
-            'save-list-title': listModule.editListTitle,
-            'delete-list-title': listModule.removeList
-        }
 
         editListForm.addEventListener('click', function (e) {
             const editListFormInfo = editListForm.elements;
             const newListTitle = editListFormInfo['title'].value.trim();
-
-            if (!e.target.matches('button') || newListTitle.length === 0) {
+            // e.preventDefault();
+            if (newListTitle.length === 0) {
                 return false;
-
-            } else {
-                // if id is save-list-title, editListTitle is called with newListTitle and currentTitle else deleteList is called with currentTitle
-                return listActions[e.target.id](currentTitle, newListTitle); 
+            } else if (e.target.id === 'save-list-title') {
+                return listModule.editListTitle(currentListTitle, currentListId, newListTitle);
+            } else if (e.target.id === 'delete-list-title') {
+                return listModule.removeList(currentListId);
             }
+
         }, false);
     }
 
@@ -154,8 +150,8 @@ var events = (function () {
         modalEvents.addListFormSubmitEventListener();
     }
 
-    const addEditListEvent = (title) => {
-        modalEvents.addEditListFormSubmitEventListener(title);
+    const addEditListEvent = (title, id) => {
+        modalEvents.addEditListFormSubmitEventListener(title, id);
     }
 
     return {
