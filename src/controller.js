@@ -16,13 +16,14 @@ var listFactory =  (title, tasks) => {
     }
 }
 
-function tasksFactory (title, notes = null, dueDate, priority, list) {
+function tasksFactory (title, notes = null, dueDate, priority, listTitle, listId) {
     return {
         title: title,
         notes: notes,
         dueDate: dueDate,
         priority: priority,
-        list: list,
+        listTitle: listTitle,
+        listId: listId,
         id: uuidv4()
     }
 }
@@ -119,11 +120,11 @@ var initialLoad = (function () {
 var taskModule = (function () {
     let lists = initialLoad.getLists();
 
-    const createTaskItem = ( title, notes, dueDate, priority, list) => {
-        let task = tasksFactory(title, notes, dueDate, priority, list);
+    const createTaskItem = ( title, notes, dueDate, priority, listTitle, listId) => {
+        let task = tasksFactory(title, notes, dueDate, priority, listTitle, listId);
 
         lists.some(function (list) {
-            if (list.title.toLowerCase() === task.list.toLowerCase()) {
+            if (list.id === task.listId) {
                 list.tasks.push(task);
                 localStorage.setItem('lists', JSON.stringify(lists));
                 return true;

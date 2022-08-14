@@ -54,7 +54,7 @@ var taskFormContainer = (function () {
             input.setAttribute('autocomplete', 'off');
             input.setAttribute('autocorrect', 'off');
             
-            if (property !== 'Notes') {
+            if (property === 'Title') {
                 // input.setAttribute('autofocus', 'autofocus');
                 input.setAttribute('required', 'required');
                 input.setAttribute('pattern', noLeadingWhitespcePattern);
@@ -62,12 +62,36 @@ var taskFormContainer = (function () {
             }
 
             input.classList.add('modal-input');
-
             formGroup.appendChild(label);
             formGroup.appendChild(input);
-
             form.appendChild(formGroup);
         });
+    }
+
+    const buildSelectInput = (lists) => {
+        const formGroup = document.createElement('div');
+        formGroup.classList.add('form-group');
+
+        const label = document.createElement('label');
+        label.setAttribute('for', 'list-select');
+        label.textContent = 'List';
+
+        const select = document.createElement('select');
+        select.setAttribute('name', 'list-select');
+        select.setAttribute('id', 'list-select');
+        select.classList.add('modal-input');
+
+        lists.forEach(function (list) {
+            const option = document.createElement('option');
+            option.setAttribute('value', list.title);
+            option.dataset.id = list.id;
+            option.textContent = list.title;
+            select.appendChild(option);
+        });
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(select);
+        form.appendChild(formGroup);
     }
 
     const buildDueDateInput = () => {
@@ -133,9 +157,14 @@ var taskFormContainer = (function () {
 
     }
 
-    const taskTextInputProperties = ['Title', 'List', 'Notes'];
+    const taskTextInputProperties = ['Title', 'Notes'];
     const priorityLevels = ['Low', 'Medium', 'High'];
+    const lists = JSON.parse(localStorage.getItem('lists'));
+  
     buildFormTextInputs(taskTextInputProperties);
+    if (lists) {
+        buildSelectInput(lists);
+    }
     buildDueDateInput();
     buildFromPriorityField(priorityLevels);
 

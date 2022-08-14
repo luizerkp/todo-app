@@ -44,8 +44,9 @@ var modalEvents = (function () {
             const taskNotes = taskFormInfo['notes'].value.trim();
             const taskDueDate = taskFormInfo['due-date'].value.trim();
             const taskPriority = taskFormInfo['priority'].value.trim();
-            const taskList = taskFormInfo['list'].value.trim();           
-            return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskList);
+            const taskListTitle = taskFormInfo['list-select'].value; 
+            const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
+            return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
         }, false);
     }
 
@@ -120,9 +121,10 @@ var listDisplayEvents = (function () {
         listShortcuts.forEach(shortcut => {
             shortcut.addEventListener('click', function (e) {
                 const listTitle = e.target.getAttribute('data-title');
+                const listId = e.target.getAttribute('data-id');
                 const tasksContentDiv = document.querySelector('.tasks-content');
                 tasksContentDiv.removeAttribute('id');
-                return taskDisplayController.getListTasksList(listTitle);
+                return taskDisplayController.getListTasksList(listTitle, listId);
             });
         });
     }

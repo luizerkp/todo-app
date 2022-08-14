@@ -26,7 +26,7 @@ function buildTasksUl(tasks) {
         const taskDueDateItemText = document.createElement('p');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
         const dayOfweek = task.dueDate.split(' ')[0];
         const month = task.dueDate.split(' ')[1];
         const dayNumber = task.dueDate.split(' ')[2];
@@ -39,11 +39,11 @@ function buildTasksUl(tasks) {
         taskItem.appendChild(taskDueDateItemDiv);
         tasksUl.appendChild(taskItem);
     });
-    
+
     return tasksUl;
 }
 
-var formattedTasks = (function (){
+var formattedTasks = (function () {
     //  compare priority for task during the same day
     const comparePriorityAndTime = function (a, b) {
         const priorityLevel = {
@@ -61,12 +61,12 @@ var formattedTasks = (function (){
             } else {
                 return 0;
             }
-        } 
+        }
         return 0;
     }
-    
+
     // returns an array of dates of length formatted as dateStrings
-    const getFormatedDaysArray = function(start, numDays) {
+    const getFormatedDaysArray = function (start, numDays) {
         let formattedDays = [];
         formattedDays.push(start.toDateString());
 
@@ -94,19 +94,19 @@ var formattedTasks = (function (){
         ));
         return sortedArr;
     }
-    const formatDateString = function (arr){
+    const formatDateString = function (arr) {
         let formattedArr = arr.map(obj => {
-            let formattedDate = obj.dueDate.split('').splice(0,4).join('') + '-' + obj.dueDate.split('').splice(4,2).join('') + '-' + obj.dueDate.split('').splice(6,2).join('');
-            formattedDate = new Date(formattedDate+'T00:00:00');
+            let formattedDate = obj.dueDate.split('').splice(0, 4).join('') + '-' + obj.dueDate.split('').splice(4, 2).join('') + '-' + obj.dueDate.split('').splice(6, 2).join('');
+            formattedDate = new Date(formattedDate + 'T00:00:00');
             formattedDate = formattedDate.toDateString();
-            return {...obj, dueDate: formattedDate};
+            return { ...obj, dueDate: formattedDate };
         });
         return formattedArr;
     }
-    
+
     // gets curent list of lists 
     let currentLists = JSON.parse(localStorage.getItem('lists'));
-    
+
     // extracts tasks from current lists
     let tasks = [];
     if (currentLists) {
@@ -155,11 +155,16 @@ var formattedTasks = (function (){
         return sevenDaysFormattedTasks;
     }
 
-    const getListFormattedTasks = function (list) {
-        let listFormattedTasks = allSortedTasksAndFormated.filter(task => task.list === list);
+    const getListFormattedTasks = function (listId) {
+        let listFormattedTasks = allSortedTasksAndFormated.filter(task => task.listId === listId);
         return listFormattedTasks;
     }
-        
+
+    const getFormattedTaskDetails = function (taskId) {
+        let formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
+        return formattedTaskDetails;
+    }
+
     // console.log(allSortedTasksAndFormated);
 
     return {
@@ -167,13 +172,14 @@ var formattedTasks = (function (){
         getTodayFormattedTasks: getTodayFormattedTasks,
         getTomorrowFormattedTasks: getTomorrowFormattedTasks,
         getSevenDaysFormattedTasks: getSevenDaysFormattedTasks,
-        getListFormattedTasks: getListFormattedTasks
+        getListFormattedTasks: getListFormattedTasks,
+        getFormattedTaskDetails: getFormattedTaskDetails
     }
 })();
 
 var todayTasks = (function () {
     let todayTasksList = formattedTasks.getTodayFormattedTasks();
-    const todayStr= 'today';
+    const todayStr = 'today';
     const todayTaskUl = buildTasksUl(todayTasksList, todayStr);
 
     return {
@@ -183,7 +189,7 @@ var todayTasks = (function () {
 
 var tomorrowTasks = (function () {
     let tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
-    const tomorrowStr= 'tomorrow';
+    const tomorrowStr = 'tomorrow';
     const tomorrowTaskUl = buildTasksUl(tomorrowTasksList, tomorrowStr);
 
     return {
@@ -206,15 +212,16 @@ var allTasks = (function () {
     const allTasksStr = 'all-tasks';
     const allTasksUl = buildTasksUl(allTasksList, allTasksStr);
     // console.log(tasks);
-    
+
     return {
         getAllTasksUl: () => allTasksUl
     }
 })();
 
+
 var lists = (function () {
-    const buildListTasksUl = (list) => {
-        let listTasks = formattedTasks.getListFormattedTasks(list);
+    const buildListTasksUl = (listId) => {
+        let listTasks = formattedTasks.getListFormattedTasks(listId);
         const listTasksUl = buildTasksUl(listTasks);
         return listTasksUl;
     }
@@ -222,6 +229,7 @@ var lists = (function () {
         buildListTasksUl: buildListTasksUl
     }
 })();
+
 
 var tasksDetails = (function () {
     const tasksDetailsContainer = document.createElement('div');
@@ -235,7 +243,33 @@ var tasksDetails = (function () {
     const priorityPara = document.createElement('p');
     const listPara = document.createElement('p');
 
+    const closeIcon = document.createElement('i');
+    closeIcon.classList.add('material-icons-round');
+    closeIcon.setAttribute('id', 'close-button');
+    closeIcon.classList.add('cancel');
+    closeIcon.textContent = 'close';
+
+    tasksDetailsContainer.appendChild(closeIcon);
+
+    const getTasksDetails = (taskId) => {
+        let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
+        titlePara.textContent = taskDetails.title;
+        notesPara.textContent = taskDetails.notes;
+        dueDatePara.textContent = taskDetails.dueDate;
+        priorityPara.textContent = taskDetails.priority;
+        listPara.textContent = taskDetails.listId;
+        tasksDetailsContainer.appendChild(titlePara);
+        tasksDetailsContainer.appendChild(notesPara);
+        tasksDetailsContainer.appendChild(dueDatePara);
+        tasksDetailsContainer.appendChild(priorityPara);
+        tasksDetailsContainer.appendChild(listPara);
+        return tasksDetailsContainer;
+    }
     
+    return {
+        getTasksDetails: getTasksDetails
+    }
+
 })();
 
 var taskDisplayController = (function () {
@@ -252,10 +286,10 @@ var taskDisplayController = (function () {
 
     const tasksListContainer = document.createElement('div');
     tasksListContainer.setAttribute('id', 'tasks-list-container');
-    
+
     const tasksSubContainer = document.createElement('div');
     tasksSubContainer.setAttribute('id', 'tasks-sub-container');
-    
+
     const listOfTasks = document.createElement('ul');
     listOfTasks.classList.add('list-of-tasks');
 
@@ -307,11 +341,11 @@ var taskDisplayController = (function () {
         taskList.replaceWith(allTasksUl);
     }
 
-    const getListTasksList = (list) => {
+    const getListTasksList = (listTitle, listId) => {
         const taskList = document.querySelector('.list-of-tasks');
-        const headerText = list;
+        const headerText = listTitle;
         buildHeader(headerText);
-        const listTasksUl = lists.buildListTasksUl(list);
+        const listTasksUl = lists.buildListTasksUl(listId);
         taskList.replaceWith(listTasksUl);
     }
 
