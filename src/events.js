@@ -94,24 +94,41 @@ var modalEvents = (function () {
 var taskDisplayEvents = (function () {
     const addInitialTaskDisplayEvents = () => {
         const taskShortcuts = document.querySelectorAll('.task-shortcut');
-        const taskShortcutsEvents = {
-            'today': taskDisplayController.getTodayList,
-            'tomorrow': taskDisplayController.getTomorrowList,
-            'next-7-days': taskDisplayController.getSevenDayList,
-            'all-tasks': taskDisplayController.getAllTasksList
-        }
+        // const taskShortcutsEvents = {
+        //     'today': taskDisplayController.getTodayList,
+        //     'tomorrow': taskDisplayController.getTomorrowList,
+        //     'next-7-days': taskDisplayController.getSevenDayList,
+        //     'all-tasks': taskDisplayController.getAllTasksList
+        // }
 
         taskShortcuts.forEach(shortcut => {
             shortcut.addEventListener('click', function (e) {
                 const taskId = e.target.getAttribute('id');
-                const tasksContentDiv = document.querySelector('.tasks-content');
-                tasksContentDiv.removeAttribute('id');
-                return taskShortcutsEvents[taskId]();
+                // const tasksContentDiv = document.querySelector('.tasks-content');
+                // tasksContentDiv.removeAttribute('id');
+                return taskDisplayController.selectTimeFrame(taskId);
             });
         });
     }
+
+    const addTaskDetailsEvent = () => {
+        const taskItems = document.querySelectorAll('.task-item');
+        const taskDetailsDiv = document.querySelector('.task-details-container');
+        taskItems.forEach(taskItem => {
+            taskItem.addEventListener('click', function () {
+                const taskId = taskItem.getAttribute('data-id');
+                if (taskDetailsDiv.getAttribute('id' === 'hidden')) {
+                    taskDetailsDiv.removeAttribute('id');
+                }
+                // console.log(taskId);
+                return taskDisplayController.getTaskDetails(taskId);
+            });
+        });
+    }
+
     return {
-        addInitialTaskDisplayEvents: addInitialTaskDisplayEvents
+        addInitialTaskDisplayEvents: addInitialTaskDisplayEvents,
+        addTaskDetailsEvent: addTaskDetailsEvent
     }
 })();
 
@@ -123,7 +140,6 @@ var listDisplayEvents = (function () {
                 const listTitle = e.target.getAttribute('data-title');
                 const listId = e.target.getAttribute('data-id');
                 const tasksContentDiv = document.querySelector('.tasks-content');
-                tasksContentDiv.removeAttribute('id');
                 return taskDisplayController.getListTasksList(listTitle, listId);
             });
         });
@@ -156,12 +172,17 @@ var events = (function () {
         modalEvents.addEditListFormSubmitEventListener(title, id);
     }
 
+    const addTaskDetailsEvent = () => {
+        // console.log('adding task details event');
+        taskDisplayEvents.addTaskDetailsEvent();
+    }
     return {
         addInitialEventListeners: addInitialEventListeners,
         addCancelEvents: addCancelEvents,
         addTaskSubmitEvent: addTaskSubmitEvent,
         addListSubmitEvent: addListSubmitEvent,
-        addEditListEvent: addEditListEvent
+        addEditListEvent: addEditListEvent,
+        addTaskDetailsEvent: addTaskDetailsEvent
     }
 })();
 

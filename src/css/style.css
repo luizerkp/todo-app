@@ -101,6 +101,9 @@ p {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border: solid 1px transparent;
+    border-radius: 8px;
+    padding-left: 10px;
 }
 
 #lists-header {
@@ -117,7 +120,7 @@ p {
     color: rgb(97, 93, 93);
 }
 
-#hiden {
+#hidden {
     display: none;
 }
 
@@ -301,14 +304,15 @@ p {
     flex-direction: column;
     /* flex: 1 1 auto; */
     gap: 2px;
-    margin-left: 75px;
+    margin-left: 50px;
+    margin-right: 50px;
     height: 100%;
 }
 
 #tasks-sub-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 2px;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 500px));
+    gap: 45px;
     height: 100%;
 }
 
@@ -316,11 +320,11 @@ p {
     grid-column: 1 / 2;
 }
 
-.tasks-details-container {
+.task-details-container {
     grid-column: 2 / 3;
 }
 
-#tasks-list-container, .tasks-details-container {
+#tasks-list-container, .task-details-container {
     max-width: 450px;
     margin-bottom: 20px;
     background-color: #f1eeee;
@@ -371,13 +375,14 @@ p {
     border: solid 1px transparent;
     border-radius: 8px;
 }
+
 .task-item-title-text, .task-item-due-date-text {
     font-size: 1rem;
     font-weight: bold;
 }
 
-.task-item:hover { 
-   background-color: #dfdede;
+.task-item:hover, .task-shortcut:hover, .list-shortcut:hover {
+    background-color: #cfcfcf;
 }  
 
 

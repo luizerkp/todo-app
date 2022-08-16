@@ -73,7 +73,7 @@ var initialLoad = (function () {
         editIcon.dataset.id = item.id;
         editIcon.dataset.title = item.title;
         
-        listItem.innerText = item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title;
+        listItem.innerText = item.title.length > 14 ? item.title.substring(0, 14) + '...' : item.title;
         listItem.appendChild(editIcon);
 
         return listItem;

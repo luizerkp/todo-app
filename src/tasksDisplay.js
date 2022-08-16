@@ -1,6 +1,6 @@
 // import { loadPage } from './controller.js';
 // import { modal } from './modals.js';
-// import { events } from './events.js'
+import { events } from './events.js'
 
 
 // create ul element with tasks 
@@ -12,10 +12,10 @@ function buildTasksUl(tasks) {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-item');
         taskItem.classList.add(task.priority.toLowerCase());
+        taskItem.dataset.id = task.id;
 
         const taskTitleItemDiv = document.createElement('div');
         taskTitleItemDiv.classList.add('task-item-title-text');
-        taskTitleItemDiv.dataset.id = task.id
 
         const taskTitleItemText = document.createElement('p');
         taskTitleItemText.textContent = task.title.length > 25 ? task.title.substring(0, 25) + '...' : task.title;
@@ -233,8 +233,7 @@ var lists = (function () {
 
 var tasksDetails = (function () {
     const tasksDetailsContainer = document.createElement('div');
-    tasksDetailsContainer.setAttribute('id', 'hiden');
-    tasksDetailsContainer.classList.add('tasks-details-container');
+    tasksDetailsContainer.classList.add('task-details-container');
 
     const titlePara = document.createElement('p');
     titlePara.classList.add('title-text');
@@ -243,21 +242,13 @@ var tasksDetails = (function () {
     const priorityPara = document.createElement('p');
     const listPara = document.createElement('p');
 
-    const closeIcon = document.createElement('i');
-    closeIcon.classList.add('material-icons-round');
-    closeIcon.setAttribute('id', 'close-button');
-    closeIcon.classList.add('cancel');
-    closeIcon.textContent = 'close';
-
-    tasksDetailsContainer.appendChild(closeIcon);
-
     const getTasksDetails = (taskId) => {
         let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
         titlePara.textContent = taskDetails.title;
         notesPara.textContent = taskDetails.notes;
         dueDatePara.textContent = taskDetails.dueDate;
         priorityPara.textContent = taskDetails.priority;
-        listPara.textContent = taskDetails.listId;
+        listPara.textContent = taskDetails.listTitle;
         tasksDetailsContainer.appendChild(titlePara);
         tasksDetailsContainer.appendChild(notesPara);
         tasksDetailsContainer.appendChild(dueDatePara);
@@ -276,11 +267,15 @@ var taskDisplayController = (function () {
     const mainTaskContainer = document.createElement('div');
     mainTaskContainer.setAttribute('id', 'main-task-container');
 
+    const taskDetailsContainer = document.createElement('div');
+    taskDetailsContainer.classList.add('task-details-container');
+    taskDetailsContainer.setAttribute('id', 'hidden');
+
     const tasksHeaderDiv = document.createElement('div');
     tasksHeaderDiv.setAttribute('id', 'tasks-header');
 
     const tasksHeaderContent = document.createElement('h1');
-    tasksHeaderContent.textContent = 'Placeholder';
+    tasksHeaderContent.textContent = 'Pending Tasks';
 
     tasksHeaderContent.setAttribute('id', 'tasks-header-content');
 
@@ -295,11 +290,11 @@ var taskDisplayController = (function () {
 
     const tasksContentDiv = document.createElement('div');
     tasksContentDiv.classList.add('tasks-content');
-    tasksContentDiv.setAttribute('id', 'hiden');
 
     tasksListContainer.appendChild(listOfTasks);
     tasksHeaderDiv.appendChild(tasksHeaderContent);
     tasksSubContainer.appendChild(tasksListContainer);
+    tasksSubContainer.appendChild(taskDetailsContainer);
 
     tasksContentDiv.appendChild(tasksHeaderDiv);
     tasksContentDiv.appendChild(tasksSubContainer);
@@ -307,6 +302,18 @@ var taskDisplayController = (function () {
     const buildHeader = (header) => {
         const headerText = document.querySelector('#tasks-header-content');
         headerText.textContent = header.length > 25 ? header.substring(0, 25) + '...' : header;
+    }
+    const selectTimeFrame = (timeframe) => {
+        const taskTimFrames = {
+            'today': getTodayList,
+            'tomorrow': getTomorrowList,
+            'next-7-days': getSevenDayList,
+            'all-tasks': getAllTasksList
+        }
+        taskTimFrames[timeframe]();
+
+        // add event listener to list tasks ul to display task details
+        events.addTaskDetailsEvent();
     }
 
     const getTodayList = () => {
@@ -347,17 +354,31 @@ var taskDisplayController = (function () {
         buildHeader(headerText);
         const listTasksUl = lists.buildListTasksUl(listId);
         taskList.replaceWith(listTasksUl);
+
+        // add event listener to list tasks ul to display task details
+        events.addTaskDetailsEvent();
+    }
+    const getTaskDetails = (taskId) => {
+        const taskDetailsDiv = document.querySelector('.task-details-container');
+        if (taskDetailsDiv.getAttribute('id') === 'hidden') {
+            taskDetailsDiv.removeAttribute('id');
+        }
+        const taskDetails = tasksDetails.getTasksDetails(taskId);
+        taskDetailsDiv.replaceWith(taskDetails);
+    }
+    const hideTaskDetails = () => {
+        const taskDetailsDiv = document.querySelector('.task-details-container');
+        taskDetailsDiv.setAttribute('id', 'hidden');
     }
 
     mainTaskContainer.appendChild(tasksContentDiv);
 
     return {
         getMainTaskContainer: () => mainTaskContainer,
-        getTodayList: getTodayList,
-        getTomorrowList: getTomorrowList,
-        getSevenDayList: getSevenDayList,
-        getAllTasksList: getAllTasksList,
-        getListTasksList: getListTasksList
+        selectTimeFrame: selectTimeFrame,
+        getListTasksList: getListTasksList,
+        getTaskDetails: getTaskDetails,
+        hideTaskDetails: hideTaskDetails
     }
 })();
 
