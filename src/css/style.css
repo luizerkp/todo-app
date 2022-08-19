@@ -46,7 +46,7 @@ p {
     background-color: rgb(230, 231, 238);
 }
 
-.title-text {
+.title-text, .task-details-header {
     font-size: 24px;
     font-weight: bold;
     color: #292525;
@@ -384,7 +384,23 @@ p {
 .task-item:hover, .task-shortcut:hover, .list-shortcut:hover {
     background-color: #cfcfcf;
 }  
+.task-details-container {
+    display: flex;
+    flex-direction: column;
+}
+.task-details-header {
+    text-align: center;
+}
 
+.task-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 auto;
+    gap: 10px;
+    margin-top: 20px; 
+
+}
 
 /* Sticky Footer and credit */
 .footer {

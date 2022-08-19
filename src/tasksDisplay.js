@@ -235,8 +235,17 @@ var tasksDetails = (function () {
     const tasksDetailsContainer = document.createElement('div');
     tasksDetailsContainer.classList.add('task-details-container');
 
+    const tasksDetailsHeader = document.createElement('h1');
+    tasksDetailsHeader.classList.add('task-details-header');
+    tasksDetailsHeader.innerText = 'Task Details';
+
+    tasksDetailsContainer.appendChild(tasksDetailsHeader);
+
+    const tasksDetails = document.createElement('div');
+    tasksDetails.classList.add('task-details');
+
     const titlePara = document.createElement('p');
-    titlePara.classList.add('title-text');
+    titlePara.classList.add('task-title');
     const notesPara = document.createElement('p');
     const dueDatePara = document.createElement('p');
     const priorityPara = document.createElement('p');
@@ -249,11 +258,12 @@ var tasksDetails = (function () {
         dueDatePara.textContent = taskDetails.dueDate;
         priorityPara.textContent = taskDetails.priority;
         listPara.textContent = taskDetails.listTitle;
-        tasksDetailsContainer.appendChild(titlePara);
-        tasksDetailsContainer.appendChild(notesPara);
-        tasksDetailsContainer.appendChild(dueDatePara);
-        tasksDetailsContainer.appendChild(priorityPara);
-        tasksDetailsContainer.appendChild(listPara);
+        tasksDetails.appendChild(titlePara);
+        tasksDetails.appendChild(notesPara);
+        tasksDetails.appendChild(dueDatePara);
+        tasksDetails.appendChild(priorityPara);
+        tasksDetails.appendChild(listPara);
+        tasksDetailsContainer.appendChild(tasksDetails);
         return tasksDetailsContainer;
     }
     
