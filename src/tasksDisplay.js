@@ -241,36 +241,34 @@ var tasksDetails = (function () {
 
     tasksDetailsContainer.appendChild(tasksDetailsHeader);
 
-    const tasksDetails = document.createElement('div');
-    tasksDetails.classList.add('task-details');
-
-    const titlePara = document.createElement('p');
-    titlePara.classList.add('task-title');
-    const notesPara = document.createElement('p');
-    const dueDatePara = document.createElement('p');
-    const priorityPara = document.createElement('p');
-    const listPara = document.createElement('p');
+    const tasksDetailsDiv = document.createElement('div');
+    tasksDetailsDiv.classList.add('task-details');
 
     const getTasksDetails = (taskId) => {
         let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
-        titlePara.textContent = taskDetails.title;
-        notesPara.textContent = taskDetails.notes;
-        dueDatePara.textContent = taskDetails.dueDate;
-        priorityPara.textContent = taskDetails.priority;
-        listPara.textContent = taskDetails.listTitle;
-        tasksDetails.appendChild(titlePara);
-        tasksDetails.appendChild(notesPara);
-        tasksDetails.appendChild(dueDatePara);
-        tasksDetails.appendChild(priorityPara);
-        tasksDetails.appendChild(listPara);
-        tasksDetailsContainer.appendChild(tasksDetails);
+
+        // reset tasks details div to prevent duplicate tasks info
+        tasksDetailsDiv.innerHTML = '';
+
+        for (let [key, value] of Object.entries(taskDetails)) {
+            if (key !== 'listId' && key !== 'id') {
+                let header = document.createElement('h2');
+                header.classList.add('task-details-sub-header');
+                let para = document.createElement('p');
+                para.classList.add('task-details-para');
+                header.textContent = key[0].toUpperCase() + key.substring(1);
+                para.textContent = value;
+                tasksDetailsDiv.appendChild(header);
+                tasksDetailsDiv.appendChild(para);
+            }
+        }
+        tasksDetailsContainer.appendChild(tasksDetailsDiv);
         return tasksDetailsContainer;
     }
     
     return {
         getTasksDetails: getTasksDetails
     }
-
 })();
 
 var taskDisplayController = (function () {
@@ -375,6 +373,7 @@ var taskDisplayController = (function () {
         }
         const taskDetails = tasksDetails.getTasksDetails(taskId);
         taskDetailsDiv.replaceWith(taskDetails);
+        // taskDetailsDiv.replaceWith(taskDetails);
     }
     const hideTaskDetails = () => {
         const taskDetailsDiv = document.querySelector('.task-details-container');

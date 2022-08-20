@@ -151,7 +151,7 @@ var taskFormContainer = (function () {
         formGroup.appendChild(priorityContentDiv);
         form.appendChild(formGroup);
 
-        const addTaskButtonId = 'add-Task';
+        const addTaskButtonId = 'add-task';
         const buttons = createButtons(addTaskButtonId);
         form.appendChild(buttons);
 
@@ -203,7 +203,7 @@ var listFormContainer = (function () {
 
     form.appendChild(formGroup);
     
-    const addListButtonId = 'add-List';
+    const addListButtonId = 'add-list';
     const buttons = createButtons(addListButtonId);
     form.appendChild(buttons);
     

@@ -38,7 +38,11 @@ var modalEvents = (function () {
 
     const addTaskSubmitEventListener = () => {
         const taskForm = document.querySelector('#task-form');
+        const addBtn = document.querySelector('#add-task');
+
         taskForm.addEventListener('submit', function () {
+            addBtn.setAttribute('disabled', 'disabled');
+            addBtn.style.cursor = 'wait';
             const taskFormInfo = taskForm.elements;
             const taskName = taskFormInfo['title'].value.trim();
             const taskNotes = taskFormInfo['notes'].value.trim();
@@ -46,13 +50,17 @@ var modalEvents = (function () {
             const taskPriority = taskFormInfo['priority'].value.trim();
             const taskListTitle = taskFormInfo['list-select'].value; 
             const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
+            console.log(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
             return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
         }, false);
     }
 
     const addListFormSubmitEventListener = () => {
         const listForm = document.querySelector('#list-form');
+        const addBtn = document.querySelector('#add-list');
         listForm.addEventListener('submit', function () {
+            addBtn.setAttribute('disabled', 'disabled');
+            addBtn.style.cursor = 'wait';
             const listFormInfo = listForm.elements;
             const listName = listFormInfo['title'].value.trim();
 
