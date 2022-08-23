@@ -11,7 +11,6 @@ import { events } from './events.js';
 var buildHeaderContent = (function () {
     const headerDiv = document.createElement('header');
     headerDiv.setAttribute('id', 'header-content');
-
     const viewListIcon = document.createElement('i');
     viewListIcon.classList.add('material-icons-round');
     viewListIcon.setAttribute('id','header-icon');
@@ -28,13 +27,7 @@ var buildPageContent = (function (){
     const mainContainer = loadPage.getContentDiv();
     document.body.appendChild(mainContainer);
     loadPage.buildPage();
-    events.addInitialEventListeners();
-})();
-
-var buildFooterContent = (function () {
-    footer.buildFooter();
-})();
-
-var buildModal = (function () {
     modal.buildModalContainer();
+    events.addInitialEventListeners();
+    footer.buildFooter();
 })();

@@ -85,20 +85,28 @@ var formattedTasks = (function () {
         return sortedArr;
     }
 
-    // sort tasks by due date changes due date from yyyy-mm-dd to yyyymmdd
+    // sort tasks by due date using yyyymmdd as format for comparison 
     const sortArrayByDuedate = function (arr) {
         let sortedArr = arr.sort((objADueDate, objBDueDate) => (
-            objADueDate.dueDate = objADueDate.dueDate.split('-').join(''),
-            objBDueDate.dueDate = objBDueDate.dueDate.split('-').join(''),
-            objADueDate.dueDate - objBDueDate.dueDate
+            objADueDate.dueDate.split('-').join('') - objBDueDate.dueDate.split('-').join('')
         ));
+        // console.log(sortedArr)
         return sortedArr;
     }
-    const formatDateString = function (arr) {
+    const formatDateString = function (arr) { 
+        // time necessary for Date() constructor set to 00:00:00
+        let time = 'T00:00:00'
+
         let formattedArr = arr.map(obj => {
-            let formattedDate = obj.dueDate.split('').splice(0, 4).join('') + '-' + obj.dueDate.split('').splice(4, 2).join('') + '-' + obj.dueDate.split('').splice(6, 2).join('');
-            formattedDate = new Date(formattedDate + 'T00:00:00');
+            // format dueDate from yyyy-mm-dd to yyyy-mm-ddT00:00:00
+            let formattedDate = obj.dueDate + time;
+
+            // new date format will be like this sample: "Wed Aug 24 2022 00:00:00 GMT-0700 (Pacific Daylight Time)"
+            formattedDate = new Date(formattedDate);
+
+            // date format will be like this sample: "Wed Aug 24 2022"
             formattedDate = formattedDate.toDateString();
+            
             return { ...obj, dueDate: formattedDate };
         });
         return formattedArr;
@@ -161,6 +169,7 @@ var formattedTasks = (function () {
     }
 
     const getFormattedTaskDetails = function (taskId) {
+        // console.log(allSortedTasksAndFormated)
         let formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
         return formattedTaskDetails;
     }
@@ -230,7 +239,6 @@ var lists = (function () {
     }
 })();
 
-
 var tasksDetails = (function () {
     const tasksDetailsContainer = document.createElement('div');
     tasksDetailsContainer.classList.add('task-details-container');
@@ -246,9 +254,30 @@ var tasksDetails = (function () {
 
     const getTasksDetails = (taskId) => {
         let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
+        // console.log(taskDetails);
 
         // reset tasks details div to prevent duplicate tasks info
         tasksDetailsDiv.innerHTML = '';
+
+        const editDIv = document.createElement('div');
+        editDIv.setAttribute('id', 'edit-div')
+
+        const editBtn = document.createElement('button');
+        editBtn.setAttribute('id', 'edit-task-btn')
+        editBtn.textContent = "Edit"
+        editBtn.dataset.id = taskId
+        editBtn.dataset.listId = taskDetails.listId
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.setAttribute('id', 'delete-task-btn');
+        deleteBtn.textContent = "Delete"
+        deleteBtn.dataset.id = taskId
+        deleteBtn.dataset.listId = taskDetails.listId
+
+        editDIv.appendChild(editBtn)
+        editDIv.appendChild(deleteBtn)
+
+        tasksDetailsDiv.appendChild(editDIv);
 
         for (let [key, value] of Object.entries(taskDetails)) {
             if (key !== 'listId' && key !== 'id') {
@@ -256,13 +285,15 @@ var tasksDetails = (function () {
                 header.classList.add('task-details-sub-header');
                 let para = document.createElement('p');
                 para.classList.add('task-details-para');
-                header.textContent = key[0].toUpperCase() + key.substring(1);
+                header.innerText = key[0].toUpperCase() + key.substring(1);
                 para.textContent = value;
                 tasksDetailsDiv.appendChild(header);
                 tasksDetailsDiv.appendChild(para);
             }
         }
+
         tasksDetailsContainer.appendChild(tasksDetailsDiv);
+
         return tasksDetailsContainer;
     }
     
@@ -311,6 +342,15 @@ var taskDisplayController = (function () {
         const headerText = document.querySelector('#tasks-header-content');
         headerText.textContent = header.length > 25 ? header.substring(0, 25) + '...' : header;
     }
+    // hides the task details div
+    const hideTaskDetails = () => {
+        const taskDetailsContainer = document.querySelector('.task-details-container');
+
+        if (taskDetailsContainer.getAttribute('id') !== 'hidden') {
+            taskDetailsContainer.setAttribute('id', 'hidden');
+        }
+    }
+
     const selectTimeFrame = (timeframe) => {
         const taskTimFrames = {
             'today': getTodayList,
@@ -319,6 +359,9 @@ var taskDisplayController = (function () {
             'all-tasks': getAllTasksList
         }
         taskTimFrames[timeframe]();
+
+        // hide taks details div
+        hideTaskDetails();
 
         // add event listener to list tasks ul to display task details
         events.addTaskDetailsEvent();
@@ -363,6 +406,9 @@ var taskDisplayController = (function () {
         const listTasksUl = lists.buildListTasksUl(listId);
         taskList.replaceWith(listTasksUl);
 
+        // hide task details div
+        hideTaskDetails();
+
         // add event listener to list tasks ul to display task details
         events.addTaskDetailsEvent();
     }
@@ -373,13 +419,7 @@ var taskDisplayController = (function () {
         }
         const taskDetails = tasksDetails.getTasksDetails(taskId);
         taskDetailsDiv.replaceWith(taskDetails);
-        // taskDetailsDiv.replaceWith(taskDetails);
     }
-    const hideTaskDetails = () => {
-        const taskDetailsDiv = document.querySelector('.task-details-container');
-        taskDetailsDiv.setAttribute('id', 'hidden');
-    }
-
     mainTaskContainer.appendChild(tasksContentDiv);
 
     return {
@@ -387,7 +427,6 @@ var taskDisplayController = (function () {
         selectTimeFrame: selectTimeFrame,
         getListTasksList: getListTasksList,
         getTaskDetails: getTaskDetails,
-        hideTaskDetails: hideTaskDetails
     }
 })();
 

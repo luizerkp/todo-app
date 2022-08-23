@@ -102,18 +102,10 @@ var modalEvents = (function () {
 var taskDisplayEvents = (function () {
     const addInitialTaskDisplayEvents = () => {
         const taskShortcuts = document.querySelectorAll('.task-shortcut');
-        // const taskShortcutsEvents = {
-        //     'today': taskDisplayController.getTodayList,
-        //     'tomorrow': taskDisplayController.getTomorrowList,
-        //     'next-7-days': taskDisplayController.getSevenDayList,
-        //     'all-tasks': taskDisplayController.getAllTasksList
-        // }
 
         taskShortcuts.forEach(shortcut => {
             shortcut.addEventListener('click', function (e) {
                 const taskId = e.target.getAttribute('id');
-                // const tasksContentDiv = document.querySelector('.tasks-content');
-                // tasksContentDiv.removeAttribute('id');
                 return taskDisplayController.selectTimeFrame(taskId);
             });
         });

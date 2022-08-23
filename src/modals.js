@@ -1,3 +1,4 @@
+// import { initialLoad } from './controller.js'
 
 function getFormattedDate(date) {
     let day = date.getDate();
@@ -154,7 +155,6 @@ var taskFormContainer = (function () {
         const addTaskButtonId = 'add-task';
         const buttons = createButtons(addTaskButtonId);
         form.appendChild(buttons);
-
     }
 
     const taskTextInputProperties = ['Title', 'Notes'];
@@ -162,11 +162,18 @@ var taskFormContainer = (function () {
     const lists = JSON.parse(localStorage.getItem('lists'));
   
     buildFormTextInputs(taskTextInputProperties);
+
     if (lists) {
         buildSelectInput(lists);
     }
+
     buildDueDateInput();
     buildFromPriorityField(priorityLevels);
+
+    const getTaskEditForm = (task) => {
+        // clone exiting form to build edit form and change id atribute to list-edit-form
+        const editForm = form.cloneNode(true);
+    }
 
     return {
         getTaskForm: () => form,
@@ -217,7 +224,7 @@ var listFormContainer = (function () {
         editForm.id = 'list-edit-form';
 
         // change title label text to 'New Title'
-        editForm.childNodes[0].childNodes[0].textContent = '';
+        editForm.childNodes[0].childNodes[0].textContent = 'New Title';
 
         // change title input value to title, remove placeholder attribute and add autofocus attribute
         editForm.childNodes[0].childNodes[1].removeAttribute('placeholder');
@@ -231,7 +238,6 @@ var listFormContainer = (function () {
         editForm.childNodes[1].childNodes[0].classList.remove('add-button');
         editForm.childNodes[1].childNodes[0].classList.add('edit-buttons');
         // editForm.childNodes[1].childNodes[0].setAttribute('name', 'edit-list-title');
-
 
         // chnage cancel button to delete button 
         editForm.childNodes[1].childNodes[1].textContent = 'Delete';
@@ -349,7 +355,6 @@ var modal = (function () {
 
         // Enable normal scroll when modal is closed
         document.body.style.overflow = "auto"
-
     }
 
     return {    

@@ -5,9 +5,6 @@ import { taskDisplayController } from "./tasksDisplay.js";
 import { v4 as uuidv4 } from '../node_modules/uuid'
 
 
-// console.log(uuidv4())
-
-
 var listFactory =  (title, tasks) => {
     return {
         title: title,
@@ -77,7 +74,6 @@ var initialLoad = (function () {
         listItem.appendChild(editIcon);
 
         return listItem;
-
     }
 
     const buildDefaultLists = () => {
@@ -95,11 +91,10 @@ var initialLoad = (function () {
 
         lists = defaultLists;
         localStorage.setItem('lists', JSON.stringify(lists));
+        location.reload()
     }
-
-    if (chekStorage) {
-        lists = JSON.parse(localStorage.getItem('lists'));
-        console.log(lists);
+    
+    const buildPageDisplay = () => {
         if (lists) {
             lists.forEach(function (list) {
                 let listItem = buildListItem(list);
@@ -110,6 +105,14 @@ var initialLoad = (function () {
         }
     }
 
+    if (chekStorage) {
+        lists = JSON.parse(localStorage.getItem('lists'));
+        buildPageDisplay();   
+        console.log(lists);
+    } else {
+        // alert user and reload
+        if(!alert("Local Storage Unavilable page will reload, if problem persist please contact the developer")){window.location.reload();}
+    }
 
     return {
         getListsList: () => listsList,
@@ -220,15 +223,19 @@ var loadPage = (function() {
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('container');
 
-    const sideMenuDiv = sideMenuContent.getSideMenuDiv();
-    const tasksDisplayDiv = taskDisplayController.getMainTaskContainer();
-
-    contentDiv.appendChild(sideMenuDiv);
-    contentDiv.appendChild(tasksDisplayDiv);
 
     const buildPage = () => {
-        const addListButton =  document.querySelector('.add-list-button');
+        // creates the skeleton of side menu and the add buttons for tasks and lists
+        const sideMenuDiv = sideMenuContent.getSideMenuDiv();
+        contentDiv.appendChild(sideMenuDiv);
+
+        // displays current tasks
+        const tasksDisplayDiv = taskDisplayController.getMainTaskContainer();
+        contentDiv.appendChild(tasksDisplayDiv);
+        
+        // gets current lists of lists and appends afterend of the add-list-button
         const listsList= initialLoad.getListsList();
+        const addListButton =  document.querySelector('.add-list-button');
         addListButton.insertAdjacentElement('afterend', listsList);
     };
 
@@ -261,7 +268,7 @@ var loadPage = (function() {
     const createEditListModal = (listTitle, listId) => {
         const createEditListModalHeader = 'Edit List';
         const createEditListModalId = 'edit-list-modal';
-        console.log(listTitle, listId);
+        // console.log(listTitle, listId);
         modal.getListEditModal(listTitle);
         modal.openModal(createEditListModalHeader, createEditListModalId);
 
