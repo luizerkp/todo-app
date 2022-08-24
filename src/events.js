@@ -50,7 +50,7 @@ var modalEvents = (function () {
             const taskPriority = taskFormInfo['priority'].value.trim();
             const taskListTitle = taskFormInfo['list-select'].value; 
             const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
-            console.log(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
+            // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
             return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
         }, false);
     }
@@ -126,9 +126,25 @@ var taskDisplayEvents = (function () {
         });
     }
 
+    const addTaskDeleteEvent = () => {
+        const deleteBtn = document.querySelector('#delete-task-btn');
+        const taskId = deleteBtn.getAttribute('data-id');
+        const taskListId = deleteBtn.getAttribute('data-list-id');
+
+        deleteBtn.addEventListener('click', function () {
+            const confirmMsg = "would you like to delete this task?\n**This action can not be undone!**"
+            if (confirm(confirmMsg) === true) {
+                return taskModule.removeTask(taskId, taskListId);
+            } else {
+                return false;
+            }
+        })
+    }
+
     return {
         addInitialTaskDisplayEvents: addInitialTaskDisplayEvents,
-        addTaskDetailsEvent: addTaskDetailsEvent
+        addTaskDetailsEvent: addTaskDetailsEvent,
+        addTaskDeleteEvent: addTaskDeleteEvent,
     }
 })();
 
@@ -176,13 +192,19 @@ var events = (function () {
         // console.log('adding task details event');
         taskDisplayEvents.addTaskDetailsEvent();
     }
+
+    const addTaskEditEvents = () => {
+        taskDisplayEvents.addTaskDeleteEvent();
+        // taskDisplayEvents.addTaskEditEvent();
+    }
     return {
         addInitialEventListeners: addInitialEventListeners,
         addCancelEvents: addCancelEvents,
         addTaskSubmitEvent: addTaskSubmitEvent,
         addListSubmitEvent: addListSubmitEvent,
         addEditListEvent: addEditListEvent,
-        addTaskDetailsEvent: addTaskDetailsEvent
+        addTaskDetailsEvent: addTaskDetailsEvent,
+        addTaskEditEvents: addTaskEditEvents
     }
 })();
 

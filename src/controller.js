@@ -133,20 +133,22 @@ var taskModule = (function () {
                 return true;
             }
         });
-        console.log(JSON.parse(localStorage.getItem('lists')));
+        // console.log(JSON.parse(localStorage.getItem('lists')));
     }
 
-    // const removeTask = (task) => {
-    //     lists.some(function (list) {
-    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
-    //             list.tasks.splice(list.tasks.indexOf(task), 1);
-    //             return true;
-    //         }
-    //     });
-    //     localStorage.setItem('lists', JSON.stringify(lists));
-
-    //     console.log('New List: ', JSON.parse(localStorage.getItem('lists')));
-    // }
+    const removeTask = (taskId, taskListId) => {
+        lists.some(function (list) {
+            if (list.id === taskListId) {
+                list.tasks.splice(list.tasks.indexOf(taskId), 1);
+                return true;
+            }
+        });
+        localStorage.setItem('lists', JSON.stringify(lists));
+        // hides task details and removes task from ul displayed
+        taskDisplayController.hideTaskDetails()
+        taskDisplayController.removeTaskFromDisplay(taskId);
+        // taskDisplayController.updateTasksObj();
+    }
 
     // const editTask = (task, newTitle, newNotes, newDueDate, newPriority, newList) => {
     //     lists.some(function (list) {
@@ -174,7 +176,7 @@ var taskModule = (function () {
 
     return {
         createTaskItem: createTaskItem,
-        // removeTask: removeTask,
+        removeTask: removeTask,
         // editTask: editTask,
     }
 })();
