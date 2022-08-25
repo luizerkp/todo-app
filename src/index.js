@@ -30,4 +30,5 @@ var buildPageContent = (function (){
     modal.buildModalContainer();
     events.addInitialEventListeners();
     footer.buildFooter();
+    loadPage.restorePrevState()
 })();

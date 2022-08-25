@@ -166,14 +166,8 @@ var taskFormContainer = (function () {
     if (lists) {
         buildSelectInput(lists);
     }
-
     buildDueDateInput();
     buildFromPriorityField(priorityLevels);
-
-    const getTaskEditForm = (task) => {
-        // clone exiting form to build edit form and change id atribute to list-edit-form
-        const editForm = form.cloneNode(true);
-    }
 
     return {
         getTaskForm: () => form,

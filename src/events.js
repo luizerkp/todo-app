@@ -50,7 +50,7 @@ var modalEvents = (function () {
             const taskPriority = taskFormInfo['priority'].value.trim();
             const taskListTitle = taskFormInfo['list-select'].value; 
             const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
-            // console.log(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
+            // (taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
             return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
         }, false);
     }
@@ -106,6 +106,7 @@ var taskDisplayEvents = (function () {
         taskShortcuts.forEach(shortcut => {
             shortcut.addEventListener('click', function (e) {
                 const taskId = e.target.getAttribute('id');
+                localStorage.setItem('task-container-data-id', JSON.stringify(taskId));
                 return taskDisplayController.selectTimeFrame(taskId);
             });
         });
@@ -120,7 +121,7 @@ var taskDisplayEvents = (function () {
                 if (taskDetailsDiv.getAttribute('id' === 'hidden')) {
                     taskDetailsDiv.removeAttribute('id');
                 }
-                // console.log(taskId);
+                // (taskId);
                 return taskDisplayController.getTaskDetails(taskId);
             });
         });
@@ -138,7 +139,7 @@ var taskDisplayEvents = (function () {
             } else {
                 return false;
             }
-        })
+        });
     }
 
     return {
@@ -155,7 +156,7 @@ var listDisplayEvents = (function () {
             shortcut.addEventListener('click', function (e) {
                 const listTitle = e.target.getAttribute('data-title');
                 const listId = e.target.getAttribute('data-id');
-                const tasksContentDiv = document.querySelector('.tasks-content');
+                localStorage.setItem('task-container-data-id', JSON.stringify(listId));
                 return taskDisplayController.getListTasksList(listTitle, listId);
             });
         });
@@ -189,13 +190,11 @@ var events = (function () {
     }
 
     const addTaskDetailsEvent = () => {
-        // console.log('adding task details event');
         taskDisplayEvents.addTaskDetailsEvent();
     }
 
-    const addTaskEditEvents = () => {
+    const addTaskDeleteEvents = () => {
         taskDisplayEvents.addTaskDeleteEvent();
-        // taskDisplayEvents.addTaskEditEvent();
     }
     return {
         addInitialEventListeners: addInitialEventListeners,
@@ -204,7 +203,7 @@ var events = (function () {
         addListSubmitEvent: addListSubmitEvent,
         addEditListEvent: addEditListEvent,
         addTaskDetailsEvent: addTaskDetailsEvent,
-        addTaskEditEvents: addTaskEditEvents
+        addTaskDeleteEvents: addTaskDeleteEvents
     }
 })();
 

@@ -28,6 +28,7 @@ var tasksContent = (function () {
         const taskItem = document.createElement('li');
         taskItem.classList.add('task-shortcut');
         taskItem.setAttribute('id', shortcut.toLowerCase().replace(/\s/g, '-'));
+        taskItem.dataset.id = shortcut.toLowerCase().replace(/\s/g, '-');
         taskItem.textContent = shortcut;
         tasksList.appendChild(taskItem);
     });

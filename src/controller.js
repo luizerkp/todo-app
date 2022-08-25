@@ -4,7 +4,6 @@ import { events } from "./events.js";
 import { taskDisplayController } from "./tasksDisplay.js";
 import { v4 as uuidv4 } from '../node_modules/uuid'
 
-
 var listFactory =  (title, tasks) => {
     return {
         title: title,
@@ -133,51 +132,23 @@ var taskModule = (function () {
                 return true;
             }
         });
-        // console.log(JSON.parse(localStorage.getItem('lists')));
     }
 
     const removeTask = (taskId, taskListId) => {
         lists.some(function (list) {
             if (list.id === taskListId) {
-                list.tasks.splice(list.tasks.indexOf(taskId), 1);
+                let taskIndex = list.tasks.findIndex(task => task.id === taskId);
+                list.tasks.splice(taskIndex, 1);
                 return true;
             }
         });
         localStorage.setItem('lists', JSON.stringify(lists));
-        // hides task details and removes task from ul displayed
-        taskDisplayController.hideTaskDetails()
-        taskDisplayController.removeTaskFromDisplay(taskId);
-        // taskDisplayController.updateTasksObj();
+        document.location.reload();
     }
-
-    // const editTask = (task, newTitle, newNotes, newDueDate, newPriority, newList) => {
-    //     lists.some(function (list) {
-    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
-    //             list.tasks.splice(list.tasks.indexOf(task), 1);
-    //             return true;
-    //         }
-    //     });
-    //     task.title = newTitle;
-    //     task.notes = newNotes;
-    //     task.dueDate = newDueDate;
-    //     task.priority = newPriority;
-    //     task.list = newList;
-    //     lists.some(function (list) {
-    //         if (list.title.toLowerCase() === task.list.toLowerCase()) {
-    //             list.tasks.push(task);
-    //             return true;
-    //         }
-    //     });
-    //     localStorage.setItem('lists', JSON.stringify(lists));
-
-    //     console.log('New List: ', JSON.parse(localStorage.getItem('lists')));
-    // }
-
 
     return {
         createTaskItem: createTaskItem,
-        removeTask: removeTask,
-        // editTask: editTask,
+        removeTask: removeTask
     }
 })();
 
@@ -225,6 +196,19 @@ var loadPage = (function() {
     const contentDiv = document.createElement('div');
     contentDiv.classList.add('container');
 
+    const restorePrevState = () => {
+        const previousTaskContainerDataId = JSON.parse(localStorage.getItem('task-container-data-id'));
+        let previousTaskConatainer;
+        // retrive task container div via data-id if it exists
+        if (previousTaskContainerDataId) {
+            previousTaskConatainer = document.querySelector(`[data-id = "${previousTaskContainerDataId}"]`)
+        }
+
+        // simulate click on shortcut if it exists
+        if (previousTaskConatainer) {
+            previousTaskConatainer.click();
+        }
+    }
 
     const buildPage = () => {
         // creates the skeleton of side menu and the add buttons for tasks and lists
@@ -270,7 +254,6 @@ var loadPage = (function() {
     const createEditListModal = (listTitle, listId) => {
         const createEditListModalHeader = 'Edit List';
         const createEditListModalId = 'edit-list-modal';
-        // console.log(listTitle, listId);
         modal.getListEditModal(listTitle);
         modal.openModal(createEditListModalHeader, createEditListModalId);
 
@@ -283,7 +266,8 @@ var loadPage = (function() {
         createListModal: createListModal,
         createEditListModal: createEditListModal,
         buildPage: buildPage,
-        getContentDiv: () => contentDiv
+        getContentDiv: () => contentDiv,
+        restorePrevState: restorePrevState
     }
 })();
 

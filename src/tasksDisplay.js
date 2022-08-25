@@ -1,7 +1,4 @@
-// import { loadPage } from './controller.js';
-// import { modal } from './modals.js';
 import { events } from './events.js'
-
 
 // create ul element with tasks 
 function buildTasksUl(tasks) {
@@ -79,7 +76,7 @@ var formattedTasks = (function () {
 
     // sort tasks by priority changes priority from high to low
     const sortArrayByPriority = function (arr) {
-        let sortedArr = arr.sort((objAPriority, objBPriority) => (
+        const sortedArr = arr.sort((objAPriority, objBPriority) => (
             comparePriorityAndTime(objAPriority, objBPriority)
         ));
         return sortedArr;
@@ -87,7 +84,7 @@ var formattedTasks = (function () {
 
     // sort tasks by due date using yyyymmdd as format for comparison 
     const sortArrayByDuedate = function (arr) {
-        let sortedArr = arr.sort((objADueDate, objBDueDate) => (
+        const sortedArr = arr.sort((objADueDate, objBDueDate) => (
             objADueDate.dueDate.split('-').join('') - objBDueDate.dueDate.split('-').join('')
         ));
         // console.log(sortedArr)
@@ -95,7 +92,7 @@ var formattedTasks = (function () {
     }
     const formatDateString = function (arr) { 
         // time necessary for Date() constructor set to 00:00:00
-        let time = 'T00:00:00'
+        const time = 'T00:00:00'
 
         let formattedArr = arr.map(obj => {
             // format dueDate from yyyy-mm-dd to yyyy-mm-ddT00:00:00
@@ -112,7 +109,9 @@ var formattedTasks = (function () {
         return formattedArr;
     }
 
-    const formatTasks = (currentLists) => {
+    const getCurrentFormatedTasks = () => {        
+        // gets list of lists 
+        const currentLists = JSON.parse(localStorage.getItem('lists'));
         // extracts tasks from current lists
         let tasks = [];
         if (currentLists) {
@@ -124,35 +123,25 @@ var formattedTasks = (function () {
         }
 
         // sort all current tasks by due date
-        let allTasksSortedByDate = sortArrayByDuedate(tasks);
+        const allTasksSortedByDate = sortArrayByDuedate(tasks);
         // sort tasks by priority after sorting by due date
-        let allTasksSortedByDateAndPriority = sortArrayByPriority(allTasksSortedByDate);
+        const allTasksSortedByDateAndPriority = sortArrayByPriority(allTasksSortedByDate);
         // format date string for sorted tasks
-        let allSortedTasksAndFormated = formatDateString(allTasksSortedByDateAndPriority);  
+        const allSortedTasksAndFormated = formatDateString(allTasksSortedByDateAndPriority);  
         return allSortedTasksAndFormated      
     }
 
-    // gets curent list of lists 
-    let currentLists = JSON.parse(localStorage.getItem('lists'));
-    let allSortedTasksAndFormated = formatTasks(currentLists);
-
-    const updateFormatedTaks = function () {
-        // gets curent list of lists 
-        currentLists = JSON.parse(localStorage.getItem('lists'));
-        allSortedTasksAndFormated = formatTasks(currentLists);
-        
-    }
+   
+    const allSortedTasksAndFormated = getCurrentFormatedTasks();
 
     const getTodayFormattedTasks = function () {
-        updateFormatedTaks();
-        let today = new Date();
-        let todayFormatted = today.toDateString();
-        let todayFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === todayFormatted);
+        const today = new Date();
+        const todayFormatted = today.toDateString();
+        const todayFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === todayFormatted);
         return todayFormattedTasks;
     }
 
     const getTomorrowFormattedTasks = function () {
-        updateFormatedTaks();
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         let tomorrowFormatted = tomorrow.toDateString();
@@ -160,11 +149,10 @@ var formattedTasks = (function () {
         return tomorrowFormattedTasks;
     }
 
-    const getSevenDaysFormattedTasks = function () {
-        updateFormatedTaks();
+    const getSevenDaysFormattedTasks = function () {     
         // get current day 
-        let sevenDaysStart = new Date();
-        let days = 7;
+        const sevenDaysStart = new Date();
+        const days = 7;
 
         // get 7 days from current day
         let sevenDaysArray = getFormatedDaysArray(sevenDaysStart, days);
@@ -173,27 +161,22 @@ var formattedTasks = (function () {
             return sevenDaysArray.includes(task.dueDate);
         });
 
-        // console.log(sevenDaysFormattedTasks);
         return sevenDaysFormattedTasks;
     }
 
     const getListFormattedTasks = function (listId) {
-        updateFormatedTaks();
-        let listFormattedTasks = allSortedTasksAndFormated.filter(task => task.listId === listId);
+        const listFormattedTasks = allSortedTasksAndFormated.filter(task => task.listId === listId);
         return listFormattedTasks;
     }
 
     const getFormattedTaskDetails = function (taskId) {
-        updateFormatedTaks();
-        // console.log(allSortedTasksAndFormated)
-        let formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
+        const formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
         return formattedTaskDetails;
     }
-    const getAllFormattedTasks = function () {
-        updateFormatedTaks();
+    const getAllFormattedTasks = function () {       
+
         return allSortedTasksAndFormated
     }
-    // console.log(allSortedTasksAndFormated);
 
     return {
         getAllFormattedTasks: getAllFormattedTasks,
@@ -202,12 +185,11 @@ var formattedTasks = (function () {
         getSevenDaysFormattedTasks: getSevenDaysFormattedTasks,
         getListFormattedTasks: getListFormattedTasks,
         getFormattedTaskDetails: getFormattedTaskDetails,
-        updateFormatedTaks:updateFormatedTaks
     }
 })();
 
 var todayTasks = (function () {
-    let todayTasksList = formattedTasks.getTodayFormattedTasks();
+    const todayTasksList = formattedTasks.getTodayFormattedTasks();
     const todayStr = 'today';
     const todayTaskUl = buildTasksUl(todayTasksList, todayStr);
 
@@ -217,7 +199,7 @@ var todayTasks = (function () {
 })();
 
 var tomorrowTasks = (function () {
-    let tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
+    const tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
     const tomorrowStr = 'tomorrow';
     const tomorrowTaskUl = buildTasksUl(tomorrowTasksList, tomorrowStr);
 
@@ -227,7 +209,7 @@ var tomorrowTasks = (function () {
 })();
 
 var sevenDaysTasks = (function () {
-    let sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
+    const sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
     const sevenDays = 'seven-days';
     const sevenDaysTasksUl = buildTasksUl(sevenDaysTasksList, sevenDays);
 
@@ -237,10 +219,9 @@ var sevenDaysTasks = (function () {
 })();
 
 var allTasks = (function () {
-    let allTasksList = formattedTasks.getAllFormattedTasks();
+    const allTasksList = formattedTasks.getAllFormattedTasks();
     const allTasksStr = 'all-tasks';
     const allTasksUl = buildTasksUl(allTasksList, allTasksStr);
-    // console.log(tasks);
 
     return {
         getAllTasksUl: () => allTasksUl
@@ -274,19 +255,11 @@ var tasksDetails = (function () {
 
     const getTasksDetails = (taskId) => {
         let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
-        // console.log(taskDetails);
-
         // reset tasks details div to prevent duplicate tasks info
         tasksDetailsDiv.innerHTML = '';
 
         const editDIv = document.createElement('div');
         editDIv.setAttribute('id', 'edit-div')
-
-        const editBtn = document.createElement('button');
-        editBtn.setAttribute('id', 'edit-task-btn')
-        editBtn.textContent = "Edit"
-        editBtn.dataset.id = taskId
-        editBtn.dataset.listId = taskDetails.listId
 
         const deleteBtn = document.createElement('button');
         deleteBtn.setAttribute('id', 'delete-task-btn');
@@ -294,7 +267,6 @@ var tasksDetails = (function () {
         deleteBtn.dataset.id = taskId
         deleteBtn.dataset.listId = taskDetails.listId
 
-        editDIv.appendChild(editBtn)
         editDIv.appendChild(deleteBtn)
 
         tasksDetailsDiv.appendChild(editDIv);
@@ -362,6 +334,7 @@ var taskDisplayController = (function () {
         const headerText = document.querySelector('#tasks-header-content');
         headerText.textContent = header.length > 25 ? header.substring(0, 25) + '...' : header;
     }
+
     // hides the task details div
     const hideTaskDetails = () => {
         const taskDetailsContainer = document.querySelector('.task-details-container');
@@ -369,11 +342,6 @@ var taskDisplayController = (function () {
         if (taskDetailsContainer.getAttribute('id') !== 'hidden') {
             taskDetailsContainer.setAttribute('id', 'hidden');
         }
-    }
-
-    const removeTaskFromDisplay = (taskId) => {
-        const taskToRemove = document.querySelector(`[data-id="${taskId}"]`);
-        taskToRemove.remove();
     }
 
     const selectTimeFrame = (timeframe) => {
@@ -445,12 +413,8 @@ var taskDisplayController = (function () {
         }
         const taskDetails = tasksDetails.getTasksDetails(taskId);
         taskDetailsDiv.replaceWith(taskDetails);
-        events.addTaskEditEvents();
+        events.addTaskDeleteEvents();
     }
-
-    // const updateTasksObj = () => {
-    //     formattedTasks.updateFormatedTaks();
-    // }
 
     mainTaskContainer.appendChild(tasksContentDiv);
 
@@ -459,9 +423,7 @@ var taskDisplayController = (function () {
         selectTimeFrame: selectTimeFrame,
         getListTasksList: getListTasksList,
         getTaskDetails: getTaskDetails,
-        hideTaskDetails: hideTaskDetails,
-        removeTaskFromDisplay: removeTaskFromDisplay,
-        // updateTasksObj: updateTasksObj
+        hideTaskDetails: hideTaskDetails
     }
 })();
 
