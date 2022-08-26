@@ -20,6 +20,7 @@ function tasksFactory (title, notes = null, dueDate, priority, listTitle, listId
         priority: priority,
         listTitle: listTitle,
         listId: listId,
+        completed: false,
         id: uuidv4()
     }
 }

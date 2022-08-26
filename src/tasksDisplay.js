@@ -16,6 +16,13 @@ function buildTasksUl(tasks) {
 
         const taskTitleItemText = document.createElement('p');
         taskTitleItemText.textContent = task.title.length > 25 ? task.title.substring(0, 25) + '...' : task.title;
+        
+        const radioBtnIcon = document.createElement('i');
+        radioBtnIcon.classList.add('material-icons-round', 'task-status-btn');
+        radioBtnIcon.textContent = "radio_button_unchecked";
+
+        taskTitleItemText.insertAdjacentElement('afterbegin', radioBtnIcon);
+        
 
         const taskDueDateItemDiv = document.createElement('div');
         taskDueDateItemDiv.classList.add('task-item-due-date-text');
