@@ -1,4 +1,3 @@
-// import { initialLoad } from './controller.js'
 
 function getFormattedDate(date) {
     let day = date.getDate();

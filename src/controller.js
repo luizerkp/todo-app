@@ -140,16 +140,33 @@ var taskModule = (function () {
             if (list.id === taskListId) {
                 let taskIndex = list.tasks.findIndex(task => task.id === taskId);
                 list.tasks.splice(taskIndex, 1);
+                localStorage.setItem('lists', JSON.stringify(lists));
                 return true;
             }
         });
-        localStorage.setItem('lists', JSON.stringify(lists));
         document.location.reload();
+    }
+
+    const changeTaskStatus = (taskId, taskListId) => {
+        const completed = 'completed';
+        lists.some(function (list) {
+            if (list.id === taskListId) {
+                let task = list.tasks.find(task => task.id === taskId);
+                // if completed is set to false the set it to true and vice versa
+                task.completed = task.completed === false ? true:false;
+                localStorage.setItem('lists', JSON.stringify(lists));
+                taskDisplayController.changeCompleteStatus(task.id);
+                return true;
+            }
+        });
+        
+        // document.location.reload();
     }
 
     return {
         createTaskItem: createTaskItem,
-        removeTask: removeTask
+        removeTask: removeTask, 
+        changeTaskStatus: changeTaskStatus
     }
 })();
 

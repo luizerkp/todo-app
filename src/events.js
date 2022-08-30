@@ -127,6 +127,19 @@ var taskDisplayEvents = (function () {
         });
     }
 
+    const addTaskCompleteEvent = () => {
+        const taskStatusBtns = document.querySelectorAll('.task-status-btn');
+        taskStatusBtns.forEach(taskStatusBtn => {
+            taskStatusBtn.addEventListener('click', function (e) {
+                // prevents task details from showing when toggleling complete on/off
+                e.stopPropagation();
+                let taskId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-id')
+                let taskListId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-list-id')
+                return taskDisplayController.changeStatus(taskId, taskListId)
+            });
+        });
+    }
+
     const addTaskDeleteEvent = () => {
         const deleteBtn = document.querySelector('#delete-task-btn');
         const taskId = deleteBtn.getAttribute('data-id');
@@ -146,6 +159,7 @@ var taskDisplayEvents = (function () {
         addInitialTaskDisplayEvents: addInitialTaskDisplayEvents,
         addTaskDetailsEvent: addTaskDetailsEvent,
         addTaskDeleteEvent: addTaskDeleteEvent,
+        addTaskCompleteEvent: addTaskCompleteEvent
     }
 })();
 
@@ -189,8 +203,9 @@ var events = (function () {
         modalEvents.addEditListFormSubmitEventListener(title, id);
     }
 
-    const addTaskDetailsEvent = () => {
+    const addTasksEvents = () => {
         taskDisplayEvents.addTaskDetailsEvent();
+        taskDisplayEvents.addTaskCompleteEvent();
     }
 
     const addTaskDeleteEvents = () => {
@@ -202,7 +217,7 @@ var events = (function () {
         addTaskSubmitEvent: addTaskSubmitEvent,
         addListSubmitEvent: addListSubmitEvent,
         addEditListEvent: addEditListEvent,
-        addTaskDetailsEvent: addTaskDetailsEvent,
+        addTasksEvents: addTasksEvents,
         addTaskDeleteEvents: addTaskDeleteEvents
     }
 })();

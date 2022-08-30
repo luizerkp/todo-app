@@ -1,3 +1,4 @@
+import { taskModule } from './controller.js';
 import { events } from './events.js'
 
 // create ul element with tasks 
@@ -10,20 +11,23 @@ function buildTasksUl(tasks) {
         taskItem.classList.add('task-item');
         taskItem.classList.add(task.priority.toLowerCase());
         taskItem.dataset.id = task.id;
+        taskItem.dataset.listId = task.listId
 
         const taskTitleItemDiv = document.createElement('div');
         taskTitleItemDiv.classList.add('task-item-title-text');
 
+        // limits title length displayed to 25 chars and adds elipsis if longer
         const taskTitleItemText = document.createElement('p');
         taskTitleItemText.textContent = task.title.length > 25 ? task.title.substring(0, 25) + '...' : task.title;
         
+        // adds radion to toggle complete status on/off
         const radioBtnIcon = document.createElement('i');
         radioBtnIcon.classList.add('material-icons-round', 'task-status-btn');
         radioBtnIcon.textContent = "radio_button_unchecked";
 
         taskTitleItemText.insertAdjacentElement('afterbegin', radioBtnIcon);
         
-
+        // format and add due date info
         const taskDueDateItemDiv = document.createElement('div');
         taskDueDateItemDiv.classList.add('task-item-due-date-text');
 
@@ -36,6 +40,11 @@ function buildTasksUl(tasks) {
         const dayNumber = task.dueDate.split(' ')[2];
         const dueDateText = new Date(task.dueDate) >= today ? `${dayOfweek} ${month} ${dayNumber}` : 'No due date';
         taskDueDateItemText.textContent = dueDateText;
+
+        // check if task is set as completed and add class 'completed'
+        if (task.completed) {
+            taskItem.classList.add('completed')
+        }
 
         taskTitleItemDiv.appendChild(taskTitleItemText);
         taskDueDateItemDiv.appendChild(taskDueDateItemText);
@@ -181,7 +190,6 @@ var formattedTasks = (function () {
         return formattedTaskDetails;
     }
     const getAllFormattedTasks = function () {       
-
         return allSortedTasksAndFormated
     }
 
@@ -279,7 +287,7 @@ var tasksDetails = (function () {
         tasksDetailsDiv.appendChild(editDIv);
 
         for (let [key, value] of Object.entries(taskDetails)) {
-            if (key !== 'listId' && key !== 'id') {
+            if (key !== 'listId' && key !== 'id' && key !== 'completed') {
                 let header = document.createElement('h2');
                 header.classList.add('task-details-sub-header');
                 let para = document.createElement('p');
@@ -351,22 +359,6 @@ var taskDisplayController = (function () {
         }
     }
 
-    const selectTimeFrame = (timeframe) => {
-        const taskTimFrames = {
-            'today': getTodayList,
-            'tomorrow': getTomorrowList,
-            'next-7-days': getSevenDayList,
-            'all-tasks': getAllTasksList
-        }
-        taskTimFrames[timeframe]();
-
-        // hide taks details div
-        hideTaskDetails();
-
-        // add event listener to list tasks ul to display task details
-        events.addTaskDetailsEvent();
-    }
-
     const getTodayList = () => {
         const taskList = document.querySelector('.list-of-tasks');
         const headerText = "Today's Tasks";
@@ -410,8 +402,24 @@ var taskDisplayController = (function () {
         hideTaskDetails();
 
         // add event listener to list tasks ul to display task details
-        events.addTaskDetailsEvent();
+        events.addTasksEvents();
     }
+
+    const selectTimeFrame = (timeframe) => {
+        const taskTimFrames = {
+            'today': getTodayList,
+            'tomorrow': getTomorrowList,
+            'next-7-days': getSevenDayList,
+            'all-tasks': getAllTasksList
+        }
+        taskTimFrames[timeframe]();
+
+        // hide taks details div
+        hideTaskDetails();
+
+        // add event listener to list tasks ul to display task details
+        events.addTasksEvents();
+    }    
 
     const getTaskDetails = (taskId) => {
         const taskDetailsDiv = document.querySelector('.task-details-container');
@@ -423,6 +431,19 @@ var taskDisplayController = (function () {
         events.addTaskDeleteEvents();
     }
 
+    const changeStatus = (taskId, taskListId) => {
+        taskModule.changeTaskStatus(taskId, taskListId);
+    }
+
+    const changeCompleteStatus = (taskId) => {
+        const targetTask = document.querySelector(`[data-id = "${taskId}"]`);
+        if (targetTask.classList.contains('completed')) {
+            targetTask.classList.remove('completed');
+        } else {
+            targetTask.classList.add('completed');
+        }
+    }
+
     mainTaskContainer.appendChild(tasksContentDiv);
 
     return {
@@ -430,7 +451,9 @@ var taskDisplayController = (function () {
         selectTimeFrame: selectTimeFrame,
         getListTasksList: getListTasksList,
         getTaskDetails: getTaskDetails,
-        hideTaskDetails: hideTaskDetails
+        hideTaskDetails: hideTaskDetails,
+        changeStatus: changeStatus,
+        changeCompleteStatus: changeCompleteStatus
     }
 })();
 
