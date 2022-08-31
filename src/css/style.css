@@ -305,7 +305,6 @@ p {
 .tasks-content {
     display: flex;
     flex-direction: column;
-    /* flex: 1 1 auto; */
     gap: 2px;
     margin-left: 50px;
     margin-right: 50px;
@@ -314,7 +313,7 @@ p {
 
 #tasks-sub-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 500px));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 500px));
     gap: 45px;
     height: 100%;
 }
@@ -459,6 +458,11 @@ p {
     background-color: #7a7979;
 }
 
+.selected {
+    /* background-color: #a7f3d0; */
+    box-shadow: 1px 2px 2px 2px rgb(14, 13, 13);
+}
+
 /* Sticky Footer and credit */
 .footer {
     display: flex;
@@ -481,3 +485,124 @@ p {
     height: 20px;
     width: 20px;
 }
+
+/* ########################################## Responsive layout ########################################################*/
+@media only screen and (max-width: 1100px) {
+    #tasks-sub-container {
+        grid-template-rows: auto;
+        gap: 20px;
+    }
+    
+    #tasks-list-container {
+        grid-column: unset;
+        grid-row: 1/2;
+    }
+    
+    .task-details-container {
+        grid-column: unset;
+        grid-row: 2/3;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .title-text, .create-task-button, .add-list-button, .tasks-list, .lists-list {
+        margin: 8px;
+    }
+    .lists-list, .tasks-list {
+        padding: 0px;
+    }
+    
+    .tasks-content {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+}
+
+@media only screen and (max-width: 500px) {
+    #header-content {
+        padding-left: 10px;
+        height: 5rem;
+        gap: 5px;
+        max-width: 325px;
+    }
+    #header-content>h1 {
+        font-size: 36px;
+    
+    } 
+    #main-task-container {
+        background-image: none;
+        background-size: inherit;
+        background-repeat: no-repeat;
+    }
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(auto-fit, minmax(150px, 180px));
+        max-width: 100%;
+    }
+    .side-menu {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-content: space-between;
+        width: auto;
+        height: 180px;
+        grid-row: 1/2;
+        max-width: fit-content;
+    }
+    .lists-list {
+        grid-row: 1/2;
+    }
+    .title-text {
+        font-size: 18px;
+    }
+    .task-shortcut, .list-shortcut {
+        gap:5px;
+        font-size: 14px;
+        max-width: 100%;
+    }
+    .create-task-button, .add-list-button {
+        font-weight: normal;
+    }
+    .tasks-content {
+        margin-left: 5px;
+        margin-right: 5px;
+        max-width: 325px;
+    }
+    #tasks-list-container, .task-details-container {
+        padding: 0px;
+    }
+    .task-item-title-text, .task-item-due-date-text {
+        font-size: 1rem;
+    }
+
+    #tasks-sub-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 325px));
+        max-width: 325px;
+    }
+    #tasks-header-content {
+        font-size: 1rem;
+        width: 280px;
+        height: 30px;
+    }
+}
+
+/* @media only screen and (max-width: 500px) {
+    #tasks-sub-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 285px));
+    }
+    #tasks-header-content {
+        width: 200px;
+        font-size: 18px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #tasks-sub-container {
+        grid-template-columns: repeat(auto-fit, minmax(185px, 250px));
+    }
+    #tasks-header-content {
+        width: 185px;
+        font-size: 16px;
+    }
+
+} */

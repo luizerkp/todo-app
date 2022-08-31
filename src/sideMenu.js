@@ -35,7 +35,6 @@ var tasksContent = (function () {
 
     tasksDiv.appendChild(tasksList);
 
-
     return {
         getTasksDiv: () => tasksDiv
     }
@@ -62,7 +61,6 @@ var listsContent = (function () {
     addIcon.setAttribute('id', 'add-list-icon');
     addIcon.textContent = 'add';
     addListButton.appendChild(addIcon);
-
 
     return {
         getListsDiv: () => listsDiv

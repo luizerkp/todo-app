@@ -4,7 +4,7 @@ import { events } from "./events.js";
 import { taskDisplayController } from "./tasksDisplay.js";
 import { v4 as uuidv4 } from '../node_modules/uuid'
 
-var listFactory =  (title, tasks) => {
+function listFactory (title, tasks) {
     return {
         title: title,
         tasks: tasks,
@@ -77,7 +77,7 @@ var initialLoad = (function () {
     }
 
     const buildDefaultLists = () => {
-        let defaultListsTitles = ['Personal', 'Work', 'Groceries'];
+        const defaultListsTitles = ['Personal', 'Work', 'Groceries'];
         let defaultLists = [];
         defaultListsTitles.forEach(function (listTitle) {
             let list = listFactory(listTitle, []);
@@ -108,7 +108,6 @@ var initialLoad = (function () {
     if (chekStorage) {
         lists = JSON.parse(localStorage.getItem('lists'));
         buildPageDisplay();   
-        console.log(lists);
     } else {
         // alert user and reload
         if(!alert("Local Storage Unavilable page will reload, if problem persist please contact the developer")){window.location.reload();}
@@ -141,14 +140,14 @@ var taskModule = (function () {
                 let taskIndex = list.tasks.findIndex(task => task.id === taskId);
                 list.tasks.splice(taskIndex, 1);
                 localStorage.setItem('lists', JSON.stringify(lists));
+                taskDisplayController.updateFomattedTasks();
+                taskDisplayController.removeTaskFromDisplay(taskId);
                 return true;
             }
         });
-        document.location.reload();
     }
 
     const changeTaskStatus = (taskId, taskListId) => {
-        const completed = 'completed';
         lists.some(function (list) {
             if (list.id === taskListId) {
                 let task = list.tasks.find(task => task.id === taskId);
@@ -156,11 +155,10 @@ var taskModule = (function () {
                 task.completed = task.completed === false ? true:false;
                 localStorage.setItem('lists', JSON.stringify(lists));
                 taskDisplayController.changeCompleteStatus(task.id);
+                taskDisplayController.updateFomattedTasks();
                 return true;
             }
         });
-        
-        // document.location.reload();
     }
 
     return {
@@ -177,7 +175,6 @@ var listModule = (function () {
         let list = listFactory(listTitle, []);
             lists.push(list);
             localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
-            console.log(JSON.parse(localStorage.getItem('lists')));
     }
 
     const editListTitle= (currentListTitle, listId, newListTitle) => {
@@ -216,6 +213,7 @@ var loadPage = (function() {
 
     const restorePrevState = () => {
         const previousTaskContainerDataId = JSON.parse(localStorage.getItem('task-container-data-id'));
+        const defaultToAllTasks = document.querySelector('#all-tasks');
         let previousTaskConatainer;
         // retrive task container div via data-id if it exists
         if (previousTaskContainerDataId) {
@@ -225,6 +223,8 @@ var loadPage = (function() {
         // simulate click on shortcut if it exists
         if (previousTaskConatainer) {
             previousTaskConatainer.click();
+        } else {
+            defaultToAllTasks.click();
         }
     }
 

@@ -32,7 +32,7 @@ var modalEvents = (function () {
         cancelButtons.forEach(button => {
             button.addEventListener('click', function () {
                 return modal.closeModal();
-            }, false);
+            });
         });
     }
 
@@ -50,9 +50,8 @@ var modalEvents = (function () {
             const taskPriority = taskFormInfo['priority'].value.trim();
             const taskListTitle = taskFormInfo['list-select'].value; 
             const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
-            // (taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
             return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
-        }, false);
+        });
     }
 
     const addListFormSubmitEventListener = () => {
@@ -69,7 +68,7 @@ var modalEvents = (function () {
             } else {
                 return listModule.createListItem(listName);
             }
-        }, false);
+        });
     }
 
     const addEditListFormSubmitEventListener = (currentListTitle, currentListId) => {
@@ -87,7 +86,7 @@ var modalEvents = (function () {
                 return listModule.removeList(currentListId);
             }
 
-        }, false);
+        });
     }
 
     return {
@@ -118,10 +117,8 @@ var taskDisplayEvents = (function () {
         taskItems.forEach(taskItem => {
             taskItem.addEventListener('click', function () {
                 const taskId = taskItem.getAttribute('data-id');
-                if (taskDetailsDiv.getAttribute('id' === 'hidden')) {
-                    taskDetailsDiv.removeAttribute('id');
-                }
-                // (taskId);
+                taskDisplayController.reomoveSelected();
+                taskItem.classList.add('selected');
                 return taskDisplayController.getTaskDetails(taskId);
             });
         });

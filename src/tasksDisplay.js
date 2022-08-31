@@ -38,7 +38,7 @@ function buildTasksUl(tasks) {
         const dayOfweek = task.dueDate.split(' ')[0];
         const month = task.dueDate.split(' ')[1];
         const dayNumber = task.dueDate.split(' ')[2];
-        const dueDateText = new Date(task.dueDate) >= today ? `${dayOfweek} ${month} ${dayNumber}` : 'No due date';
+        const dueDateText = new Date(task.dueDate) >= today ? `${dayOfweek} ${month} ${dayNumber}` : 'Past Due Date';
         taskDueDateItemText.textContent = dueDateText;
 
         // check if task is set as completed and add class 'completed'
@@ -103,7 +103,6 @@ var formattedTasks = (function () {
         const sortedArr = arr.sort((objADueDate, objBDueDate) => (
             objADueDate.dueDate.split('-').join('') - objBDueDate.dueDate.split('-').join('')
         ));
-        // console.log(sortedArr)
         return sortedArr;
     }
     const formatDateString = function (arr) { 
@@ -127,7 +126,7 @@ var formattedTasks = (function () {
 
     const getCurrentFormatedTasks = () => {        
         // gets list of lists 
-        const currentLists = JSON.parse(localStorage.getItem('lists'));
+        let currentLists = JSON.parse(localStorage.getItem('lists'));
         // extracts tasks from current lists
         let tasks = [];
         if (currentLists) {
@@ -148,7 +147,12 @@ var formattedTasks = (function () {
     }
 
    
-    const allSortedTasksAndFormated = getCurrentFormatedTasks();
+    let allSortedTasksAndFormated = getCurrentFormatedTasks();
+
+    // update allSortedAndFormated object everytime a change has been made to localStorage obj 'lists'
+    const updateFormatedTaskObj = () => {
+        allSortedTasksAndFormated = getCurrentFormatedTasks();
+    }
 
     const getTodayFormattedTasks = function () {
         const today = new Date();
@@ -158,22 +162,22 @@ var formattedTasks = (function () {
     }
 
     const getTomorrowFormattedTasks = function () {
-        let tomorrow = new Date();
+        const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        let tomorrowFormatted = tomorrow.toDateString();
-        let tomorrowFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === tomorrowFormatted);
+        const tomorrowFormatted = tomorrow.toDateString();
+        const tomorrowFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === tomorrowFormatted);
         return tomorrowFormattedTasks;
     }
 
-    const getSevenDaysFormattedTasks = function () {     
+    const getSevenDaysFormattedTasks = function () {    
         // get current day 
         const sevenDaysStart = new Date();
         const days = 7;
 
         // get 7 days from current day
-        let sevenDaysArray = getFormatedDaysArray(sevenDaysStart, days);
+        const sevenDaysArray = getFormatedDaysArray(sevenDaysStart, days);
 
-        let sevenDaysFormattedTasks = allSortedTasksAndFormated.filter(task => {
+        const sevenDaysFormattedTasks = allSortedTasksAndFormated.filter(task => {
             return sevenDaysArray.includes(task.dueDate);
         });
 
@@ -200,53 +204,65 @@ var formattedTasks = (function () {
         getSevenDaysFormattedTasks: getSevenDaysFormattedTasks,
         getListFormattedTasks: getListFormattedTasks,
         getFormattedTaskDetails: getFormattedTaskDetails,
+        updateFormatedTaskObj: updateFormatedTaskObj
     }
 })();
 
 var todayTasks = (function () {
-    const todayTasksList = formattedTasks.getTodayFormattedTasks();
-    const todayStr = 'today';
-    const todayTaskUl = buildTasksUl(todayTasksList, todayStr);
+    const getTodayTaskUl = () => {
+        const todayTasksList = formattedTasks.getTodayFormattedTasks();
+        const todayStr = 'today';
+        const todayTaskUl = buildTasksUl(todayTasksList, todayStr);
+        return todayTaskUl        
+    }
 
     return {
-        getTodayTaskUl: () => todayTaskUl
+        getTodayTaskUl: getTodayTaskUl
     }
 })();
 
 var tomorrowTasks = (function () {
-    const tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
-    const tomorrowStr = 'tomorrow';
-    const tomorrowTaskUl = buildTasksUl(tomorrowTasksList, tomorrowStr);
+    const getTomorrowTaskUl = () => {
+        const tomorrowTasksList = formattedTasks.getTomorrowFormattedTasks();
+        const tomorrowStr = 'tomorrow';
+        const tomorrowTaskUl = buildTasksUl(tomorrowTasksList, tomorrowStr);
+        return tomorrowTaskUl;
+    }
 
     return {
-        getTomorrowTaskUl: () => tomorrowTaskUl
+        getTomorrowTaskUl: getTomorrowTaskUl
     }
 })();
 
 var sevenDaysTasks = (function () {
-    const sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
-    const sevenDays = 'seven-days';
-    const sevenDaysTasksUl = buildTasksUl(sevenDaysTasksList, sevenDays);
+    const getSevenDaysUl = () => {
+        const sevenDaysTasksList = formattedTasks.getSevenDaysFormattedTasks();
+        const sevenDays = 'seven-days';
+        const sevenDaysTasksUl = buildTasksUl(sevenDaysTasksList, sevenDays);
+        return sevenDaysTasksUl;      
+    }
 
     return {
-        getSevenDaysUl: () => sevenDaysTasksUl
+        getSevenDaysUl: getSevenDaysUl
     }
 })();
 
 var allTasks = (function () {
-    const allTasksList = formattedTasks.getAllFormattedTasks();
-    const allTasksStr = 'all-tasks';
-    const allTasksUl = buildTasksUl(allTasksList, allTasksStr);
-
+    const getAllTasksUl = () => {
+        const allTasksList = formattedTasks.getAllFormattedTasks();
+        const allTasksStr = 'all-tasks';
+        const allTasksUl = buildTasksUl(allTasksList, allTasksStr); 
+        return allTasksUl       
+    }
     return {
-        getAllTasksUl: () => allTasksUl
+        getAllTasksUl: getAllTasksUl
     }
 })();
 
 
 var lists = (function () {
     const buildListTasksUl = (listId) => {
-        let listTasks = formattedTasks.getListFormattedTasks(listId);
+        const listTasks = formattedTasks.getListFormattedTasks(listId);
         const listTasksUl = buildTasksUl(listTasks);
         return listTasksUl;
     }
@@ -269,7 +285,7 @@ var tasksDetails = (function () {
     tasksDetailsDiv.classList.add('task-details');
 
     const getTasksDetails = (taskId) => {
-        let taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
+        const taskDetails = formattedTasks.getFormattedTaskDetails(taskId);
         // reset tasks details div to prevent duplicate tasks info
         tasksDetailsDiv.innerHTML = '';
 
@@ -359,6 +375,20 @@ var taskDisplayController = (function () {
         }
     }
 
+    const reomoveSelected = () => {
+        const taskItems = document.querySelectorAll('.task-item');
+
+        taskItems.forEach(taskItem => {
+            taskItem.classList.remove('selected');
+        })
+    }
+
+    const removeTaskFromDisplay = (taskId) => {
+        const taskToRemove = document.querySelector(`[data-id="${taskId}"]`);
+        taskToRemove.remove();
+        hideTaskDetails();
+    }
+
     const getTodayList = () => {
         const taskList = document.querySelector('.list-of-tasks');
         const headerText = "Today's Tasks";
@@ -444,6 +474,10 @@ var taskDisplayController = (function () {
         }
     }
 
+    const updateFomattedTasks = () => {
+        formattedTasks.updateFormatedTaskObj();
+    }
+
     mainTaskContainer.appendChild(tasksContentDiv);
 
     return {
@@ -453,7 +487,10 @@ var taskDisplayController = (function () {
         getTaskDetails: getTaskDetails,
         hideTaskDetails: hideTaskDetails,
         changeStatus: changeStatus,
-        changeCompleteStatus: changeCompleteStatus
+        changeCompleteStatus: changeCompleteStatus,
+        updateFomattedTasks: updateFomattedTasks,
+        removeTaskFromDisplay: removeTaskFromDisplay,
+        reomoveSelected: reomoveSelected
     }
 })();
 
