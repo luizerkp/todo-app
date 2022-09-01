@@ -9,12 +9,12 @@ var footer = (function() {
     const a = document.createElement('a');
     a.href = "https://github.com/luizerkp";
     const myGithubLogo = document.createElement('img');
-    myGithubLogo.src= githubLogo
-    a.appendChild(myGithubLogo)
+    myGithubLogo.src= githubLogo;
+    a.appendChild(myGithubLogo);
     a.setAttribute('id', 'github-logo');
     a.target = '_blank';
     const date = new Date().getFullYear();
-    footerPara_1.textContent = `Copyright © ${date} Luis Tamarez`
+    footerPara_1.textContent = `Copyright © ${date} Luis Tamarez`;
     footerPara_2.textContent = "All Rights Reserved";
     footerDiv.appendChild(footerPara_1);
     footerDiv.appendChild(a);
@@ -24,7 +24,7 @@ var footer = (function() {
     
     return {
         buildFooter: buildFooter
-    }
+    };
 })();
 
 export { footer };

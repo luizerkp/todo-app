@@ -29,7 +29,7 @@ function createButtons (addButtonId) {
 
 // provides pattern format for atrribute for no leading whitespace regex: /^(?:[^\s].*)$/
 // doubles as check for empty string 
-const noLeadingWhitespcePattern = '[^\\s].*'
+const noLeadingWhitespcePattern = '[^\\s].*';
 const inputPatternTitle = 'No leading whitespace or empty field';
 
 var taskFormContainer = (function () {
@@ -66,7 +66,7 @@ var taskFormContainer = (function () {
             formGroup.appendChild(input);
             form.appendChild(formGroup);
         });
-    }
+    };
 
     const buildSelectInput = (lists) => {
         const formGroup = document.createElement('div');
@@ -92,7 +92,7 @@ var taskFormContainer = (function () {
         formGroup.appendChild(label);
         formGroup.appendChild(select);
         form.appendChild(formGroup);
-    }
+    };
 
     const buildDueDateInput = () => {
         const formGroup = document.createElement('div');
@@ -114,7 +114,7 @@ var taskFormContainer = (function () {
         formGroup.appendChild(input);
 
         form.appendChild(formGroup);
-    }
+    };
 
     const buildFromPriorityField = (levels) => {
         const formGroup = document.createElement('div');
@@ -154,7 +154,7 @@ var taskFormContainer = (function () {
         const addTaskButtonId = 'add-task';
         const buttons = createButtons(addTaskButtonId);
         form.appendChild(buttons);
-    }
+    };
 
     const taskTextInputProperties = ['Title', 'Notes'];
     const priorityLevels = ['Low', 'Medium', 'High'];
@@ -170,7 +170,7 @@ var taskFormContainer = (function () {
 
     return {
         getTaskForm: () => form,
-    }
+    };
 })();
 
 var listFormContainer = (function () {
@@ -221,7 +221,6 @@ var listFormContainer = (function () {
 
         // change title input value to title, remove placeholder attribute and add autofocus attribute
         editForm.childNodes[0].childNodes[1].removeAttribute('placeholder');
-        // editForm.childNodes[0].childNodes[1].removeAttribute('required');
         editForm.childNodes[0].childNodes[1].setAttribute('value', title);
         editForm.childNodes[0].childNodes[1].setAttribute('autofocus', 'autofocus');
 
@@ -230,7 +229,6 @@ var listFormContainer = (function () {
         editForm.childNodes[1].childNodes[0].id = 'save-list-title';
         editForm.childNodes[1].childNodes[0].classList.remove('add-button');
         editForm.childNodes[1].childNodes[0].classList.add('edit-buttons');
-        // editForm.childNodes[1].childNodes[0].setAttribute('name', 'edit-list-title');
 
         // chnage cancel button to delete button 
         editForm.childNodes[1].childNodes[1].textContent = 'Delete';
@@ -239,7 +237,6 @@ var listFormContainer = (function () {
         editForm.childNodes[1].childNodes[1].classList.remove('cancel-button');
         editForm.childNodes[1].childNodes[1].classList.remove('cancel');
         editForm.childNodes[1].childNodes[1].classList.add('edit-buttons');
-        // editForm.childNodes[1].childNodes[1].setAttribute('name', 'delete-list-title');
 
         return editForm;
     };
@@ -247,7 +244,7 @@ var listFormContainer = (function () {
     return {
         getListForm: () => form,
         getListEditForm: getListEditForm,
-    }
+    };
 })();
 
 var modal = (function () {
@@ -298,36 +295,36 @@ var modal = (function () {
         const currentForm = document.querySelector('.modal-form');
         const taskForm = taskFormContainer.getTaskForm();
         currentForm.replaceWith(taskForm);
-    }
+    };
 
     const getListModal = () => {
         const currentForm = document.querySelector('.modal-form');
         const listForm = listFormContainer.getListForm();
         currentForm.replaceWith(listForm);
-    }
+    };
 
     const getListEditModal = (title) => {
         const currentForm = document.querySelector('.modal-form');
         const listEditForm = listFormContainer.getListEditForm(title);
         currentForm.replaceWith(listEditForm);
-    }
+    };
 
     var buildHeader = (header) => {
         const modalHeaderText = document.querySelector('#modal-header-text');
         modalHeaderText.textContent = header;
-    }
+    };
 
     const buildModalContainer = () => {
         document.body.appendChild(modal);
-    }
+    };
 
     const getModalElements = () => {
         let modalElements = {
             modal: document.querySelector('.modal'),
             modalContent: document.querySelector('.modal-content'),
-        }
+        };
         return modalElements;
-    }
+    };
 
     const openModal = (modalName, id) => {
         const modalElements = getModalElements();
@@ -337,7 +334,7 @@ var modal = (function () {
 
         // Disable background scroll while modal is open
         document.body.style.overflow = "hidden";
-    }
+    };
 
     const closeModal = () => {
         const form = document.querySelector('.modal-form');
@@ -347,8 +344,8 @@ var modal = (function () {
         modalElements.modalContent.removeAttribute('id');
 
         // Enable normal scroll when modal is closed
-        document.body.style.overflow = "auto"
-    }
+        document.body.style.overflow = "auto";
+    };
 
     return {    
         buildModalContainer: buildModalContainer,
@@ -357,7 +354,7 @@ var modal = (function () {
         getListEditModal: getListEditModal,
         openModal: openModal,
         closeModal: closeModal
-    }
+    };
 })();
 
 

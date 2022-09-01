@@ -37,7 +37,7 @@ var tasksContent = (function () {
 
     return {
         getTasksDiv: () => tasksDiv
-    }
+    };
 })();
 
 var listsContent = (function () {
@@ -64,7 +64,7 @@ var listsContent = (function () {
 
     return {
         getListsDiv: () => listsDiv
-    }
+    };
 })();
 
 var sideMenuContent = (function () {
@@ -79,7 +79,7 @@ var sideMenuContent = (function () {
 
     return {
         getSideMenuDiv: () => sideMenuDiv,
-    }
+    };
 })();
 
 export { sideMenuContent };

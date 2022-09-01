@@ -1,5 +1,5 @@
 import { taskModule } from './controller.js';
-import { events } from './events.js'
+import { events } from './events.js';
 
 // create ul element with tasks 
 function buildTasksUl(tasks) {
@@ -11,7 +11,7 @@ function buildTasksUl(tasks) {
         taskItem.classList.add('task-item');
         taskItem.classList.add(task.priority.toLowerCase());
         taskItem.dataset.id = task.id;
-        taskItem.dataset.listId = task.listId
+        taskItem.dataset.listId = task.listId;
 
         const taskTitleItemDiv = document.createElement('div');
         taskTitleItemDiv.classList.add('task-item-title-text');
@@ -43,7 +43,7 @@ function buildTasksUl(tasks) {
 
         // check if task is set as completed and add class 'completed'
         if (task.completed) {
-            taskItem.classList.add('completed')
+            taskItem.classList.add('completed');
         }
 
         taskTitleItemDiv.appendChild(taskTitleItemText);
@@ -76,7 +76,7 @@ var formattedTasks = (function () {
             }
         }
         return 0;
-    }
+    };
 
     // returns an array of dates of length formatted as dateStrings
     const getFormatedDaysArray = function (start, numDays) {
@@ -96,7 +96,7 @@ var formattedTasks = (function () {
             comparePriorityAndTime(objAPriority, objBPriority)
         ));
         return sortedArr;
-    }
+    };
 
     // sort tasks by due date using yyyymmdd as format for comparison 
     const sortArrayByDuedate = function (arr) {
@@ -104,10 +104,10 @@ var formattedTasks = (function () {
             objADueDate.dueDate.split('-').join('') - objBDueDate.dueDate.split('-').join('')
         ));
         return sortedArr;
-    }
+    };
     const formatDateString = function (arr) { 
         // time necessary for Date() constructor set to 00:00:00
-        const time = 'T00:00:00'
+        const time = 'T00:00:00';
 
         let formattedArr = arr.map(obj => {
             // format dueDate from yyyy-mm-dd to yyyy-mm-ddT00:00:00
@@ -122,7 +122,7 @@ var formattedTasks = (function () {
             return { ...obj, dueDate: formattedDate };
         });
         return formattedArr;
-    }
+    };
 
     const getCurrentFormatedTasks = () => {        
         // gets list of lists 
@@ -143,23 +143,22 @@ var formattedTasks = (function () {
         const allTasksSortedByDateAndPriority = sortArrayByPriority(allTasksSortedByDate);
         // format date string for sorted tasks
         const allSortedTasksAndFormated = formatDateString(allTasksSortedByDateAndPriority);  
-        return allSortedTasksAndFormated      
-    }
+        return allSortedTasksAndFormated;    
+    };
 
-   
     let allSortedTasksAndFormated = getCurrentFormatedTasks();
 
     // update allSortedAndFormated object everytime a change has been made to localStorage obj 'lists'
     const updateFormatedTaskObj = () => {
         allSortedTasksAndFormated = getCurrentFormatedTasks();
-    }
+    };
 
     const getTodayFormattedTasks = function () {
         const today = new Date();
         const todayFormatted = today.toDateString();
         const todayFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === todayFormatted);
         return todayFormattedTasks;
-    }
+    };
 
     const getTomorrowFormattedTasks = function () {
         const tomorrow = new Date();
@@ -167,7 +166,7 @@ var formattedTasks = (function () {
         const tomorrowFormatted = tomorrow.toDateString();
         const tomorrowFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === tomorrowFormatted);
         return tomorrowFormattedTasks;
-    }
+    };
 
     const getSevenDaysFormattedTasks = function () {    
         // get current day 
@@ -182,20 +181,20 @@ var formattedTasks = (function () {
         });
 
         return sevenDaysFormattedTasks;
-    }
+    };
 
     const getListFormattedTasks = function (listId) {
         const listFormattedTasks = allSortedTasksAndFormated.filter(task => task.listId === listId);
         return listFormattedTasks;
-    }
+    };
 
     const getFormattedTaskDetails = function (taskId) {
         const formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
         return formattedTaskDetails;
-    }
+    };
     const getAllFormattedTasks = function () {       
-        return allSortedTasksAndFormated
-    }
+        return allSortedTasksAndFormated;
+    };
 
     return {
         getAllFormattedTasks: getAllFormattedTasks,
@@ -205,7 +204,7 @@ var formattedTasks = (function () {
         getListFormattedTasks: getListFormattedTasks,
         getFormattedTaskDetails: getFormattedTaskDetails,
         updateFormatedTaskObj: updateFormatedTaskObj
-    }
+    };
 })();
 
 var todayTasks = (function () {
@@ -213,12 +212,12 @@ var todayTasks = (function () {
         const todayTasksList = formattedTasks.getTodayFormattedTasks();
         const todayStr = 'today';
         const todayTaskUl = buildTasksUl(todayTasksList, todayStr);
-        return todayTaskUl        
-    }
+        return todayTaskUl;        
+    };
 
     return {
         getTodayTaskUl: getTodayTaskUl
-    }
+    };
 })();
 
 var tomorrowTasks = (function () {
@@ -227,11 +226,11 @@ var tomorrowTasks = (function () {
         const tomorrowStr = 'tomorrow';
         const tomorrowTaskUl = buildTasksUl(tomorrowTasksList, tomorrowStr);
         return tomorrowTaskUl;
-    }
+    };
 
     return {
         getTomorrowTaskUl: getTomorrowTaskUl
-    }
+    };
 })();
 
 var sevenDaysTasks = (function () {
@@ -240,11 +239,11 @@ var sevenDaysTasks = (function () {
         const sevenDays = 'seven-days';
         const sevenDaysTasksUl = buildTasksUl(sevenDaysTasksList, sevenDays);
         return sevenDaysTasksUl;      
-    }
+    };
 
     return {
         getSevenDaysUl: getSevenDaysUl
-    }
+    };
 })();
 
 var allTasks = (function () {
@@ -252,11 +251,11 @@ var allTasks = (function () {
         const allTasksList = formattedTasks.getAllFormattedTasks();
         const allTasksStr = 'all-tasks';
         const allTasksUl = buildTasksUl(allTasksList, allTasksStr); 
-        return allTasksUl       
-    }
+        return allTasksUl;      
+    };
     return {
         getAllTasksUl: getAllTasksUl
-    }
+    };
 })();
 
 
@@ -265,10 +264,10 @@ var lists = (function () {
         const listTasks = formattedTasks.getListFormattedTasks(listId);
         const listTasksUl = buildTasksUl(listTasks);
         return listTasksUl;
-    }
+    };
     return {
         buildListTasksUl: buildListTasksUl
-    }
+    };
 })();
 
 var tasksDetails = (function () {
@@ -290,15 +289,15 @@ var tasksDetails = (function () {
         tasksDetailsDiv.innerHTML = '';
 
         const editDIv = document.createElement('div');
-        editDIv.setAttribute('id', 'edit-div')
+        editDIv.setAttribute('id', 'edit-div');
 
         const deleteBtn = document.createElement('button');
         deleteBtn.setAttribute('id', 'delete-task-btn');
-        deleteBtn.textContent = "Delete"
-        deleteBtn.dataset.id = taskId
-        deleteBtn.dataset.listId = taskDetails.listId
+        deleteBtn.textContent = "Delete";
+        deleteBtn.dataset.id = taskId;
+        deleteBtn.dataset.listId = taskDetails.listId;
 
-        editDIv.appendChild(deleteBtn)
+        editDIv.appendChild(deleteBtn);
 
         tasksDetailsDiv.appendChild(editDIv);
 
@@ -318,11 +317,11 @@ var tasksDetails = (function () {
         tasksDetailsContainer.appendChild(tasksDetailsDiv);
 
         return tasksDetailsContainer;
-    }
+    };
     
     return {
         getTasksDetails: getTasksDetails
-    }
+    };
 })();
 
 var taskDisplayController = (function () {
@@ -364,7 +363,7 @@ var taskDisplayController = (function () {
     const buildHeader = (header) => {
         const headerText = document.querySelector('#tasks-header-content');
         headerText.textContent = header.length > 25 ? header.substring(0, 25) + '...' : header;
-    }
+    };
 
     // hides the task details div
     const hideTaskDetails = () => {
@@ -373,21 +372,21 @@ var taskDisplayController = (function () {
         if (taskDetailsContainer.getAttribute('id') !== 'hidden') {
             taskDetailsContainer.setAttribute('id', 'hidden');
         }
-    }
+    };
 
     const reomoveSelected = () => {
         const taskItems = document.querySelectorAll('.task-item');
 
         taskItems.forEach(taskItem => {
             taskItem.classList.remove('selected');
-        })
-    }
+        });
+    };
 
     const removeTaskFromDisplay = (taskId) => {
         const taskToRemove = document.querySelector(`[data-id="${taskId}"]`);
         taskToRemove.remove();
         hideTaskDetails();
-    }
+    };
 
     const getTodayList = () => {
         const taskList = document.querySelector('.list-of-tasks');
@@ -395,7 +394,7 @@ var taskDisplayController = (function () {
         buildHeader(headerText);
         const todayTasksUl = todayTasks.getTodayTaskUl();
         taskList.replaceWith(todayTasksUl);
-    }
+    };
 
     const getTomorrowList = () => {
         const taskList = document.querySelector('.list-of-tasks');
@@ -403,7 +402,7 @@ var taskDisplayController = (function () {
         buildHeader(headerText);
         const tomorrowTasksUl = tomorrowTasks.getTomorrowTaskUl();
         taskList.replaceWith(tomorrowTasksUl);
-    }
+    };
 
     const getSevenDayList = () => {
         const taskList = document.querySelector('.list-of-tasks');
@@ -411,7 +410,7 @@ var taskDisplayController = (function () {
         buildHeader(headerText);
         const sevenDaysUl = sevenDaysTasks.getSevenDaysUl();
         taskList.replaceWith(sevenDaysUl);
-    }
+    };
 
     const getAllTasksList = () => {
         const taskList = document.querySelector('.list-of-tasks');
@@ -419,7 +418,7 @@ var taskDisplayController = (function () {
         buildHeader(headerText);
         const allTasksUl = allTasks.getAllTasksUl();
         taskList.replaceWith(allTasksUl);
-    }
+    };
 
     const getListTasksList = (listTitle, listId) => {
         const taskList = document.querySelector('.list-of-tasks');
@@ -433,7 +432,7 @@ var taskDisplayController = (function () {
 
         // add event listener to list tasks ul to display task details
         events.addTasksEvents();
-    }
+    };
 
     const selectTimeFrame = (timeframe) => {
         const taskTimFrames = {
@@ -441,7 +440,8 @@ var taskDisplayController = (function () {
             'tomorrow': getTomorrowList,
             'next-7-days': getSevenDayList,
             'all-tasks': getAllTasksList
-        }
+        };
+
         taskTimFrames[timeframe]();
 
         // hide taks details div
@@ -449,7 +449,7 @@ var taskDisplayController = (function () {
 
         // add event listener to list tasks ul to display task details
         events.addTasksEvents();
-    }    
+    };   
 
     const getTaskDetails = (taskId) => {
         const taskDetailsDiv = document.querySelector('.task-details-container');
@@ -459,11 +459,11 @@ var taskDisplayController = (function () {
         const taskDetails = tasksDetails.getTasksDetails(taskId);
         taskDetailsDiv.replaceWith(taskDetails);
         events.addTaskDeleteEvents();
-    }
+    };
 
     const changeStatus = (taskId, taskListId) => {
         taskModule.changeTaskStatus(taskId, taskListId);
-    }
+    };
 
     const changeCompleteStatus = (taskId) => {
         const targetTask = document.querySelector(`[data-id = "${taskId}"]`);
@@ -472,11 +472,11 @@ var taskDisplayController = (function () {
         } else {
             targetTask.classList.add('completed');
         }
-    }
+    };
 
     const updateFomattedTasks = () => {
         formattedTasks.updateFormatedTaskObj();
-    }
+    };
 
     mainTaskContainer.appendChild(tasksContentDiv);
 
@@ -491,7 +491,7 @@ var taskDisplayController = (function () {
         updateFomattedTasks: updateFomattedTasks,
         removeTaskFromDisplay: removeTaskFromDisplay,
         reomoveSelected: reomoveSelected
-    }
+    };
 })();
 
 export { taskDisplayController };

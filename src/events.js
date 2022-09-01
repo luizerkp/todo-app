@@ -25,7 +25,7 @@ var modalEvents = (function () {
             );
         });
 
-    }
+    };
 
     const addCancelEventListeners = () => {
         const cancelButtons = document.querySelectorAll('.cancel');
@@ -34,13 +34,13 @@ var modalEvents = (function () {
                 return modal.closeModal();
             });
         });
-    }
+    };
 
     const addTaskSubmitEventListener = () => {
         const taskForm = document.querySelector('#task-form');
         const addBtn = document.querySelector('#add-task');
 
-        taskForm.addEventListener('submit', function () {
+        taskForm.addEventListener('submit', function (e) {
             addBtn.setAttribute('disabled', 'disabled');
             addBtn.style.cursor = 'wait';
             const taskFormInfo = taskForm.elements;
@@ -50,9 +50,9 @@ var modalEvents = (function () {
             const taskPriority = taskFormInfo['priority'].value.trim();
             const taskListTitle = taskFormInfo['list-select'].value; 
             const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
-            return taskModule.createTaskItem(taskName, taskNotes, taskDueDate, taskPriority, taskListTitle, taskListId);
+            return taskModule.createTaskItem(taskName, taskDueDate, taskPriority, taskListTitle, taskListId, taskNotes);
         });
-    }
+    };
 
     const addListFormSubmitEventListener = () => {
         const listForm = document.querySelector('#list-form');
@@ -69,7 +69,7 @@ var modalEvents = (function () {
                 return listModule.createListItem(listName);
             }
         });
-    }
+    };
 
     const addEditListFormSubmitEventListener = (currentListTitle, currentListId) => {
         const editListForm = document.querySelector('#list-edit-form');
@@ -87,7 +87,7 @@ var modalEvents = (function () {
             }
 
         });
-    }
+    };
 
     return {
         addInitialModalEvents: addInitialModalEvents,
@@ -95,7 +95,7 @@ var modalEvents = (function () {
         addTaskSubmitEventListener: addTaskSubmitEventListener,
         addListFormSubmitEventListener: addListFormSubmitEventListener,
         addEditListFormSubmitEventListener: addEditListFormSubmitEventListener
-    }
+    };
 })();
 
 var taskDisplayEvents = (function () {
@@ -109,11 +109,10 @@ var taskDisplayEvents = (function () {
                 return taskDisplayController.selectTimeFrame(taskId);
             });
         });
-    }
+    };
 
     const addTaskDetailsEvent = () => {
         const taskItems = document.querySelectorAll('.task-item');
-        const taskDetailsDiv = document.querySelector('.task-details-container');
         taskItems.forEach(taskItem => {
             taskItem.addEventListener('click', function () {
                 const taskId = taskItem.getAttribute('data-id');
@@ -122,7 +121,7 @@ var taskDisplayEvents = (function () {
                 return taskDisplayController.getTaskDetails(taskId);
             });
         });
-    }
+    };
 
     const addTaskCompleteEvent = () => {
         const taskStatusBtns = document.querySelectorAll('.task-status-btn');
@@ -130,12 +129,12 @@ var taskDisplayEvents = (function () {
             taskStatusBtn.addEventListener('click', function (e) {
                 // prevents task details from showing when toggleling complete on/off
                 e.stopPropagation();
-                let taskId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-id')
-                let taskListId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-list-id')
-                return taskDisplayController.changeStatus(taskId, taskListId)
+                let taskId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-id');
+                let taskListId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-list-id');
+                return taskDisplayController.changeStatus(taskId, taskListId);
             });
         });
-    }
+    };
 
     const addTaskDeleteEvent = () => {
         const deleteBtn = document.querySelector('#delete-task-btn');
@@ -143,21 +142,21 @@ var taskDisplayEvents = (function () {
         const taskListId = deleteBtn.getAttribute('data-list-id');
 
         deleteBtn.addEventListener('click', function () {
-            const confirmMsg = "would you like to delete this task?\n**This action can not be undone!**"
+            const confirmMsg = "would you like to delete this task?\n**This action can not be undone!**";
             if (confirm(confirmMsg) === true) {
                 return taskModule.removeTask(taskId, taskListId);
             } else {
                 return false;
             }
         });
-    }
+    };
 
     return {
         addInitialTaskDisplayEvents: addInitialTaskDisplayEvents,
         addTaskDetailsEvent: addTaskDetailsEvent,
         addTaskDeleteEvent: addTaskDeleteEvent,
         addTaskCompleteEvent: addTaskCompleteEvent
-    }
+    };
 })();
 
 var listDisplayEvents = (function () {
@@ -171,10 +170,10 @@ var listDisplayEvents = (function () {
                 return taskDisplayController.getListTasksList(listTitle, listId);
             });
         });
-    }
+    };
     return {
         addInitialListDisplayEvents: addInitialListDisplayEvents
-    }
+    };
 })();
 
 var events = (function () {
@@ -182,32 +181,32 @@ var events = (function () {
         modalEvents.addInitialModalEvents();
         taskDisplayEvents.addInitialTaskDisplayEvents();
         listDisplayEvents.addInitialListDisplayEvents();
-    }
+    };
 
     const addCancelEvents = () => {
         modalEvents.addCancelEventListeners();
-    }
+    };
 
     const addTaskSubmitEvent = () => {
         modalEvents.addTaskSubmitEventListener();
-    }
+    };
 
     const addListSubmitEvent = () => {
         modalEvents.addListFormSubmitEventListener();
-    }
+    };
 
     const addEditListEvent = (title, id) => {
         modalEvents.addEditListFormSubmitEventListener(title, id);
-    }
+    };
 
     const addTasksEvents = () => {
         taskDisplayEvents.addTaskDetailsEvent();
         taskDisplayEvents.addTaskCompleteEvent();
-    }
+    };
 
     const addTaskDeleteEvents = () => {
         taskDisplayEvents.addTaskDeleteEvent();
-    }
+    };
     return {
         addInitialEventListeners: addInitialEventListeners,
         addCancelEvents: addCancelEvents,
@@ -216,7 +215,7 @@ var events = (function () {
         addEditListEvent: addEditListEvent,
         addTasksEvents: addTasksEvents,
         addTaskDeleteEvents: addTaskDeleteEvents
-    }
+    };
 })();
 
 export { events };

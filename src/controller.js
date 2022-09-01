@@ -2,17 +2,17 @@ import { sideMenuContent } from "./sideMenu.js";
 import { modal } from "./modals.js";
 import { events } from "./events.js";
 import { taskDisplayController } from "./tasksDisplay.js";
-import { v4 as uuidv4 } from '../node_modules/uuid'
+import { v4 as uuidv4 } from '../node_modules/uuid';
 
 function listFactory (title, tasks) {
     return {
         title: title,
         tasks: tasks,
         id: uuidv4()
-    }
+    };
 }
 
-function tasksFactory (title, notes = null, dueDate, priority, listTitle, listId) {
+function tasksFactory (title, dueDate, priority, listTitle, listId, notes = null) {
     return {
         title: title,
         notes: notes,
@@ -22,7 +22,7 @@ function tasksFactory (title, notes = null, dueDate, priority, listTitle, listId
         listId: listId,
         completed: false,
         id: uuidv4()
-    }
+    };
 }
 
 // source https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
@@ -74,7 +74,7 @@ var initialLoad = (function () {
         listItem.appendChild(editIcon);
 
         return listItem;
-    }
+    };
 
     const buildDefaultLists = () => {
         const defaultListsTitles = ['Personal', 'Work', 'Groceries'];
@@ -91,8 +91,8 @@ var initialLoad = (function () {
 
         lists = defaultLists;
         localStorage.setItem('lists', JSON.stringify(lists));
-        location.reload()
-    }
+        location.reload();
+    };
     
     const buildPageDisplay = () => {
         if (lists) {
@@ -103,7 +103,7 @@ var initialLoad = (function () {
         } else {
             buildDefaultLists();
         }
-    }
+    };
 
     if (chekStorage) {
         lists = JSON.parse(localStorage.getItem('lists'));
@@ -116,14 +116,14 @@ var initialLoad = (function () {
     return {
         getListsList: () => listsList,
         getLists: () => lists,
-    }
+    };
 })();
 
 var taskModule = (function () {
     let lists = initialLoad.getLists();
 
-    const createTaskItem = ( title, notes, dueDate, priority, listTitle, listId) => {
-        let task = tasksFactory(title, notes, dueDate, priority, listTitle, listId);
+    const createTaskItem = (title, dueDate, priority, listTitle, listId, notes) => {
+        let task = tasksFactory(title, dueDate, priority, listTitle, listId, notes);
 
         lists.some(function (list) {
             if (list.id === task.listId) {
@@ -132,7 +132,7 @@ var taskModule = (function () {
                 return true;
             }
         });
-    }
+    };
 
     const removeTask = (taskId, taskListId) => {
         lists.some(function (list) {
@@ -145,7 +145,7 @@ var taskModule = (function () {
                 return true;
             }
         });
-    }
+    };
 
     const changeTaskStatus = (taskId, taskListId) => {
         lists.some(function (list) {
@@ -159,13 +159,13 @@ var taskModule = (function () {
                 return true;
             }
         });
-    }
+    };
 
     return {
         createTaskItem: createTaskItem,
         removeTask: removeTask, 
         changeTaskStatus: changeTaskStatus
-    }
+    };
 })();
 
 var listModule = (function () {
@@ -175,7 +175,7 @@ var listModule = (function () {
         let list = listFactory(listTitle, []);
             lists.push(list);
             localStorage.setItem('lists', JSON.stringify(initialLoad.getLists()));
-    }
+    };
 
     const editListTitle= (currentListTitle, listId, newListTitle) => {
         // if title has changed, update list title in localStorage
@@ -189,7 +189,7 @@ var listModule = (function () {
                 }
             });
         }    
-    }
+    };
 
     const removeList = (listId) => {
         lists.some(function (list, index) {
@@ -198,13 +198,13 @@ var listModule = (function () {
                 localStorage.setItem('lists', JSON.stringify(lists));
             }
         });
-    }
+    };
 
     return {
         createListItem: createListItem,
         editListTitle: editListTitle,
         removeList: removeList
-    }
+    };
 })();
 
 var loadPage = (function() {
@@ -217,7 +217,7 @@ var loadPage = (function() {
         let previousTaskConatainer;
         // retrive task container div via data-id if it exists
         if (previousTaskContainerDataId) {
-            previousTaskConatainer = document.querySelector(`[data-id = "${previousTaskContainerDataId}"]`)
+            previousTaskConatainer = document.querySelector(`[data-id = "${previousTaskContainerDataId}"]`);
         }
 
         // simulate click on shortcut if it exists
@@ -226,7 +226,7 @@ var loadPage = (function() {
         } else {
             defaultToAllTasks.click();
         }
-    }
+    };
 
     const buildPage = () => {
         // creates the skeleton of side menu and the add buttons for tasks and lists
@@ -254,7 +254,7 @@ var loadPage = (function() {
         // handle events listeners
         events.addCancelEvents();
         events.addTaskSubmitEvent();
-    }
+    };
 
     const createListModal = () => {
         const createListModalHeader = 'Create List';
@@ -267,7 +267,7 @@ var loadPage = (function() {
         // handle events listeners
         events.addCancelEvents();
         events.addListSubmitEvent();
-    }
+    };
 
     const createEditListModal = (listTitle, listId) => {
         const createEditListModalHeader = 'Edit List';
@@ -277,7 +277,7 @@ var loadPage = (function() {
 
         events.addCancelEvents();
         events.addEditListEvent(listTitle, listId);
-    }
+    };
 
     return {
         createTaskModal: createTaskModal,
@@ -286,7 +286,7 @@ var loadPage = (function() {
         buildPage: buildPage,
         getContentDiv: () => contentDiv,
         restorePrevState: restorePrevState
-    }
+    };
 })();
 
 export { loadPage, taskModule, listModule };
