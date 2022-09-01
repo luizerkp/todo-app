@@ -307,7 +307,14 @@ var tasksDetails = (function () {
                 header.classList.add('task-details-sub-header');
                 let para = document.createElement('p');
                 para.classList.add('task-details-para');
-                header.innerText = key[0].toUpperCase() + key.substring(1);
+
+                // ensures that due date and list title are formatted correctly
+                if (key === 'dueDate' || key === 'listTitle') {
+                    header.innerText = key === 'dueDate' ? 'Due Date': 'List Title';
+                } else {
+                    header.innerText = key[0].toUpperCase() + key.substring(1);
+                }
+            
                 para.textContent = value;
                 tasksDetailsDiv.appendChild(header);
                 tasksDetailsDiv.appendChild(para);
