@@ -1,12 +1,12 @@
-import { loadPage, taskModule, listModule } from './controller.js';
-import { modal } from './modals.js';
-import { taskDisplayController } from './tasksDisplay.js';
+import { loadPage, taskModule, listModule } from './controller';
+import { modal } from './modals';
+import { taskDisplayController } from './tasksDisplay';
 
 var modalEvents = (function () {
     const addInitialModalEvents = () => {
-        let createTaskEvent = document.querySelector('.create-task-button');
-        let addListEvent = document.querySelector('.add-list-button');
-        let editListEvents = document.querySelectorAll('.edit-list-icon');
+        const createTaskEvent = document.querySelector('.create-task-button');
+        const addListEvent = document.querySelector('.add-list-button');
+        const editListEvents = document.querySelectorAll('.edit-list-icon');
 
         createTaskEvent.addEventListener('click', function () {
             return loadPage.createTaskModal();
@@ -16,7 +16,7 @@ var modalEvents = (function () {
             return loadPage.createListModal();
         });
 
-        editListEvents.forEach(function (editListEvent) {
+        editListEvents.forEach((editListEvent) => {
             editListEvent.addEventListener('click', function (e) {
                 let dataTitle = e.target.getAttribute('data-title');
                 let dataId = e.target.getAttribute('data-id');
@@ -29,7 +29,7 @@ var modalEvents = (function () {
 
     const addCancelEventListeners = () => {
         const cancelButtons = document.querySelectorAll('.cancel');
-        cancelButtons.forEach(button => {
+        cancelButtons.forEach((button) => {
             button.addEventListener('click', function () {
                 return modal.closeModal();
             });
@@ -40,7 +40,7 @@ var modalEvents = (function () {
         const taskForm = document.querySelector('#task-form');
         const addBtn = document.querySelector('#add-task');
 
-        taskForm.addEventListener('submit', function (e) {
+        taskForm.addEventListener('submit', function () {
             addBtn.setAttribute('disabled', 'disabled');
             addBtn.style.cursor = 'wait';
             const taskFormInfo = taskForm.elements;
@@ -62,12 +62,8 @@ var modalEvents = (function () {
             addBtn.style.cursor = 'wait';
             const listFormInfo = listForm.elements;
             const listName = listFormInfo['title'].value.trim();
-
-            if (listName.length === 0) {
-                return false;
-            } else {
-                return listModule.createListItem(listName);
-            }
+            return listModule.createListItem(listName);
+        
         });
     };
 
@@ -77,7 +73,7 @@ var modalEvents = (function () {
         editListForm.addEventListener('click', function (e) {
             const editListFormInfo = editListForm.elements;
             const newListTitle = editListFormInfo['title'].value.trim();
-            // e.preventDefault();
+            
             if (newListTitle.length === 0) {
                 return false;
             } else if (e.target.id === 'save-list-title') {
@@ -90,11 +86,11 @@ var modalEvents = (function () {
     };
 
     return {
-        addInitialModalEvents: addInitialModalEvents,
-        addCancelEventListeners: addCancelEventListeners,
-        addTaskSubmitEventListener: addTaskSubmitEventListener,
-        addListFormSubmitEventListener: addListFormSubmitEventListener,
-        addEditListFormSubmitEventListener: addEditListFormSubmitEventListener
+        addInitialModalEvents,
+        addCancelEventListeners,
+        addTaskSubmitEventListener,
+        addListFormSubmitEventListener,
+        addEditListFormSubmitEventListener
     };
 })();
 
@@ -102,7 +98,7 @@ var taskDisplayEvents = (function () {
     const addInitialTaskDisplayEvents = () => {
         const taskShortcuts = document.querySelectorAll('.task-shortcut');
 
-        taskShortcuts.forEach(shortcut => {
+        taskShortcuts.forEach((shortcut) => {
             shortcut.addEventListener('click', function (e) {
                 const taskId = e.target.getAttribute('id');
                 localStorage.setItem('task-container-data-id', JSON.stringify(taskId));
@@ -113,7 +109,7 @@ var taskDisplayEvents = (function () {
 
     const addTaskDetailsEvent = () => {
         const taskItems = document.querySelectorAll('.task-item');
-        taskItems.forEach(taskItem => {
+        taskItems.forEach((taskItem) => {
             taskItem.addEventListener('click', function () {
                 const taskId = taskItem.getAttribute('data-id');
                 taskDisplayController.reomoveSelected();
@@ -125,7 +121,7 @@ var taskDisplayEvents = (function () {
 
     const addTaskCompleteEvent = () => {
         const taskStatusBtns = document.querySelectorAll('.task-status-btn');
-        taskStatusBtns.forEach(taskStatusBtn => {
+        taskStatusBtns.forEach((taskStatusBtn) => {
             taskStatusBtn.addEventListener('click', function (e) {
                 // prevents task details from showing when toggleling complete on/off
                 e.stopPropagation();
@@ -145,24 +141,23 @@ var taskDisplayEvents = (function () {
             const confirmMsg = "would you like to delete this task?\n**This action can not be undone!**";
             if (confirm(confirmMsg) === true) {
                 return taskModule.removeTask(taskId, taskListId);
-            } else {
-                return false;
-            }
+            } 
+            return false;         
         });
     };
 
     return {
-        addInitialTaskDisplayEvents: addInitialTaskDisplayEvents,
-        addTaskDetailsEvent: addTaskDetailsEvent,
-        addTaskDeleteEvent: addTaskDeleteEvent,
-        addTaskCompleteEvent: addTaskCompleteEvent
+        addInitialTaskDisplayEvents,
+        addTaskDetailsEvent,
+        addTaskDeleteEvent,
+        addTaskCompleteEvent
     };
 })();
 
 var listDisplayEvents = (function () {
     const addInitialListDisplayEvents = () => {
         const listShortcuts = document.querySelectorAll('.list-shortcut');
-        listShortcuts.forEach(shortcut => {
+        listShortcuts.forEach((shortcut) => {
             shortcut.addEventListener('click', function (e) {
                 const listTitle = e.target.getAttribute('data-title');
                 const listId = e.target.getAttribute('data-id');
@@ -172,7 +167,7 @@ var listDisplayEvents = (function () {
         });
     };
     return {
-        addInitialListDisplayEvents: addInitialListDisplayEvents
+        addInitialListDisplayEvents
     };
 })();
 
@@ -208,13 +203,13 @@ var events = (function () {
         taskDisplayEvents.addTaskDeleteEvent();
     };
     return {
-        addInitialEventListeners: addInitialEventListeners,
-        addCancelEvents: addCancelEvents,
-        addTaskSubmitEvent: addTaskSubmitEvent,
-        addListSubmitEvent: addListSubmitEvent,
-        addEditListEvent: addEditListEvent,
-        addTasksEvents: addTasksEvents,
-        addTaskDeleteEvents: addTaskDeleteEvents
+        addInitialEventListeners,
+        addCancelEvents,
+        addTaskSubmitEvent,
+        addListSubmitEvent,
+        addEditListEvent,
+        addTasksEvents,
+        addTaskDeleteEvents
     };
 })();
 

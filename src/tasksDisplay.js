@@ -1,5 +1,5 @@
-import { taskModule } from './controller.js';
-import { events } from './events.js';
+import { taskModule } from './controller';
+import { events } from './events';
 
 // create ul element with tasks 
 function buildTasksUl(tasks) {
@@ -60,9 +60,9 @@ var formattedTasks = (function () {
     //  compare priority for task during the same day
     const comparePriorityAndTime = function (a, b) {
         const priorityLevel = {
-            'High': 1,
-            'Medium': 2,
-            'Low': 3
+            High: 1,
+            Medium: 2,
+            Low: 3
         };
 
         // if dates are the same, sort by priority descending from high to low
@@ -109,7 +109,7 @@ var formattedTasks = (function () {
         // time necessary for Date() constructor set to 00:00:00
         const time = 'T00:00:00';
 
-        let formattedArr = arr.map(obj => {
+        let formattedArr = arr.map((obj) => {
             // format dueDate from yyyy-mm-dd to yyyy-mm-ddT00:00:00
             let formattedDate = obj.dueDate + time;
 
@@ -130,7 +130,7 @@ var formattedTasks = (function () {
         // extracts tasks from current lists
         let tasks = [];
         if (currentLists) {
-            currentLists.forEach(list => {
+            currentLists.forEach((list) => {
                 list.tasks.forEach(task => {
                     tasks.push(task);
                 });
@@ -153,22 +153,22 @@ var formattedTasks = (function () {
         allSortedTasksAndFormated = getCurrentFormatedTasks();
     };
 
-    const getTodayFormattedTasks = function () {
+    const getTodayFormattedTasks = () => {
         const today = new Date();
         const todayFormatted = today.toDateString();
-        const todayFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === todayFormatted);
+        const todayFormattedTasks = allSortedTasksAndFormated.filter((task) => task.dueDate === todayFormatted);
         return todayFormattedTasks;
     };
 
-    const getTomorrowFormattedTasks = function () {
+    const getTomorrowFormattedTasks = () => {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         const tomorrowFormatted = tomorrow.toDateString();
-        const tomorrowFormattedTasks = allSortedTasksAndFormated.filter(task => task.dueDate === tomorrowFormatted);
+        const tomorrowFormattedTasks = allSortedTasksAndFormated.filter((task) => task.dueDate === tomorrowFormatted);
         return tomorrowFormattedTasks;
     };
 
-    const getSevenDaysFormattedTasks = function () {    
+    const getSevenDaysFormattedTasks = () => {    
         // get current day 
         const sevenDaysStart = new Date();
         const days = 7;
@@ -176,23 +176,23 @@ var formattedTasks = (function () {
         // get 7 days from current day
         const sevenDaysArray = getFormatedDaysArray(sevenDaysStart, days);
 
-        const sevenDaysFormattedTasks = allSortedTasksAndFormated.filter(task => {
+        const sevenDaysFormattedTasks = allSortedTasksAndFormated.filter((task) => {
             return sevenDaysArray.includes(task.dueDate);
         });
 
         return sevenDaysFormattedTasks;
     };
 
-    const getListFormattedTasks = function (listId) {
-        const listFormattedTasks = allSortedTasksAndFormated.filter(task => task.listId === listId);
+    const getListFormattedTasks = (listId) => {
+        const listFormattedTasks = allSortedTasksAndFormated.filter((task) => task.listId === listId);
         return listFormattedTasks;
     };
 
-    const getFormattedTaskDetails = function (taskId) {
-        const formattedTaskDetails = allSortedTasksAndFormated.find(task => task.id === taskId);
+    const getFormattedTaskDetails = (taskId) => {
+        const formattedTaskDetails = allSortedTasksAndFormated.find((task) => task.id === taskId);
         return formattedTaskDetails;
     };
-    const getAllFormattedTasks = function () {       
+    const getAllFormattedTasks = () => {       
         return allSortedTasksAndFormated;
     };
 
@@ -489,15 +489,15 @@ var taskDisplayController = (function () {
 
     return {
         getMainTaskContainer: () => mainTaskContainer,
-        selectTimeFrame: selectTimeFrame,
-        getListTasksList: getListTasksList,
-        getTaskDetails: getTaskDetails,
-        hideTaskDetails: hideTaskDetails,
-        changeStatus: changeStatus,
-        changeCompleteStatus: changeCompleteStatus,
-        updateFomattedTasks: updateFomattedTasks,
-        removeTaskFromDisplay: removeTaskFromDisplay,
-        reomoveSelected: reomoveSelected
+        selectTimeFrame,
+        getListTasksList,
+        getTaskDetails,
+        hideTaskDetails,
+        changeStatus,
+        changeCompleteStatus,
+        updateFomattedTasks,
+        removeTaskFromDisplay,
+        reomoveSelected
     };
 })();
 

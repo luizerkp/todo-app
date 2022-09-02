@@ -1,7 +1,7 @@
-import { sideMenuContent } from "./sideMenu.js";
-import { modal } from "./modals.js";
-import { events } from "./events.js";
-import { taskDisplayController } from "./tasksDisplay.js";
+import { sideMenuContent } from "./sideMenu";
+import { modal } from "./modals";
+import { events } from "./events";
+import { taskDisplayController } from "./tasksDisplay";
 import { v4 as uuidv4 } from '../node_modules/uuid';
 
 function listFactory (title, tasks) {
@@ -79,12 +79,12 @@ var initialLoad = (function () {
     const buildDefaultLists = () => {
         const defaultListsTitles = ['Personal', 'Work', 'Groceries'];
         let defaultLists = [];
-        defaultListsTitles.forEach(function (listTitle) {
+        defaultListsTitles.forEach((listTitle) => {
             let list = listFactory(listTitle, []);
             defaultLists.push(list);
         });
 
-        defaultLists.forEach(function (list) {
+        defaultLists.forEach((list) =>{
             let listItem = buildListItem(list);
             listsList.appendChild(listItem);
         });
@@ -96,7 +96,7 @@ var initialLoad = (function () {
     
     const buildPageDisplay = () => {
         if (lists) {
-            lists.forEach(function (list) {
+            lists.forEach((list) => {
                 let listItem = buildListItem(list);
                 listsList.appendChild(listItem);
             });
@@ -125,7 +125,7 @@ var taskModule = (function () {
     const createTaskItem = (title, dueDate, priority, listTitle, listId, notes) => {
         let task = tasksFactory(title, dueDate, priority, listTitle, listId, notes);
 
-        lists.some(function (list) {
+        lists.some((list) => {
             if (list.id === task.listId) {
                 list.tasks.push(task);
                 localStorage.setItem('lists', JSON.stringify(lists));
@@ -135,9 +135,9 @@ var taskModule = (function () {
     };
 
     const removeTask = (taskId, taskListId) => {
-        lists.some(function (list) {
+        lists.some((list) => {
             if (list.id === taskListId) {
-                let taskIndex = list.tasks.findIndex(task => task.id === taskId);
+                let taskIndex = list.tasks.findIndex((task) => task.id === taskId);
                 list.tasks.splice(taskIndex, 1);
                 localStorage.setItem('lists', JSON.stringify(lists));
                 taskDisplayController.updateFomattedTasks();
@@ -148,9 +148,9 @@ var taskModule = (function () {
     };
 
     const changeTaskStatus = (taskId, taskListId) => {
-        lists.some(function (list) {
+        lists.some((list) => {
             if (list.id === taskListId) {
-                let task = list.tasks.find(task => task.id === taskId);
+                let task = list.tasks.find((task) => task.id === taskId);
                 // if completed is set to false the set it to true and vice versa
                 task.completed = task.completed === false ? true:false;
                 localStorage.setItem('lists', JSON.stringify(lists));
@@ -162,9 +162,9 @@ var taskModule = (function () {
     };
 
     return {
-        createTaskItem: createTaskItem,
-        removeTask: removeTask, 
-        changeTaskStatus: changeTaskStatus
+        createTaskItem,
+        removeTask,
+        changeTaskStatus
     };
 })();
 
@@ -182,7 +182,7 @@ var listModule = (function () {
         if (currentListTitle === newListTitle) {
             return false;
         } else {
-            lists.some(function (list) {
+            lists.some((list) => {
                 if (list.id === listId) {
                     list.title = newListTitle;
                     localStorage.setItem('lists', JSON.stringify(lists));
@@ -192,7 +192,7 @@ var listModule = (function () {
     };
 
     const removeList = (listId) => {
-        lists.some(function (list, index) {
+        lists.some((list, index) => {
             if (list.id === listId) {
                 lists.splice(index, 1);
                 localStorage.setItem('lists', JSON.stringify(lists));
@@ -201,9 +201,9 @@ var listModule = (function () {
     };
 
     return {
-        createListItem: createListItem,
-        editListTitle: editListTitle,
-        removeList: removeList
+        createListItem,
+        editListTitle,
+        removeList
     };
 })();
 
@@ -280,12 +280,12 @@ var loadPage = (function() {
     };
 
     return {
-        createTaskModal: createTaskModal,
-        createListModal: createListModal,
-        createEditListModal: createEditListModal,
-        buildPage: buildPage,
         getContentDiv: () => contentDiv,
-        restorePrevState: restorePrevState
+        createTaskModal,
+        createListModal,
+        createEditListModal,
+        buildPage,
+        restorePrevState
     };
 })();
 

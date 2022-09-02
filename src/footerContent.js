@@ -23,7 +23,7 @@ var footer = (function() {
     const buildFooter = () => document.body.appendChild(footerDiv);
     
     return {
-        buildFooter: buildFooter
+        buildFooter
     };
 })();
 

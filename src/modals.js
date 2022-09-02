@@ -243,7 +243,7 @@ var listFormContainer = (function () {
     
     return {
         getListForm: () => form,
-        getListEditForm: getListEditForm,
+        getListEditForm,
     };
 })();
 
@@ -348,12 +348,12 @@ var modal = (function () {
     };
 
     return {    
-        buildModalContainer: buildModalContainer,
-        getTaskModal: getTaskModal,
-        getListModal: getListModal,
-        getListEditModal: getListEditModal,
-        openModal: openModal,
-        closeModal: closeModal
+        buildModalContainer,
+        getTaskModal,
+        getListModal,
+        getListEditModal,
+        openModal,
+        closeModal
     };
 })();
 
