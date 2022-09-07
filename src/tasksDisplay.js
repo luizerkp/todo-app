@@ -1,6 +1,3 @@
-import { taskModule } from './controller';
-import { events } from './events';
-
 // checks if due date is past current date
 const pastDueDate =  (dueDate) => {
   const today = new Date();
@@ -431,7 +428,7 @@ var taskDisplayController = (function () {
     }
   };
 
-  const reomoveSelected = () => {
+  const removeSelected = () => {
     const taskItems = document.querySelectorAll('.task-item');
 
     taskItems.forEach(taskItem => {
@@ -486,9 +483,6 @@ var taskDisplayController = (function () {
 
     // hide task details div
     hideTaskDetails();
-
-    // add event listener to list tasks ul to display task details
-    events.addTasksEvents();
   };
 
   const selectTimeFrame = (timeframe) => {
@@ -503,9 +497,6 @@ var taskDisplayController = (function () {
 
     // hide taks details div
     hideTaskDetails();
-
-    // add event listener to list tasks ul to display task details
-    events.addTasksEvents();
   };
 
   const getTaskDetails = (taskId) => {
@@ -517,11 +508,6 @@ var taskDisplayController = (function () {
 
     const taskDetails = tasksDetails.getTasksDetails(taskId);
     taskDetailsDiv.replaceWith(taskDetails);
-    events.addTaskDeleteEvents();
-  };
-
-  const changeStatus = (taskId, taskListId) => {
-    taskModule.changeTaskStatus(taskId, taskListId);
   };
 
   const changeCompleteStatus = (taskId) => {
@@ -545,12 +531,10 @@ var taskDisplayController = (function () {
     selectTimeFrame,
     getListTasksList,
     getTaskDetails,
-    hideTaskDetails,
-    changeStatus,
     changeCompleteStatus,
     updateFomattedTasks,
     removeTaskFromDisplay,
-    reomoveSelected,
+    removeSelected,
   };
 
 })();

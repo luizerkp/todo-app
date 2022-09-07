@@ -31,6 +31,7 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
+    "circular-dependency-plugin": "^5.2.2",
     "material-icons": "^1.11.8",
     "uuid": "^8.3.2"
   }

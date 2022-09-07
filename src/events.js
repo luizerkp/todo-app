@@ -3,29 +3,6 @@ import { modal } from './modals';
 import { taskDisplayController } from './tasksDisplay';
 
 var modalEvents = (function () {
-  const addInitialModalEvents = () => {
-    const createTaskEvent = document.querySelector('.create-task-button');
-    const addListEvent = document.querySelector('.add-list-button');
-    const editListEvents = document.querySelectorAll('.edit-list-icon');
-
-    createTaskEvent.addEventListener('click', function () {
-      return loadPage.createTaskModal();
-    });
-
-    addListEvent.addEventListener('click', function () {
-      return loadPage.createListModal();
-    });
-
-    editListEvents.forEach((editListEvent) => {
-      editListEvent.addEventListener('click', function (e) {
-        let dataTitle = e.target.getAttribute('data-title');
-        let dataId = e.target.getAttribute('data-id');
-        return loadPage.createEditListModal(dataTitle, dataId);
-      }
-      );
-    });
-  };
-
   const addCancelEventListeners = () => {
     const cancelButtons = document.querySelectorAll('.cancel');
     cancelButtons.forEach((button) => {
@@ -86,17 +63,43 @@ var modalEvents = (function () {
     });
   };
 
+  const addInitialModalEvents = () => {
+    const createTaskEvent = document.querySelector('.create-task-button');
+    const addListEvent = document.querySelector('.add-list-button');
+    const editListEvents = document.querySelectorAll('.edit-list-icon');
+
+    createTaskEvent.addEventListener('click', function () {
+      loadPage.createTaskModal();
+      addCancelEventListeners();
+      addTaskSubmitEventListener();
+    });
+
+    addListEvent.addEventListener('click', function () {
+      loadPage.createListModal();
+      addListFormSubmitEventListener();
+      addCancelEventListeners();
+      
+    });
+
+    editListEvents.forEach((editListEvent) => {
+      editListEvent.addEventListener('click', function (e) {
+        let dataTitle = e.target.getAttribute('data-title');
+        let dataId = e.target.getAttribute('data-id');
+        loadPage.createEditListModal(dataTitle, dataId);
+        addCancelEventListeners();
+        addEditListFormSubmitEventListener(dataTitle, dataId);
+      }
+      );
+    });
+  };
+
   return {
     addInitialModalEvents,
-    addCancelEventListeners,
-    addTaskSubmitEventListener,
-    addListFormSubmitEventListener,
-    addEditListFormSubmitEventListener,
   };
 
 })();
 
-var taskDisplayEvents = (function () {
+var taskDisplayEvents = (function () {  
   const addInitialTaskDisplayEvents = () => {
     const taskShortcuts = document.querySelectorAll('.task-shortcut');
 
@@ -104,36 +107,13 @@ var taskDisplayEvents = (function () {
       shortcut.addEventListener('click', function (e) {
         const taskId = e.target.getAttribute('id');
         localStorage.setItem('task-container-data-id', JSON.stringify(taskId));
-        return taskDisplayController.selectTimeFrame(taskId);
+        taskDisplayController.selectTimeFrame(taskId);
+        addTaskDetailsEvent();
+        addTaskCompleteEvent();
       });
     });
-  };
-
-  const addTaskDetailsEvent = () => {
-    const taskItems = document.querySelectorAll('.task-item');
-    taskItems.forEach((taskItem) => {
-      taskItem.addEventListener('click', function () {
-        const taskId = taskItem.getAttribute('data-id');
-        taskDisplayController.reomoveSelected();
-        taskItem.classList.add('selected');
-        return taskDisplayController.getTaskDetails(taskId);
-      });
-    });
-  };
-
-  const addTaskCompleteEvent = () => {
-    const taskStatusBtns = document.querySelectorAll('.task-status-btn');
-    taskStatusBtns.forEach((taskStatusBtn) => {
-      taskStatusBtn.addEventListener('click', function (e) {
-        // prevents task details from showing when toggleling complete on/off
-        e.stopPropagation();
-        let taskId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-id');
-        let taskListId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-list-id');
-        return taskDisplayController.changeStatus(taskId, taskListId);
-      });
-    });
-  };
-
+  };  
+  
   const addTaskDeleteEvent = () => {
     const deleteBtn = document.querySelector('#delete-task-btn');
     const taskId = deleteBtn.getAttribute('data-id');
@@ -145,15 +125,40 @@ var taskDisplayEvents = (function () {
       if (confirm(confirmMsg) === true) {
         return taskModule.removeTask(taskId, taskListId);
       }
-
       return false;
+    });
+  };
+
+  const addTaskDetailsEvent = () => {
+    const taskItems = document.querySelectorAll('.task-item');
+    taskItems.forEach((taskItem) => {
+      taskItem.addEventListener('click', function () {
+        const taskId = taskItem.getAttribute('data-id');
+        taskDisplayController.removeSelected();
+        taskItem.classList.add('selected');
+        taskDisplayController.getTaskDetails(taskId);
+        addTaskDeleteEvent();
+      });
+    });
+  };
+
+  const addTaskCompleteEvent = () => {
+    const taskStatusBtns = document.querySelectorAll('.task-status-btn');
+    taskStatusBtns.forEach((taskStatusBtn) => {
+      taskStatusBtn.addEventListener('click', function (e) {
+        
+        // prevents task details from showing when toggleling complete on/off
+        e.stopPropagation();
+        let taskId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-id');
+        let taskListId = taskStatusBtn.parentElement.parentElement.parentElement.getAttribute('data-list-id');
+        return taskModule.changeTaskStatus(taskId, taskListId);;
+      });
     });
   };
 
   return {
     addInitialTaskDisplayEvents,
     addTaskDetailsEvent,
-    addTaskDeleteEvent,
     addTaskCompleteEvent,
   };
 
@@ -167,7 +172,10 @@ var listDisplayEvents = (function () {
         const listTitle = e.target.getAttribute('data-title');
         const listId = e.target.getAttribute('data-id');
         localStorage.setItem('task-container-data-id', JSON.stringify(listId));
-        return taskDisplayController.getListTasksList(listTitle, listId);
+        taskDisplayController.getListTasksList(listTitle, listId);
+        taskDisplayEvents.addTaskDetailsEvent();
+        taskDisplayEvents.addTaskCompleteEvent();
+        
       });
     });
   };
@@ -185,39 +193,8 @@ var events = (function () {
     listDisplayEvents.addInitialListDisplayEvents();
   };
 
-  const addCancelEvents = () => {
-    modalEvents.addCancelEventListeners();
-  };
-
-  const addTaskSubmitEvent = () => {
-    modalEvents.addTaskSubmitEventListener();
-  };
-
-  const addListSubmitEvent = () => {
-    modalEvents.addListFormSubmitEventListener();
-  };
-
-  const addEditListEvent = (title, id) => {
-    modalEvents.addEditListFormSubmitEventListener(title, id);
-  };
-
-  const addTasksEvents = () => {
-    taskDisplayEvents.addTaskDetailsEvent();
-    taskDisplayEvents.addTaskCompleteEvent();
-  };
-
-  const addTaskDeleteEvents = () => {
-    taskDisplayEvents.addTaskDeleteEvent();
-  };
-
   return {
     addInitialEventListeners,
-    addCancelEvents,
-    addTaskSubmitEvent,
-    addListSubmitEvent,
-    addEditListEvent,
-    addTasksEvents,
-    addTaskDeleteEvents,
   };
 
 })();

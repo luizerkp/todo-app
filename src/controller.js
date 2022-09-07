@@ -1,6 +1,5 @@
 import { sideMenuContent } from "./sideMenu";
 import { modal } from "./modals";
-import { events } from "./events";
 import { taskDisplayController } from "./tasksDisplay";
 import { v4 as uuidv4 } from '../node_modules/uuid';
 
@@ -39,13 +38,17 @@ function storageAvailable(type) {
     return e instanceof DOMException && (
       // everything except Firefox
       e.code === 22 ||
+
       // Firefox
       e.code === 1014 ||
+
       // test name field too, because code might not be present
       // everything except Firefox
       e.name === 'QuotaExceededError' ||
+
       // Firefox
       e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+      
       // acknowledge QuotaExceededError only if there's something already stored
       (storage && storage.length !== 0);
   }
@@ -152,6 +155,7 @@ var taskModule = (function () {
     lists.some((list) => {
       if (list.id === taskListId) {
         let task = list.tasks.find((task) => task.id === taskId);
+
         // if completed is set to false the set it to true and vice versa
         task.completed = task.completed === false ? true : false;
         localStorage.setItem('lists', JSON.stringify(lists));
@@ -254,10 +258,6 @@ var loadPage = (function () {
     // handle modal display
     modal.getTaskModal();
     modal.openModal(createTaskModalHeader, createTaskModalId);
-
-    // handle events listeners
-    events.addCancelEvents();
-    events.addTaskSubmitEvent();
   };
 
   const createListModal = () => {
@@ -267,10 +267,6 @@ var loadPage = (function () {
     // handle modal display
     modal.getListModal();
     modal.openModal(createListModalHeader, createListModalId);
-
-    // handle events listeners
-    events.addCancelEvents();
-    events.addListSubmitEvent();
   };
 
   const createEditListModal = (listTitle, listId) => {
@@ -278,9 +274,6 @@ var loadPage = (function () {
     const createEditListModalId = 'edit-list-modal';
     modal.getListEditModal(listTitle);
     modal.openModal(createEditListModalHeader, createEditListModalId);
-
-    events.addCancelEvents();
-    events.addEditListEvent(listTitle, listId);
   };
 
   return {
