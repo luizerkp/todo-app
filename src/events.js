@@ -20,7 +20,7 @@ var modalEvents = (function () {
       addBtn.setAttribute('disabled', 'disabled');
       addBtn.style.cursor = 'wait';
       const taskFormInfo = taskForm.elements;
-      const taskName = taskFormInfo['title'].value.trim();
+      const taskTitle = taskFormInfo['title'].value.trim();
       const taskNotes = taskFormInfo['notes'].value.trim();
       const taskDueDate = taskFormInfo['due-date'].value.trim();
       const taskPriority = taskFormInfo['priority'].value.trim();
@@ -29,11 +29,13 @@ var modalEvents = (function () {
           taskFormInfo['list-select']
               .options[taskFormInfo['list-select'].selectedIndex]
                   .getAttribute('data-id');
-      return taskModule.createTaskItem
-          (
-            taskName, taskDueDate, taskPriority, 
-            taskListTitle, taskListId, taskNotes
-          );
+      return taskModule.createTaskItem(
+          taskTitle, 
+          taskDueDate, 
+          taskPriority, 
+          taskListTitle, 
+          taskListId, 
+          taskNotes);
     });
   };
 
