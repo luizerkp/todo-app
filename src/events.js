@@ -25,8 +25,15 @@ var modalEvents = (function () {
       const taskDueDate = taskFormInfo['due-date'].value.trim();
       const taskPriority = taskFormInfo['priority'].value.trim();
       const taskListTitle = taskFormInfo['list-select'].value;
-      const taskListId = taskFormInfo['list-select'].options[taskFormInfo['list-select'].selectedIndex].getAttribute('data-id');
-      return taskModule.createTaskItem(taskName, taskDueDate, taskPriority, taskListTitle, taskListId, taskNotes);
+      const taskListId = 
+          taskFormInfo['list-select']
+              .options[taskFormInfo['list-select'].selectedIndex]
+                  .getAttribute('data-id');
+      return taskModule.createTaskItem
+          (
+            taskName, taskDueDate, taskPriority, 
+            taskListTitle, taskListId, taskNotes
+          );
     });
   };
 
@@ -42,26 +49,27 @@ var modalEvents = (function () {
     });
   };
 
-  const addEditListFormSubmitEventListener = (currentListTitle, currentListId) => {
-    const editListForm = document.querySelector('#list-edit-form');
+  const addEditListFormSubmitEventListener = 
+      (currentListTitle, currentListId) => {
+        const editListForm = document.querySelector('#list-edit-form');
 
-    editListForm.addEventListener('click', function (e) {
-      const editListFormInfo = editListForm.elements;
-      const newListTitle = editListFormInfo['title'].value.trim();
+        editListForm.addEventListener('click', function (e) {
+          const editListFormInfo = editListForm.elements;
+          const newListTitle = editListFormInfo['title'].value.trim();
 
-      if (newListTitle.length === 0) {
-        return false;
-      }
+          if (newListTitle.length === 0) {
+            return false;
+          }
 
-      if (e.target.id === 'save-list-title') {
-        return listModule.editListTitle(currentListTitle, currentListId, newListTitle);
-      }
+          if (e.target.id === 'save-list-title') {
+            return listModule.editListTitle(currentListTitle, currentListId, newListTitle);
+          }
 
-      if (e.target.id === 'delete-list-title') {
-        return listModule.removeList(currentListId);
-      }
-    });
-  };
+          if (e.target.id === 'delete-list-title') {
+            return listModule.removeList(currentListId);
+          }
+        });
+      };
 
   const addInitialModalEvents = () => {
     const createTaskEvent = document.querySelector('.create-task-button');
@@ -120,7 +128,8 @@ var taskDisplayEvents = (function () {
     const taskListId = deleteBtn.getAttribute('data-list-id');
 
     deleteBtn.addEventListener('click', function () {
-      const confirmMsg = "would you like to delete this task?\n**This action can not be undone!**";
+      const confirmMsg = 
+      "would you like to delete this task?\n**This action can not be undone!**";
 
       if (confirm(confirmMsg) === true) {
         return taskModule.removeTask(taskId, taskListId);

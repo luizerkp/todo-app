@@ -216,14 +216,18 @@ var listFormContainer = (function () {
   form.appendChild(errorParagraph);
 
   const getListEditForm = (title) => {
-    // clone exiting form to build edit form and change id atribute to list-edit-form
+    /* clone exiting form to build edit form and 
+       change id atribute to list-edit-form
+    */
     const editForm = form.cloneNode(true);
     editForm.id = 'list-edit-form';
 
     // change title label text to 'New Title'
     editForm.childNodes[0].childNodes[0].textContent = 'New Title';
 
-    // change title input value to title, remove placeholder attribute and add autofocus attribute
+    /* change title input value to title, remove placeholder attribute and 
+       add autofocus attribute
+    */
     editForm.childNodes[0].childNodes[1].removeAttribute('placeholder');
     editForm.childNodes[0].childNodes[1].setAttribute('value', title);
     editForm.childNodes[0].childNodes[1].setAttribute('autofocus', 'autofocus');
@@ -276,7 +280,9 @@ var modal = (function () {
   const formHeaderElement = document.createElement('h1');
   formHeaderElement.setAttribute('id', 'modal-header-text');
 
-  // add the header text to the header tag and header tag to modal content container
+  /* add the header text to the header tag and header tag to 
+     modal content container
+  */
   formHeader.appendChild(formHeaderElement);
   modalContent.appendChild(formHeader);
 
@@ -284,14 +290,18 @@ var modal = (function () {
   const formContainer = document.createElement('div');
   formContainer.classList.add('form-container');
 
-  // creates an empty form so that the form can be added to the modal content container dynamically
+  /* creates an empty form so that the form can be added to the 
+     modal content container dynamically 
+  */
   const form = document.createElement('form');
   form.classList.add('modal-form');
 
   // add the form to form container
   formContainer.appendChild(form);
 
-  // add form container to modal content container and modal content container to modal
+  /* add form container to modal content container and modal 
+     content container to modal
+  */
   modalContent.appendChild(formContainer);
   modal.appendChild(modalContent);
 
@@ -363,6 +373,5 @@ var modal = (function () {
   };
 
 })();
-
 
 export { modal };

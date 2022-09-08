@@ -15,7 +15,8 @@ const formatDueDate = (dueDate) => {
   const dayOfweek = dueDate.split(' ')[0];
   const month = dueDate.split(' ')[1];
   const dayNumber = dueDate.split(' ')[2];
-  return pastDueDate(dueDate) ? "Past Due Date" : `${dayOfweek} ${month} ${dayNumber}` ;
+  return pastDueDate(dueDate) ? "Past Due Date" : 
+      `${dayOfweek} ${month} ${dayNumber}`;
 }
 
 // create ul element with tasks 
@@ -35,7 +36,8 @@ const buildTasksUl = (tasks) => {
 
     // limits title length displayed to 25 chars and adds elipsis if longer
     const taskTitleItemText = document.createElement('p');
-    taskTitleItemText.textContent = task.title.length > 25 ? task.title.substring(0, 25) + '...' : task.title;
+    taskTitleItemText.textContent = task.title.length > 25 ? 
+        task.title.substring(0, 25) + '...' : task.title;
 
     // adds radion to toggle complete status on/off
     const radioBtnIcon = document.createElement('i');
@@ -71,13 +73,15 @@ const buildTasksUl = (tasks) => {
 
 
 const reArrangePastDueTasks = (tasks) => {
-  const idxOfFIrstValidDueDate = tasks.findIndex((task) => !pastDueDate(task.dueDate));
+  const idxOfFIrstValidDueDate = 
+  tasks.findIndex((task) => !pastDueDate(task.dueDate));
 
   /* the first task in the tasks array is not >= to current day 
      re-arrage tasks so that past due dates are at the end of array
   */ 
   if (idxOfFIrstValidDueDate > 0) {
-    return tasks.slice(idxOfFIrstValidDueDate).concat(tasks.slice(0, idxOfFIrstValidDueDate));
+    return tasks.slice(idxOfFIrstValidDueDate)
+        .concat(tasks.slice(0, idxOfFIrstValidDueDate));
   }
 
   return tasks;
@@ -121,18 +125,19 @@ var formattedTasks = (function () {
 
   // sort tasks by priority changes priority from high to low
   const sortArrayByPriority = function (arr) {
-    const sortedArr = arr.sort((objAPriority, objBPriority) => (
-      comparePriorityAndTime(objAPriority, objBPriority)
-    ));
+    const sortedArr = arr.sort((objAPriority, objBPriority) => 
+        (comparePriorityAndTime(objAPriority, objBPriority)));
 
     return sortedArr;
   };
 
   // sort tasks by due date using yyyymmdd as format for comparison 
   const sortArrayByDuedate = function (arr) {
-    const sortedArr = arr.sort((objADueDate, objBDueDate) => (
-      objADueDate.dueDate.split('-').join('') - objBDueDate.dueDate.split('-').join('')
-    ));
+    const sortedArr = arr.sort((objADueDate, objBDueDate) => 
+      (
+        objADueDate.dueDate.split('-').join('') - 
+            objBDueDate.dueDate.split('-').join('')
+      ));
 
     return sortedArr;
   };
@@ -174,10 +179,12 @@ var formattedTasks = (function () {
     const allTasksSortedByDate = sortArrayByDuedate(tasks);
 
     // sort tasks by priority after sorting by due date
-    const allTasksSortedByDateAndPriority = sortArrayByPriority(allTasksSortedByDate);
+    const allTasksSortedByDateAndPriority = 
+        sortArrayByPriority(allTasksSortedByDate);
 
     // format date string for sorted tasks
-    const allSortedTasksAndFormated = formatDateString(allTasksSortedByDateAndPriority);
+    const allSortedTasksAndFormated = 
+        formatDateString(allTasksSortedByDateAndPriority);
     return allSortedTasksAndFormated;
   };
 
@@ -191,7 +198,9 @@ var formattedTasks = (function () {
   const getTodayFormattedTasks = () => {
     const today = new Date();
     const todayFormatted = today.toDateString();
-    const todayFormattedTasks = allSortedTasksAndFormated.filter((task) => task.dueDate === todayFormatted);
+    const todayFormattedTasks = 
+        allSortedTasksAndFormated.filter((task) => 
+            task.dueDate === todayFormatted);
     return todayFormattedTasks;
   };
 
@@ -199,7 +208,9 @@ var formattedTasks = (function () {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowFormatted = tomorrow.toDateString();
-    const tomorrowFormattedTasks = allSortedTasksAndFormated.filter((task) => task.dueDate === tomorrowFormatted);
+    const tomorrowFormattedTasks = 
+        allSortedTasksAndFormated.filter((task) => 
+            task.dueDate === tomorrowFormatted);
     return tomorrowFormattedTasks;
   };
 
@@ -211,25 +222,30 @@ var formattedTasks = (function () {
     // get 7 days from current day
     const sevenDaysArray = getFormatedDaysArray(sevenDaysStart, days);
 
-    const sevenDaysFormattedTasks = allSortedTasksAndFormated.filter((task) => {
-      return sevenDaysArray.includes(task.dueDate);
+    const sevenDaysFormattedTasks = 
+        allSortedTasksAndFormated.filter((task) => {
+          return sevenDaysArray.includes(task.dueDate);
     });
 
     return sevenDaysFormattedTasks;
   };
 
   const getListFormattedTasks = (listId) => {
-    const listFormattedTasks = allSortedTasksAndFormated.filter((task) => task.listId === listId);
-    const listFormattedTasksWithPAstDueDateReArranged = reArrangePastDueTasks(listFormattedTasks);
+    const listFormattedTasks = 
+        allSortedTasksAndFormated.filter((task) => task.listId === listId);
+    const listFormattedTasksWithPAstDueDateReArranged = 
+        reArrangePastDueTasks(listFormattedTasks);
     return listFormattedTasksWithPAstDueDateReArranged;
   };
 
   const getFormattedTaskDetails = (taskId) => {
-    const formattedTaskDetails = allSortedTasksAndFormated.find((task) => task.id === taskId);
+    const formattedTaskDetails = 
+        allSortedTasksAndFormated.find((task) => task.id === taskId);
     return formattedTaskDetails;
   };
   const getAllFormattedTasks = () => {
-    const allFormattedTasksWithPastDueDatesReArranged = reArrangePastDueTasks(allSortedTasksAndFormated);
+    const allFormattedTasksWithPastDueDatesReArranged = 
+        reArrangePastDueTasks(allSortedTasksAndFormated);
     return allFormattedTasksWithPastDueDatesReArranged;
   };
 
@@ -416,12 +432,14 @@ var taskDisplayController = (function () {
 
   const buildHeader = (header) => {
     const headerText = document.querySelector('#tasks-header-content');
-    headerText.textContent = header.length > 25 ? header.substring(0, 25) + '...' : header;
+    headerText.textContent = 
+        header.length > 25 ? header.substring(0, 25) + '...' : header;
   };
 
   // hides the task details div
   const hideTaskDetails = () => {
-    const taskDetailsContainer = document.querySelector('.task-details-container');
+    const taskDetailsContainer = 
+        document.querySelector('.task-details-container');
 
     if (taskDetailsContainer.getAttribute('id') !== 'hidden') {
       taskDetailsContainer.setAttribute('id', 'hidden');

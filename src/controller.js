@@ -11,20 +11,24 @@ function listFactory(title, tasks) {
   };
 }
 
-function tasksFactory(title, dueDate, priority, listTitle, listId, notes = null) {
-  return {
-    title: title,
-    notes: notes,
-    dueDate: dueDate,
-    priority: priority,
-    listTitle: listTitle,
-    listId: listId,
-    completed: false,
-    id: uuidv4(),
-  };
-}
+function tasksFactory
+    (title, dueDate, priority, listTitle, listId, notes = null) {
+      return {
+        title: title,
+        notes: notes,
+        dueDate: dueDate,
+        priority: priority,
+        listTitle: listTitle,
+        listId: listId,
+        completed: false,
+        id: uuidv4(),
+      };
+    }
 
-// source https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+/* source: 
+    https://developer.mozilla.org/en-US/docs/Web/API/
+    Web_Storage_API/Using_the_Web_Storage_API
+*/
 function storageAvailable(type) {
   let storage;
   try {
@@ -55,6 +59,7 @@ function storageAvailable(type) {
 }
 
 var initialLoad = (function () {
+  const storageErrorMsg = 'Local Storage Unavilable page will reload, if problem persist please contact the developer'
   const chekStorage = storageAvailable('localStorage');
   const listsList = document.createElement('ul');
   listsList.classList.add('lists-list');
@@ -73,7 +78,9 @@ var initialLoad = (function () {
     editIcon.dataset.id = item.id;
     editIcon.dataset.title = item.title;
 
-    listItem.innerText = item.title.length > 14 ? item.title.substring(0, 14) + '...' : item.title;
+    listItem.innerText = 
+        item.title.length > 14 ? 
+            item.title.substring(0, 14) + '...' : item.title;
     listItem.appendChild(editIcon);
 
     return listItem;
@@ -113,7 +120,9 @@ var initialLoad = (function () {
     buildPageDisplay();
   } else {
     // alert user and reload
-    if (!alert("Local Storage Unavilable page will reload, if problem persist please contact the developer")) { window.location.reload(); }
+    if (!alert(storageErrorMsg)) { 
+      window.location.reload(); 
+    }
   }
 
   return {
@@ -126,17 +135,19 @@ var initialLoad = (function () {
 var taskModule = (function () {
   let lists = initialLoad.getLists();
 
-  const createTaskItem = (title, dueDate, priority, listTitle, listId, notes) => {
-    let task = tasksFactory(title, dueDate, priority, listTitle, listId, notes);
+  const createTaskItem = 
+      (title, dueDate, priority, listTitle, listId, notes) => {
+        let task = 
+        tasksFactory(title, dueDate, priority, listTitle, listId, notes);
 
-    lists.some((list) => {
-      if (list.id === task.listId) {
-        list.tasks.push(task);
-        localStorage.setItem('lists', JSON.stringify(lists));
-        return true;
-      }
-    });
-  };
+        lists.some((list) => {
+          if (list.id === task.listId) {
+            list.tasks.push(task);
+            localStorage.setItem('lists', JSON.stringify(lists));
+            return true;
+          }
+        });
+      };
 
   const removeTask = (taskId, taskListId) => {
     lists.some((list) => {
@@ -219,13 +230,17 @@ var loadPage = (function () {
   contentDiv.classList.add('container');
 
   const restorePrevState = () => {
-    const previousTaskContainerDataId = JSON.parse(localStorage.getItem('task-container-data-id'));
+    const previousTaskContainerDataId = 
+        JSON.parse(localStorage.getItem('task-container-data-id'));
+
     const defaultToAllTasks = document.querySelector('#all-tasks');
     let previousTaskConatainer;
 
     // retrive task container div via data-id if it exists
     if (previousTaskContainerDataId) {
-      previousTaskConatainer = document.querySelector(`[data-id = "${previousTaskContainerDataId}"]`);
+      previousTaskConatainer = 
+          document.querySelector
+              (`[data-id = "${previousTaskContainerDataId}"]`);
     }
 
     // simulate click on shortcut if it exists
@@ -269,7 +284,7 @@ var loadPage = (function () {
     modal.openModal(createListModalHeader, createListModalId);
   };
 
-  const createEditListModal = (listTitle, listId) => {
+  const createEditListModal = (listTitle) => {
     const createEditListModalHeader = 'Edit List';
     const createEditListModalId = 'edit-list-modal';
     modal.getListEditModal(listTitle);
