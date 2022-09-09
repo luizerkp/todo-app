@@ -23,17 +23,9 @@ const modalEvents = (() => {
       const taskDueDate = taskFormInfo["due-date"].value.trim();
       const taskPriority = taskFormInfo.priority.value.trim();
       const taskListTitle = taskFormInfo["list-select"].value;
-      const taskListId = taskFormInfo["list-select"]
-        .options[taskFormInfo["list-select"].selectedIndex]
-        .getAttribute("data-id");
-      return taskModule.createTaskItem(
-        taskTitle,
-        taskDueDate,
-        taskPriority,
-        taskListTitle,
-        taskListId,
-        taskNotes,
-      );
+      const taskListId =
+        taskFormInfo["list-select"].options[taskFormInfo["list-select"].selectedIndex].getAttribute("data-id");
+      return taskModule.createTaskItem(taskTitle, taskDueDate, taskPriority, taskListTitle, taskListId, taskNotes);
     });
   };
 
@@ -109,8 +101,7 @@ const taskDisplayEvents = (() => {
     const taskListId = deleteBtn.getAttribute("data-list-id");
 
     deleteBtn.addEventListener("click", () => {
-      const confirmMsg = "Would you like to delete this task?\n"
-          + "**This action can not be undone!**";
+      const confirmMsg = "Would you like to delete this task?\n**This action can not be undone!**";
 
       if (window.confirm(confirmMsg) === true) {
         return taskModule.removeTask(taskId, taskListId);

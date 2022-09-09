@@ -37,22 +37,21 @@ function storageAvailable(type) {
     storage.removeItem(x);
     return true;
   } catch (e) {
-    return e instanceof DOMException && (
+    return (
+      e instanceof DOMException &&
       // everything except Firefox
-      e.code === 22
-
-      // Firefox
-      || e.code === 1014
-
-      // test name field too, because code might not be present
-      // everything except Firefox
-      || e.name === "QuotaExceededError"
-
-      // Firefox
-      || e.name === "NS_ERROR_DOM_QUOTA_REACHED")
-
+      (e.code === 22 ||
+        // Firefox
+        e.code === 1014 ||
+        // test name field too, because code might not be present
+        // everything except Firefox
+        e.name === "QuotaExceededError" ||
+        // Firefox
+        e.name === "NS_ERROR_DOM_QUOTA_REACHED") &&
       // acknowledge QuotaExceededError only if there's something already stored
-      && (storage && storage.length !== 0);
+      storage &&
+      storage.length !== 0
+    );
   }
 }
 
@@ -74,9 +73,7 @@ const initialLoad = (() => {
     editIcon.dataset.id = item.id;
     editIcon.dataset.title = item.title;
 
-    listItem.innerText = item.title.length > 14
-      ? `${item.title.substring(0, 14)}...`
-      : item.title;
+    listItem.innerText = item.title.length > 14 ? `${item.title.substring(0, 14)}...` : item.title;
     listItem.appendChild(editIcon);
 
     return listItem;
@@ -112,8 +109,7 @@ const initialLoad = (() => {
   };
 
   const chekStorage = storageAvailable("localStorage");
-  const storageErrorMsg = "Local Storage Unavilable page will reload, "
-      + "if problem persist please contact the developer";
+  const storageErrorMsg = "Local Storage Unavilable page will reload, if problem persist please contact the developer";
 
   if (chekStorage) {
     lists = JSON.parse(localStorage.getItem("lists"));

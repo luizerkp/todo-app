@@ -3,7 +3,8 @@
         "browser": true,
         "es2021": true
     },
-    "extends": "airbnb-base",
+    "extends": ["airbnb", "prettier"],
+    "plugins": ["prettier"],
     "overrides": [
     ],
     "parserOptions": {
@@ -11,6 +12,7 @@
         "sourceType": "module"
     },
     "rules": {
+      "prettier/prettier": ["error"],
       "no-console": "off",
       "no-alert": "off",
       "quotes": [
