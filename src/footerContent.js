@@ -15,7 +15,7 @@ var footer = (function () {
   a.target = '_blank';
   const date = new Date().getFullYear();
   footerPara_1.textContent = `Copyright © ${date} Luis Tamarez`;
-  footerPara_2.textContent = 'All Rights Reserved'git ;
+  footerPara_2.textContent = 'All Rights Reserved';
   footerDiv.appendChild(footerPara_1);
   footerDiv.appendChild(a);
   footerDiv.appendChild(footerPara_2);
