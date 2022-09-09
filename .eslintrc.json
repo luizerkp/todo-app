@@ -1,0 +1,31 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "airbnb-base",
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "off",
+      "no-alert": "off",
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "wrap-iife": [
+        "error", 
+        "any"
+      ],
+      "no-param-reassign": [
+        "error", 
+        { 
+          "props": false 
+        }
+      ]
+    }
+}
