@@ -1,6 +1,6 @@
-import { sideMenuContent } from "./sideMenu";
-import { modal } from "./modals";
-import { taskDisplayController } from "./tasksDisplay";
+import { sideMenuContent } from './sideMenu';
+import { modal } from './modals';
+import { taskDisplayController } from './tasksDisplay';
 import { v4 as uuidv4 } from '../node_modules/uuid';
 
 function listFactory(title, tasks) {
@@ -59,8 +59,6 @@ function storageAvailable(type) {
 }
 
 var initialLoad = (function () {
-  const storageErrorMsg = 'Local Storage Unavilable page will reload, if problem persist please contact the developer'
-  const chekStorage = storageAvailable('localStorage');
   const listsList = document.createElement('ul');
   listsList.classList.add('lists-list');
   let lists = [];
@@ -79,8 +77,9 @@ var initialLoad = (function () {
     editIcon.dataset.title = item.title;
 
     listItem.innerText = 
-        item.title.length > 14 ? 
-            item.title.substring(0, 14) + '...' : item.title;
+        item.title.length > 14 
+            ? item.title.substring(0, 14) + '...' 
+            : item.title;
     listItem.appendChild(editIcon);
 
     return listItem;
@@ -114,6 +113,10 @@ var initialLoad = (function () {
       buildDefaultLists();
     }
   };
+
+  const chekStorage = storageAvailable('localStorage');
+  const storageErrorMsg = 'Local Storage Unavilable page will reload, ' + 
+      'if problem persist please contact the developer'
 
   if (chekStorage) {
     lists = JSON.parse(localStorage.getItem('lists'));
@@ -240,7 +243,7 @@ var loadPage = (function () {
     if (previousTaskContainerDataId) {
       previousTaskConatainer = 
           document.querySelector
-              (`[data-id = "${previousTaskContainerDataId}"]`);
+              (`[data-id = '${previousTaskContainerDataId}']`);
     }
 
     // simulate click on shortcut if it exists
@@ -267,8 +270,8 @@ var loadPage = (function () {
   };
 
   const createTaskModal = () => {
-    const createTaskModalHeader = "Create Task";
-    const createTaskModalId = "task-modal";
+    const createTaskModalHeader = 'Create Task';
+    const createTaskModalId = 'task-modal';
 
     // handle modal display
     modal.getTaskModal();

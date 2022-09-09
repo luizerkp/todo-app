@@ -7,7 +7,7 @@ var footer = (function () {
   const footerPara_1 = document.createElement('p');
   const footerPara_2 = document.createElement('p');
   const a = document.createElement('a');
-  a.href = "https://github.com/luizerkp";
+  a.href = 'https://github.com/luizerkp';
   const myGithubLogo = document.createElement('img');
   myGithubLogo.src = githubLogo;
   a.appendChild(myGithubLogo);
@@ -15,7 +15,7 @@ var footer = (function () {
   a.target = '_blank';
   const date = new Date().getFullYear();
   footerPara_1.textContent = `Copyright © ${date} Luis Tamarez`;
-  footerPara_2.textContent = "All Rights Reserved";
+  footerPara_2.textContent = 'All Rights Reserved'git ;
   footerDiv.appendChild(footerPara_1);
   footerDiv.appendChild(a);
   footerDiv.appendChild(footerPara_2);

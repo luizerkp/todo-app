@@ -130,8 +130,8 @@ var taskDisplayEvents = (function () {
     const taskListId = deleteBtn.getAttribute('data-list-id');
 
     deleteBtn.addEventListener('click', function () {
-      const confirmMsg = 
-      "would you like to delete this task?\n**This action can not be undone!**";
+      const confirmMsg = 'Would you like to delete this task?\n' +
+          '**This action can not be undone!**';
 
       if (confirm(confirmMsg) === true) {
         return taskModule.removeTask(taskId, taskListId);

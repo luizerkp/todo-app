@@ -15,8 +15,9 @@ const formatDueDate = (dueDate) => {
   const dayOfweek = dueDate.split(' ')[0];
   const month = dueDate.split(' ')[1];
   const dayNumber = dueDate.split(' ')[2];
-  return pastDueDate(dueDate) ? "Past Due Date" : 
-      `${dayOfweek} ${month} ${dayNumber}`;
+  return pastDueDate(dueDate) 
+      ? 'Past Due Date' 
+      : `${dayOfweek} ${month} ${dayNumber}`;
 }
 
 // create ul element with tasks 
@@ -36,13 +37,14 @@ const buildTasksUl = (tasks) => {
 
     // limits title length displayed to 25 chars and adds elipsis if longer
     const taskTitleItemText = document.createElement('p');
-    taskTitleItemText.textContent = task.title.length > 25 ? 
-        task.title.substring(0, 25) + '...' : task.title;
+    taskTitleItemText.textContent = task.title.length > 25 
+        ? task.title.substring(0, 25) + '...' 
+        : task.title;
 
     // adds radion to toggle complete status on/off
     const radioBtnIcon = document.createElement('i');
     radioBtnIcon.classList.add('material-icons-round', 'task-status-btn');
-    radioBtnIcon.textContent = "radio_button_unchecked";
+    radioBtnIcon.textContent = 'radio_button_unchecked';
 
     taskTitleItemText.insertAdjacentElement('afterbegin', radioBtnIcon);
 
@@ -149,7 +151,9 @@ var formattedTasks = (function () {
       // format dueDate from yyyy-mm-dd to yyyy-mm-ddT00:00:00
       let formattedDate = obj.dueDate + time;
 
-      // new date format will be like this sample: "Wed Aug 24 2022 00:00:00 GMT-0700 (Pacific Daylight Time)"
+      /* new date format will be like this sample: 
+         "Wed Aug 24 2022 00:00:00 GMT-0700 (Pacific Daylight Time)"
+      */
       formattedDate = new Date(formattedDate);
 
       // date format will be like this sample: "Wed Aug 24 2022"
@@ -190,7 +194,9 @@ var formattedTasks = (function () {
 
   let allSortedTasksAndFormated = getCurrentFormatedTasks();
 
-  // update allSortedAndFormated object everytime a change has been made to localStorage obj 'lists'
+  /* update allSortedAndFormated object everytime a change 
+     has been made to localStorage obj 'lists'
+  */
   const updateFormatedTaskObj = () => {
     allSortedTasksAndFormated = getCurrentFormatedTasks();
   };
@@ -355,7 +361,7 @@ var tasksDetails = (function () {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.setAttribute('id', 'delete-task-btn');
-    deleteBtn.textContent = "Delete";
+    deleteBtn.textContent = 'Delete';
     deleteBtn.dataset.id = taskId;
     deleteBtn.dataset.listId = taskDetails.listId;
 
@@ -432,8 +438,9 @@ var taskDisplayController = (function () {
 
   const buildHeader = (header) => {
     const headerText = document.querySelector('#tasks-header-content');
-    headerText.textContent = 
-        header.length > 25 ? header.substring(0, 25) + '...' : header;
+    headerText.textContent = header.length > 25 
+        ? header.substring(0, 25) + '...' 
+        : header;
   };
 
   // hides the task details div
@@ -455,7 +462,7 @@ var taskDisplayController = (function () {
   };
 
   const removeTaskFromDisplay = (taskId) => {
-    const taskToRemove = document.querySelector(`[data-id="${taskId}"]`);
+    const taskToRemove = document.querySelector(`[data-id='${taskId}']`);
     taskToRemove.remove();
     hideTaskDetails();
   };
@@ -486,7 +493,7 @@ var taskDisplayController = (function () {
 
   const getAllTasksList = () => {
     const taskList = document.querySelector('.list-of-tasks');
-    const headerText = "All Tasks";
+    const headerText = 'All Tasks';
     buildHeader(headerText);
     const allTasksUl = allTasks.getAllTasksUl();
     taskList.replaceWith(allTasksUl);
@@ -529,7 +536,7 @@ var taskDisplayController = (function () {
   };
 
   const changeCompleteStatus = (taskId) => {
-    const targetTask = document.querySelector(`[data-id = "${taskId}"]`);
+    const targetTask = document.querySelector(`[data-id = '${taskId}']`);
 
     if (targetTask.classList.contains('completed')) {
       targetTask.classList.remove('completed');

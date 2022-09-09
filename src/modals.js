@@ -27,7 +27,8 @@ function createButtons(addButtonId) {
 }
 
 /*
-  provides pattern format for atrribute for no leading whitespace regex: /^(?:[^\s].*)$/
+  provides pattern format for atrribute for 
+  no leading whitespace regex: /^(?:[^\s].*)$/
   provides an extra check for an empty string 
 */
 const noLeadingWhitespcePattern = '[^\\s].*';
@@ -349,7 +350,7 @@ var modal = (function () {
     buildHeader(modalName);
 
     // Disable background scroll while modal is open
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
@@ -360,7 +361,7 @@ var modal = (function () {
     modalElements.modalContent.removeAttribute('id');
 
     // Enable normal scroll when modal is closed
-    document.body.style.overflow = "auto";
+    document.body.style.overflow = 'auto';
   };
 
   return {
