@@ -162,14 +162,6 @@ p {
     background-color: white;
 }
 
-#task-modal {
-    height: 550px;
-}
-
-#list-modal {
-    height: 300px;
-}
-
 #close-button {
     position: absolute;
     top: 15px;
@@ -523,7 +515,6 @@ p {
 
     #header-content>h1 {
         font-size: 36px;
-    
     } 
 
     #main-task-container {
@@ -540,6 +531,7 @@ p {
         grid-template-rows: repeat(auto-fit, minmax(150px, 180px));
         max-width: 100%;
     }
+
     .side-menu {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -548,27 +540,71 @@ p {
         height: 180px;
         grid-row: 1/2;
     }
+
     .lists-list {
         grid-row: 1/2;
     }
+
     .title-text, .task-details-header, .task-details-sub-header {
         font-size: 18px;
     }
+
     .task-shortcut, .list-shortcut, .task-details-para {
         gap:5px;
         font-size: 16px;
         max-width: 100%;
     }
+
     .create-task-button, .add-list-button {
         font-weight: normal;
     }
+
+    #priority-container {
+      flex-direction: column;
+      gap: 0px;
+    }
+
+    #priority-group>p {
+      font-size: 1rem;
+    }
+
+    .form-container {
+      padding: 0 5px;
+      gap: 5px;
+      text-align: center;
+    }
+
+    .form-group {
+      align-items: center;
+    }
+
+    .buttons {
+      gap: 10px;
+      font-size: 1rem;
+    }
+    .add-button, .cancel-button {
+      padding: 5px 10px;
+      margin-top: 5px;
+      margin-left: 5px;
+    }
+
+    #modal-header-text {
+      font-size: 18px;
+    }
+
+    #close-button {
+      font-size: 18px;
+    }
+
     .tasks-content {
         margin-left: 5px;
         margin-right: 5px;
     }
+
     #tasks-list-container, .task-details-container {
         padding: 0px;
     }
+
     .task-item-title-text, .task-item-due-date-text {
         font-size: 1rem;
     }
@@ -577,6 +613,7 @@ p {
         grid-template-columns: repeat(auto-fit, minmax(200px, 325px));
         justify-content: center;
     }
+
     #tasks-header-content {
         font-size: 1rem;
         width: 280px;

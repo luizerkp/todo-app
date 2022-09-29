@@ -133,7 +133,7 @@ const taskModule = (() => {
     const task = tasksFactory(title, dueDate, priority, listTitle, listId, notes);
 
     lists.some((list) => {
-      if (list.id === task.listId) {
+      if (list.id.toString() === task.listId.toString()) {
         list.tasks.push(task);
         localStorage.setItem("lists", JSON.stringify(lists));
         return true;
