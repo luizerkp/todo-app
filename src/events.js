@@ -5,60 +5,75 @@ import taskDisplayController from "./tasksDisplay";
 const modalEvents = (() => {
   const addCancelEventListeners = () => {
     const cancelButtons = document.querySelectorAll(".cancel");
-    cancelButtons.forEach((button) => {
-      button.addEventListener("click", () => modal.closeModal());
-    });
+    cancelButtons.forEach(
+      (button) => {
+        button.addEventListener("click", () => modal.closeModal());
+      },
+      { once: true }
+    );
   };
 
   const addTaskSubmitEventListener = () => {
     const taskForm = document.querySelector("#task-form");
     const addBtn = document.querySelector("#add-task");
 
-    taskForm.addEventListener("submit", () => {
-      addBtn.setAttribute("disabled", "disabled");
-      addBtn.style.cursor = "wait";
-      const taskFormInfo = taskForm.elements;
-      const taskTitle = taskFormInfo.title.value.trim();
-      const taskNotes = taskFormInfo.notes.value.trim();
-      const taskDueDate = taskFormInfo["due-date"].value.trim();
-      const taskPriority = taskFormInfo.priority.value.trim();
-      const taskListTitle = taskFormInfo["list-select"].value;
-      const taskListId =
-        taskFormInfo["list-select"].options[taskFormInfo["list-select"].selectedIndex].getAttribute("data-id");
-      return taskModule.createTaskItem(taskTitle, taskDueDate, taskPriority, taskListTitle, taskListId, taskNotes);
-    });
+    taskForm.addEventListener(
+      "submit",
+      () => {
+        addBtn.setAttribute("disabled", "disabled");
+        addBtn.style.cursor = "wait";
+        const taskFormInfo = taskForm.elements;
+        const taskTitle = taskFormInfo.title.value.trim();
+        const taskNotes = taskFormInfo.notes.value.trim();
+        const taskDueDate = taskFormInfo["due-date"].value.trim();
+        const taskPriority = taskFormInfo.priority.value.trim();
+        const taskListTitle = taskFormInfo["list-select"].value;
+        const taskListId =
+          taskFormInfo["list-select"].options[taskFormInfo["list-select"].selectedIndex].getAttribute("data-id");
+        return taskModule.createTaskItem(taskTitle, taskDueDate, taskPriority, taskListTitle, taskListId, taskNotes);
+      },
+      { once: true }
+    );
   };
 
   const addListFormSubmitEventListener = () => {
     const listForm = document.querySelector("#list-form");
     const addBtn = document.querySelector("#add-list");
-    listForm.addEventListener("submit", () => {
-      addBtn.setAttribute("disabled", "disabled");
-      addBtn.style.cursor = "wait";
-      const listFormInfo = listForm.elements;
-      const listName = listFormInfo.title.value.trim();
-      return listModule.createListItem(listName);
-    });
+    listForm.addEventListener(
+      "submit",
+      () => {
+        addBtn.setAttribute("disabled", "disabled");
+        addBtn.style.cursor = "wait";
+        const listFormInfo = listForm.elements;
+        const listName = listFormInfo.title.value.trim();
+        return listModule.createListItem(listName);
+      },
+      { once: true }
+    );
   };
 
   const addEditListFormSubmitEventListener = (currentListTitle, currentListId) => {
     const editListForm = document.querySelector("#list-edit-form");
 
-    editListForm.addEventListener("click", (e) => {
-      const editListFormInfo = editListForm.elements;
-      const newListTitle = editListFormInfo.title.value.trim();
+    editListForm.addEventListener(
+      "click",
+      (e) => {
+        const editListFormInfo = editListForm.elements;
+        const newListTitle = editListFormInfo.title.value.trim();
 
-      if (newListTitle.length > 0) {
-        if (e.target.id === "save-list-title") {
-          return listModule.editListTitle(currentListTitle, currentListId, newListTitle);
-        }
+        if (newListTitle.length > 0) {
+          if (e.target.id === "save-list-title") {
+            return listModule.editListTitle(currentListTitle, currentListId, newListTitle);
+          }
 
-        if (e.target.id === "delete-list-title") {
-          return listModule.removeList(currentListId);
+          if (e.target.id === "delete-list-title") {
+            return listModule.removeList(currentListId);
+          }
         }
-      }
-      return false;
-    });
+        return false;
+      },
+      { once: true }
+    );
   };
 
   const addInitialModalEvents = () => {
