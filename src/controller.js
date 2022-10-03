@@ -3,6 +3,7 @@ import sideMenuContent from "./sideMenu";
 import modal from "./modals";
 import taskDisplayController from "./tasksDisplay";
 
+// list factory function
 function listFactory(title, tasks) {
   return {
     title,
@@ -11,6 +12,7 @@ function listFactory(title, tasks) {
   };
 }
 
+// task factory funtion
 function tasksFactory(title, dueDate, priority, listTitle, listId, notes = null) {
   return {
     title,
